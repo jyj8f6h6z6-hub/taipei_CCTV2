@@ -145,7 +145,8 @@ async function loadData(){
   const res = await fetch("./cctv.csv", {cache:"no-store"});
   if(!res.ok) throw new Error("資料下載失敗：" + res.status);
 
-  const text = await res.text();
+  const buffer = await res.arrayBuffer();
+  const text = new TextDecoder("big5").decode(buffer);
   const lines = text.trim().split(/\r?\n/);
 
   allCams = lines.slice(1).map(line => {
