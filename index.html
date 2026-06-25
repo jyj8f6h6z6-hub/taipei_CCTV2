@@ -4,233 +4,321 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
   <title>台北市道路 CCTV</title>
-  <meta name="description" content="台北市道路 CCTV，依12行政區分類，點選開啟官方即時影像頁。" />
+  <meta name="description" content="台北市道路 CCTV 地圖，點選圖釘開啟官方即時影像。" />
   <style>
     :root{
       --bg:#f6f7fb; --card:#fff; --text:#1f2937; --muted:#6b7280;
       --line:#e5e7eb; --accent:#2563eb; --accent2:#eff6ff;
-      --shadow:0 8px 24px rgba(15,23,42,.08);
+      --shadow:0 4px 20px rgba(15,23,42,.08);
     }
-    *{box-sizing:border-box}
-    body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans TC",Arial,sans-serif;background:var(--bg);color:var(--text)}
-    header{position:sticky;top:0;z-index:10;background:rgba(246,247,251,.92);backdrop-filter:blur(12px);border-bottom:1px solid var(--line)}
-    .wrap{max-width:1100px;margin:auto;padding:18px}
-    h1{font-size:24px;margin:0 0 8px}
-    .sub{color:var(--muted);font-size:14px;line-height:1.5}
-    .controls{display:grid;grid-template-columns:1fr 170px 130px;gap:10px;margin-top:14px}
-    input,select,button{font-size:16px;border:1px solid var(--line);border-radius:12px;padding:12px;background:#fff}
-    button{background:var(--accent);border-color:var(--accent);color:#fff;font-weight:700;cursor:pointer}
-    button.secondary{background:#fff;color:var(--accent)}
-    main{max-width:1100px;margin:auto;padding:18px}
-    .status{margin:0 0 14px;color:var(--muted);font-size:14px}
-    .district{background:var(--card);border-radius:18px;box-shadow:var(--shadow);margin:14px 0;overflow:hidden;border:1px solid var(--line)}
-    .district summary{cursor:pointer;list-style:none;padding:16px 18px;font-weight:800;display:flex;justify-content:space-between;align-items:center}
-    .district summary::-webkit-details-marker{display:none}
-    .badge{background:var(--accent2);color:var(--accent);border-radius:999px;padding:4px 10px;font-size:13px}
-    .list{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;padding:0 16px 16px}
-    .cam{display:block;text-decoration:none;color:var(--text);border:1px solid var(--line);border-radius:14px;padding:12px;background:#fff}
-    .cam:hover{border-color:#93c5fd;background:#f8fbff}
-    .cam-title{font-weight:750;line-height:1.35}
-    .cam-meta{margin-top:6px;color:var(--muted);font-size:12px}
-    .empty{background:#fff;border:1px solid var(--line);border-radius:18px;padding:18px;color:var(--muted)}
-    footer{max-width:1100px;margin:30px auto;padding:18px;color:var(--muted);font-size:12px;line-height:1.6}
-    @media(max-width:720px){
-      .controls{grid-template-columns:1fr}
-      .list{grid-template-columns:1fr}
-      h1{font-size:22px}
+    *{box-sizing:border-box;margin:0;padding:0}
+    body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans TC",Arial,sans-serif;
+      background:var(--bg);color:var(--text);height:100dvh;display:flex;flex-direction:column}
+
+    /* ── Header ── */
+    header{
+      flex-shrink:0;z-index:20;
+      background:rgba(246,247,251,.95);backdrop-filter:blur(12px);
+      border-bottom:1px solid var(--line);padding:12px 16px;
+    }
+    .header-row{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+    h1{font-size:18px;font-weight:800;white-space:nowrap}
+    .controls{display:flex;gap:8px;flex:1;min-width:0}
+    input,select{
+      font-size:14px;border:1.5px solid var(--line);border-radius:10px;
+      padding:8px 12px;background:#fff;color:var(--text);outline:none;
+      transition:border-color .15s;
+    }
+    input{flex:1;min-width:0}
+    input:focus,select:focus{border-color:var(--accent)}
+    .status-bar{font-size:12px;color:var(--muted);margin-top:6px}
+
+    /* ── Body: map + sidebar ── */
+    .body{display:flex;flex:1;overflow:hidden}
+
+    /* ── Sidebar ── */
+    .sidebar{
+      width:300px;flex-shrink:0;overflow-y:auto;
+      border-right:1px solid var(--line);background:#fff;
+    }
+    .district-group{}
+    .district-header{
+      position:sticky;top:0;z-index:5;
+      background:#f8fafc;border-bottom:1px solid var(--line);
+      padding:8px 14px;font-weight:800;font-size:13px;
+      display:flex;justify-content:space-between;align-items:center;
+    }
+    .badge{
+      background:var(--accent2);color:var(--accent);
+      border-radius:999px;padding:2px 8px;font-size:11px;font-weight:700;
+    }
+    .cam-item{
+      display:block;padding:9px 14px;font-size:13px;
+      border-bottom:1px solid #f1f5f9;cursor:pointer;
+      text-decoration:none;color:var(--text);
+      transition:background .12s;
+    }
+    .cam-item:hover,.cam-item.active{background:var(--accent2)}
+    .cam-item.active{border-left:3px solid var(--accent)}
+    .cam-name{font-weight:600;line-height:1.35}
+    .cam-id{font-size:11px;color:var(--muted);margin-top:2px}
+    .empty-msg{padding:20px;color:var(--muted);font-size:13px;text-align:center}
+
+    /* ── Map ── */
+    #map{flex:1}
+
+    /* ── Info Window custom ── */
+    .iw-wrap{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans TC",sans-serif;min-width:180px}
+    .iw-title{font-weight:800;font-size:14px;margin-bottom:6px;line-height:1.4}
+    .iw-meta{font-size:12px;color:#6b7280;margin-bottom:10px}
+    .iw-btn{
+      display:inline-block;background:#2563eb;color:#fff;
+      font-size:13px;font-weight:700;padding:7px 14px;
+      border-radius:8px;text-decoration:none;
+    }
+    .iw-btn:hover{background:#1d4ed8}
+
+    /* ── Mobile ── */
+    @media(max-width:700px){
+      .body{flex-direction:column}
+      .sidebar{width:100%;height:220px;border-right:none;border-top:1px solid var(--line)}
+      h1{font-size:16px}
     }
   </style>
 </head>
 <body>
+
 <header>
-  <div class="wrap">
-    <h1>台北市道路 CCTV</h1>
-    <div class="sub">
-      依 12 行政區分類。資料來源：臺北市資料大平臺「臺北市CCTV設施」；點選攝影機會開啟交工處官方播放頁。
-    </div>
+  <div class="header-row">
+    <h1>🗺 台北市道路 CCTV</h1>
     <div class="controls">
-      <input id="q" placeholder="搜尋位置，例如：忠孝、敦化、建國快" />
+      <input id="q" placeholder="搜尋路名、行政區…" />
       <select id="districtFilter">
         <option value="全部">全部行政區</option>
       </select>
-      <button id="reload">重新載入</button>
     </div>
   </div>
+  <div class="status-bar" id="status">載入中……</div>
 </header>
 
-<main>
-  <p id="status" class="status">載入中……</p>
-  <div id="content"></div>
-</main>
-
-<footer>
-  <div>說明：本頁不儲存、不轉播影像，只依官方公開資料建立清單，連結至 https://hls.bote.gov.taipei/live/index.html?id=流水號。</div>
-  <div>若官方資料集欄位或播放網址規則變更，請調整 DATA_URL 或 playerUrl()。</div>
-</footer>
+<div class="body">
+  <div class="sidebar" id="sidebar"></div>
+  <div id="map"></div>
+</div>
 
 <script>
-const DATA_URL = "./cctv.csv";
+const GMAPS_KEY = "AIzaSyAKHPmFjSg3vu0c7QUDcImysmikQ1l9gfo";
+const DATA_URL  = "./cctv.csv";
 
-const DISTRICTS = ["中正區","大同區","中山區","松山區","大安區","萬華區","信義區","士林區","北投區","內湖區","南港區","文山區"];
+const DISTRICTS = ["中正區","大同區","中山區","松山區","大安區","萬華區",
+                   "信義區","士林區","北投區","內湖區","南港區","文山區"];
 
-/*
-  台北市12行政區粗略邊界框，用來把 CCTV 座標分區。
-  優點：單一HTML即可執行，不需額外載入地圖/邊界檔。
-  若遇到行政區交界，可能需人工微調；程式會保留「未判定」分類。
-*/
 const BOXES = [
-  {d:"北投區", minX:121.45, maxX:121.62, minY:25.10, maxY:25.23},
-  {d:"士林區", minX:121.47, maxX:121.67, minY:25.07, maxY:25.16},
-  {d:"內湖區", minX:121.55, maxX:121.68, minY:25.04, maxY:25.10},
-  {d:"南港區", minX:121.57, maxX:121.70, minY:25.00, maxY:25.08},
-  {d:"文山區", minX:121.51, maxX:121.64, minY:24.95, maxY:25.03},
-  {d:"萬華區", minX:121.47, maxX:121.52, minY:25.015, maxY:25.055},
-  {d:"中正區", minX:121.49, maxX:121.54, minY:25.015, maxY:25.055},
-  {d:"大同區", minX:121.49, maxX:121.53, minY:25.045, maxY:25.085},
-  {d:"中山區", minX:121.51, maxX:121.57, minY:25.045, maxY:25.095},
-  {d:"松山區", minX:121.54, maxX:121.59, minY:25.035, maxY:25.075},
-  {d:"大安區", minX:121.51, maxX:121.57, minY:25.005, maxY:25.055},
-  {d:"信義區", minX:121.55, maxX:121.61, minY:25.005, maxY:25.055}
+  {d:"北投區", minX:121.45,maxX:121.62,minY:25.10,maxY:25.23},
+  {d:"士林區", minX:121.47,maxX:121.67,minY:25.07,maxY:25.16},
+  {d:"內湖區", minX:121.55,maxX:121.68,minY:25.04,maxY:25.10},
+  {d:"南港區", minX:121.57,maxX:121.70,minY:25.00,maxY:25.08},
+  {d:"文山區", minX:121.51,maxX:121.64,minY:24.95,maxY:25.03},
+  {d:"萬華區", minX:121.47,maxX:121.52,minY:25.015,maxY:25.055},
+  {d:"中正區", minX:121.49,maxX:121.54,minY:25.015,maxY:25.055},
+  {d:"大同區", minX:121.49,maxX:121.53,minY:25.045,maxY:25.085},
+  {d:"中山區", minX:121.51,maxX:121.57,minY:25.045,maxY:25.095},
+  {d:"松山區", minX:121.54,maxX:121.59,minY:25.035,maxY:25.075},
+  {d:"大安區", minX:121.51,maxX:121.57,minY:25.005,maxY:25.055},
+  {d:"信義區", minX:121.55,maxX:121.61,minY:25.005,maxY:25.055},
 ];
 
-let allCams = [];
-
-function parseCSV(text){
-  const rows = [];
-  let row = [], cell = "", q = false;
-  for(let i=0;i<text.length;i++){
-    const c = text[i], n = text[i+1];
-    if(c === '"' && q && n === '"'){ cell += '"'; i++; }
-    else if(c === '"'){ q = !q; }
-    else if(c === "," && !q){ row.push(cell); cell = ""; }
-    else if((c === "\n" || c === "\r") && !q){
-      if(cell || row.length){ row.push(cell); rows.push(row); row = []; cell = ""; }
-      if(c === "\r" && n === "\n") i++;
-    } else cell += c;
-  }
-  if(cell || row.length){ row.push(cell); rows.push(row); }
-  return rows;
+function districtByCoord(x,y){
+  const h = BOXES.find(b=>x>=b.minX&&x<=b.maxX&&y>=b.minY&&y<=b.maxY);
+  return h?h.d:"未判定";
 }
-
-function normalizeHeader(s){ return String(s || "").replace(/\s/g,"").toLowerCase(); }
-
-function pick(obj, names){
-  const keys = Object.keys(obj);
-  for(const name of names){
-    const found = keys.find(k => normalizeHeader(k).includes(normalizeHeader(name)));
-    if(found) return obj[found];
-  }
-  return "";
-}
-
 function cleanName(raw){
-  let s = String(raw || "").trim();
-  // 例：255-忠孝東路-敦化南路口 → 忠孝東路-敦化南路口
-  s = s.replace(/^\s*\d+\s*[-_－—]\s*/, "");
-  return s || "未命名 CCTV";
+  return String(raw||"").trim().replace(/^\s*\d+\s*[-_－—]\s*/,"") || "未命名";
 }
-
-function districtByCoord(x, y){
-  const hit = BOXES.find(b => x >= b.minX && x <= b.maxX && y >= b.minY && y <= b.maxY);
-  return hit ? hit.d : "未判定";
-}
-
 function playerUrl(id){
   return `https://hls.bote.gov.taipei/live/index.html?id=${encodeURIComponent(id)}`;
 }
+function parseCSV(text){
+  const rows=[];let row=[],cell="",q=false;
+  for(let i=0;i<text.length;i++){
+    const c=text[i],n=text[i+1];
+    if(c==='"'&&q&&n==='"'){cell+='"';i++;}
+    else if(c==='"'){q=!q;}
+    else if(c===","&&!q){row.push(cell);cell="";}
+    else if((c==="\n"||c==="\r")&&!q){
+      if(cell||row.length){row.push(cell);rows.push(row);row=[];cell="";}
+      if(c==="\r"&&n==="\n")i++;
+    }else cell+=c;
+  }
+  if(cell||row.length){row.push(cell);rows.push(row);}
+  return rows;
+}
 
+let allCams=[], map, infoWindow, markers=[], activeSidebarItem=null;
+
+/* ── 載入 CSV ── */
 async function loadData(){
-  document.getElementById("status").textContent = "載入 cctv.csv 中……";
-
-  const res = await fetch("./cctv.csv", {cache:"no-store"});
-  if(!res.ok) throw new Error("資料下載失敗：" + res.status);
-
-  const buffer = await res.arrayBuffer();
-  const text = new TextDecoder("big5").decode(buffer);
+  document.getElementById("status").textContent="載入 cctv.csv 中……";
+  const res = await fetch(DATA_URL,{cache:"no-store"});
+  if(!res.ok) throw new Error("HTTP "+res.status);
+  const buf = await res.arrayBuffer();
+  const text = new TextDecoder("big5").decode(buf);
   const lines = text.trim().split(/\r?\n/);
-
-  allCams = lines.slice(1).map(line => {
-    const parts = line.split(",");
-    const rawName = parts[2]?.trim();
-    const id = rawName.match(/^\d+/)?.[0];
-    const x = parseFloat(parts[3]);
-    const y = parseFloat(parts[4]);
-
-    return {
-      id,
-      name: cleanName(rawName),
-      rawName,
-      x,
-      y,
-      district: districtByCoord(x, y),
-      url: playerUrl(id)
-    };
-  }).filter(c => c.id && c.rawName);
+  allCams = lines.slice(1).map(line=>{
+    const p=line.split(",");
+    const rawName=p[2]?.trim();
+    const id=rawName?.match(/^\d+/)?.[0];
+    const x=parseFloat(p[3]), y=parseFloat(p[4]);
+    return {id,name:cleanName(rawName),rawName,x,y,
+            district:districtByCoord(x,y),url:playerUrl(id)};
+  }).filter(c=>c.id&&Number.isFinite(c.x)&&Number.isFinite(c.y));
 
   buildDistrictOptions();
   render();
 }
 
+/* ── 行政區選單 ── */
 function buildDistrictOptions(){
-  const sel = document.getElementById("districtFilter");
-  const current = sel.value;
-  sel.innerHTML = `<option value="全部">全部行政區</option>` +
-    [...DISTRICTS, "未判定"].map(d => `<option value="${d}">${d}</option>`).join("");
-  sel.value = current || "全部";
+  const sel=document.getElementById("districtFilter");
+  sel.innerHTML=`<option value="全部">全部行政區</option>`+
+    [...DISTRICTS,"未判定"].map(d=>`<option value="${d}">${d}</option>`).join("");
 }
 
-function render(){
-  const q = document.getElementById("q").value.trim().toLowerCase();
-  const df = document.getElementById("districtFilter").value;
-
-  let cams = allCams.filter(c => {
-    const okQ = !q || (c.name + c.rawName + c.id + c.district).toLowerCase().includes(q);
-    const okD = df === "全部" || c.district === df;
-    return okQ && okD;
+/* ── 篩選後的清單 ── */
+function filteredCams(){
+  const q=document.getElementById("q").value.trim().toLowerCase();
+  const df=document.getElementById("districtFilter").value;
+  return allCams.filter(c=>{
+    const okQ=!q||(c.name+c.rawName+c.district).toLowerCase().includes(q);
+    const okD=df==="全部"||c.district===df;
+    return okQ&&okD;
   });
+}
 
-  const order = [...DISTRICTS, "未判定"];
-  const grouped = Object.fromEntries(order.map(d => [d, []]));
-  cams.forEach(c => (grouped[c.district] ||= []).push(c));
-
-  document.getElementById("status").textContent =
+/* ── 主渲染：側欄 + 地圖 ── */
+function render(){
+  const cams=filteredCams();
+  document.getElementById("status").textContent=
     `共 ${allCams.length} 支 CCTV；目前顯示 ${cams.length} 支。`;
-
-  const html = order
-    .filter(d => grouped[d] && grouped[d].length)
-    .map(d => {
-      const items = grouped[d]
-        .sort((a,b)=>a.name.localeCompare(b.name,"zh-Hant"))
-        .map(c => `
-          <a class="cam" href="${c.url}" target="_blank" rel="noopener">
-            <div class="cam-title">${escapeHtml(c.name)}</div>
-            <div class="cam-meta">ID ${escapeHtml(c.id)}｜${Number.isFinite(c.x)?c.x.toFixed(6):""}, ${Number.isFinite(c.y)?c.y.toFixed(6):""}</div>
-          </a>
-        `).join("");
-      return `
-        <details class="district" open>
-          <summary>${d}<span class="badge">${grouped[d].length} 支</span></summary>
-          <div class="list">${items}</div>
-        </details>
-      `;
-    }).join("");
-
-  document.getElementById("content").innerHTML = html || `<div class="empty">找不到符合條件的 CCTV。</div>`;
+  renderSidebar(cams);
+  renderMarkers(cams);
 }
 
-function escapeHtml(s){
-  return String(s).replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]));
+/* ── 側欄 ── */
+function renderSidebar(cams){
+  const order=[...DISTRICTS,"未判定"];
+  const grouped=Object.fromEntries(order.map(d=>[d,[]]));
+  cams.forEach(c=>(grouped[c.district]||=[]).push(c));
+
+  let html="";
+  order.forEach(d=>{
+    const list=grouped[d];
+    if(!list||!list.length)return;
+    html+=`<div class="district-group">
+      <div class="district-header">${esc(d)}<span class="badge">${list.length}</span></div>`;
+    list.sort((a,b)=>a.name.localeCompare(b.name,"zh-Hant")).forEach(c=>{
+      html+=`<div class="cam-item" data-id="${esc(c.id)}" onclick="focusCam('${esc(c.id)}')">
+        <div class="cam-name">${esc(c.name)}</div>
+        <div class="cam-id">ID ${esc(c.id)}</div>
+      </div>`;
+    });
+    html+="</div>";
+  });
+  document.getElementById("sidebar").innerHTML=html||
+    `<div class="empty-msg">找不到符合條件的 CCTV。</div>`;
 }
 
-document.getElementById("q").addEventListener("input", render);
-document.getElementById("districtFilter").addEventListener("change", render);
-document.getElementById("reload").addEventListener("click", loadData);
+/* ── 地圖標記 ── */
+function renderMarkers(cams){
+  markers.forEach(m=>m.setMap(null));
+  markers=[];
+  if(!map)return;
+  if(infoWindow)infoWindow.close();
 
-loadData().catch(err => {
-  document.getElementById("status").textContent = "載入失敗。";
-  document.getElementById("content").innerHTML =
-    `<div class="empty">無法讀取官方資料。可能是 CORS、網路或官方下載連結變更。<br>${escapeHtml(err.message)}</div>`;
-});
+  cams.forEach(c=>{
+    const marker=new google.maps.Marker({
+      position:{lat:c.y,lng:c.x},
+      map,
+      title:c.name,
+      icon:{
+        path:google.maps.SymbolPath.CIRCLE,
+        scale:7,
+        fillColor:"#2563eb",
+        fillOpacity:.85,
+        strokeColor:"#fff",
+        strokeWeight:2,
+      }
+    });
+    marker.camData=c;
+    marker.addListener("click",()=>openInfo(marker));
+    markers.push(marker);
+  });
+}
+
+/* ── Info Window ── */
+function openInfo(marker){
+  const c=marker.camData;
+  if(infoWindow)infoWindow.close();
+  infoWindow=new google.maps.InfoWindow({
+    content:`<div class="iw-wrap">
+      <div class="iw-title">${esc(c.name)}</div>
+      <div class="iw-meta">ID ${esc(c.id)} ・ ${esc(c.district)}</div>
+      <a class="iw-btn" href="${c.url}" target="_blank" rel="noopener">▶ 開啟即時影像</a>
+    </div>`
+  });
+  infoWindow.open(map,marker);
+  highlightSidebar(c.id);
+}
+
+/* ── 側欄點擊 → 地圖飛到該點 ── */
+function focusCam(id){
+  const marker=markers.find(m=>m.camData.id===id);
+  if(!marker)return;
+  map.panTo(marker.getPosition());
+  map.setZoom(16);
+  openInfo(marker);
+  // 捲動側欄高亮
+  highlightSidebar(id);
+}
+
+function highlightSidebar(id){
+  if(activeSidebarItem) activeSidebarItem.classList.remove("active");
+  const el=document.querySelector(`.cam-item[data-id="${id}"]`);
+  if(el){el.classList.add("active");el.scrollIntoView({block:"nearest"});activeSidebarItem=el;}
+}
+
+function esc(s){
+  return String(s).replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]));
+}
+
+/* ── Google Maps 初始化 ── */
+window.initMap=async function(){
+  map=new google.maps.Map(document.getElementById("map"),{
+    center:{lat:25.0478,lng:121.5318},
+    zoom:12,
+    mapTypeControl:false,
+    fullscreenControl:true,
+    streetViewControl:false,
+    styles:[
+      {featureType:"poi",elementType:"labels",stylers:[{visibility:"off"}]},
+      {featureType:"transit",elementType:"labels",stylers:[{visibility:"off"}]},
+    ]
+  });
+  infoWindow=new google.maps.InfoWindow();
+
+  try{
+    await loadData();
+  }catch(err){
+    document.getElementById("status").textContent="載入失敗："+err.message;
+  }
+};
+
+document.getElementById("q").addEventListener("input",render);
+document.getElementById("districtFilter").addEventListener("change",render);
+</script>
+
+<script async defer
+  src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAKHPmFjSg3vu0c7QUDcImysmikQ1l9gfo&callback=initMap&language=zh-TW">
 </script>
 </body>
 </html>
