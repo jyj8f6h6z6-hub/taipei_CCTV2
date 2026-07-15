@@ -1,187 +1,113 @@
-# 台北市道路 CCTV
-Project Status
+# PROJECT STATUS
 
-最後更新：2026-07-15
-
----
-
-# 專案網址
-
-GitHub
-https://github.com/jyj8f6h6z6-hub/taipei_CCTV2
-
-GitHub Pages
-https://jyj8f6h6z6-hub.github.io/taipei_CCTV2/
+## 專案名稱
+台北市道路 CCTV 地圖
 
 ---
 
-# 專案狀態
+# 目前完成進度
 
-版本：v1.1
+## ✅ 資料來源
 
-目前狀態：
-
-✅ 正常運作
-
----
-
-# 已完成功能
-
-## 地圖
-
-- Google Maps 顯示所有 CCTV
-- Marker 顯示全部攝影機
-- 點擊 Marker 開啟資訊視窗
-- 開啟官方即時影像
+- 已由 CSV 改為台北市政府 Open Data API
+- 因 API CORS 限制，改採 GitHub Actions 定時下載
+- 自動產生 `cctv.json`
+- 網站直接讀取 `cctv.json`
+- 不再直接呼叫台北市 API
 
 ---
 
-## 側邊欄
+## ✅ 地圖
 
-- 行政區分類
-- CCTV 清單
-- 高亮目前選取 CCTV
-- 點選清單自動定位
+已完成 Google Maps → Leaflet 遷移（大部分）
 
----
+### 已完成
 
-## 搜尋
-
-- 關鍵字搜尋
+- Leaflet 1.9.4
+- OpenStreetMap 底圖
+- Marker 改為 `L.circleMarker`
+- Popup 改為 Leaflet Popup
+- 左側清單
+- 搜尋
 - 行政區篩選
+- Popup 樣式
+- 我的位置（Leaflet）
+- 最近 CCTV 計算
+- 已移除 Google API Key
 
 ---
 
-## 資料
+## ✅ 已修正
 
-- 讀取 cctv.csv
-- Big5 編碼支援
-- 自動建立官方 HLS 播放網址
-
----
-
-## 定位（2026-07-15）
-
-新增：
-
-- 📍 我的位置按鈕
-- 瀏覽器 GPS 定位
-- 地圖移動到目前位置
-- 顯示紅色定位 Marker
-- 定位失敗訊息
-- 定位權限處理
+- API CORS 問題
+- 新版 API 欄位名稱
+  - `攝影機編號`
+  - `wgsx`
+  - `wgsy`
+- Popup 樣式
+- 按鈕文字顏色
+- 定位 Marker
+- Sidebar 正常
 
 ---
 
-## 程式架構
+# 尚未完成
 
-已完成拆分：
+## Leaflet 最後整理
 
-- index.html
-- style.css
-- script.js
-
-不再使用單一 HTML。
-
----
-
-# Git
-
-Repository：
-
-https://github.com/jyj8f6h6z6-hub/taipei_CCTV2
-
-目前 Branch：
-
-main
+- [ ] 完全移除 Google Maps 殘留程式
+- [ ] 整理 `script.js`
+- [ ] 移除未使用函式
+- [ ] 清除 Google Maps 註解
 
 ---
 
-# 下一步開發
+## 功能
 
-Priority 1
-
-□ 找最近 CCTV
-
-功能：
-
-- 自動計算最近攝影機
-- 顯示距離
-- 地圖自動飛過去
-- 自動開啟 InfoWindow
+- [ ] 定位後自動飛到最近 CCTV（重新整理為 Leaflet 寫法）
+- [ ] Sidebar 點擊動畫最佳化
+- [ ] 地圖飛行動畫最佳化
 
 ---
 
-Priority 2
+## UI
 
-□ 附近 CCTV
-
-- 顯示 500 公尺內
-- 顯示 1 公里內
-- 距離排序
+- [ ] Popup 外觀微調
+- [ ] Marker 顏色可設定
+- [ ] 深色模式（未開始）
 
 ---
 
-Priority 3
+# GitHub
 
-□ 即時影像內嵌播放
+## 已完成
 
-- 不開新分頁
-- 側邊播放
-- 可切換 CCTV
-
----
-
-Priority 4
-
-□ 收藏 CCTV
-
-- LocalStorage
-- 常用攝影機
+- GitHub Pages
+- GitHub Actions
+- 自動更新 cctv.json
 
 ---
 
-Priority 5
+# 下一步
 
-□ Marker Cluster
-
-大量 Marker 效能最佳化
-
----
-
-Priority 6
-
-□ PWA
-
-- 離線支援
-- 安裝到手機
-- App Icon
+1. 完成 Leaflet 最終整理
+2. 完全移除 Google Maps 程式
+3. 清理 script.js
+4. 新增更多功能
 
 ---
 
-# 備註
+# 未來規劃
 
-本專案目前已改為：
+- ⭐ 收藏 CCTV
+- ⭐ 最近 CCTV 清單
+- ⭐ 即時預覽（Popup 直接播放）
+- ⭐ 衛星地圖切換
+- ⭐ 路況圖層
+- ⭐ 分享目前 CCTV
+- ⭐ 行動裝置 UI 優化
 
-GitHub Repository
-↓
+---
 
-Clone 到本機
-
-↓
-
-VS Code 開發
-
-↓
-
-Commit
-
-↓
-
-Push
-
-↓
-
-GitHub Pages 自動更新
-
-不再直接於 GitHub 網頁編輯程式碼。
+更新日期：2026-07-15
+狀態：🟢 開發中（Leaflet 遷移約 90% 完成）

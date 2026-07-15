@@ -155,6 +155,8 @@ function renderSidebar(cams){
 /* ── 地圖標記 ── */
 function renderMarkers(cams){
 
+  const markerRadius = window.innerWidth <= 900 ? 10 : 8;
+  
   markers.forEach(m=>{
     map.removeLayer(m);
   });
@@ -168,7 +170,7 @@ function renderMarkers(cams){
     const marker=L.circleMarker(
       [c.y,c.x],
       {
-        radius:7,
+        radius: markerRadius,
         fillColor:"#2563eb",
         fillOpacity:.85,
         color:"#ffffff",
