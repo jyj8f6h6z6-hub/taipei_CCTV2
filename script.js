@@ -1,5 +1,5 @@
-const GMAPS_KEY = "AIzaSyAKHPmFjSg3vu0c7QUDcImysmikQ1l9gfo";
-const DATA_URL  = "./cctv.csv";
+const API_URL =
+  "https://data.taipei/api/v1/dataset/d317a3c4-ff08-48af-894e-31dfb5155de3?scope=resourceAquire&limit=1000";
 
 const DISTRICTS = ["中正區","大同區","中山區","松山區","大安區","萬華區",
                    "信義區","士林區","北投區","內湖區","南港區","文山區"];
@@ -29,21 +29,6 @@ function cleanName(raw){
 function playerUrl(id){
   return `https://hls.bote.gov.taipei/live/index.html?id=${encodeURIComponent(id)}`;
 }
-function parseCSV(text){
-  const rows=[];let row=[],cell="",q=false;
-  for(let i=0;i<text.length;i++){
-    const c=text[i],n=text[i+1];
-    if(c==='"'&&q&&n==='"'){cell+='"';i++;}
-    else if(c==='"'){q=!q;}
-    else if(c===","&&!q){row.push(cell);cell="";}
-    else if((c==="\n"||c==="\r")&&!q){
-      if(cell||row.length){row.push(cell);rows.push(row);row=[];cell="";}
-      if(c==="\r"&&n==="\n")i++;
-    }else cell+=c;
-  }
-  if(cell||row.length){row.push(cell);rows.push(row);}
-  return rows;
-}
 
 let allCams = [];
 let map;
@@ -53,28 +38,47 @@ let activeSidebarItem = null;
 let userLocationMarker = null;
 let currentUserPosition = null;
 
-/* ── 載入 CSV ── */
+/* ── 從臺北市資料大平臺 API 載入資料 ── */
 async function loadData() {
   const status = document.getElementById("status");
-  status.textContent = "載入 cctv.csv 中……";
+  status.textContent = "正在載入臺北市 CCTV 開放資料……";
 
-  const res = await fetch(DATA_URL, {
+  const res = await fetch(API_URL, {
     cache: "no-store"
   });
 
   if (!res.ok) {
-    throw new Error(`HTTP ${res.status}`);
+    throw new Error(`API 連線失敗，HTTP ${res.status}`);
   }
 
-  const buf = await res.arrayBuffer();
-  const text = new TextDecoder("big5").decode(buf);
-  const rows = parseCSV(text.trim());
+  const json = await res.json();
+  const rows = json.result?.results;
 
-  allCams = rows.slice(1).map(p => {
-    const rawName = p[2]?.trim();
-    const id = rawName?.match(/^\d+/)?.[0];
-    const x = parseFloat(p[3]);
-    const y = parseFloat(p[4]);
+  if (!Array.isArray(rows)) {
+    console.error("API 回傳內容：", json);
+    throw new Error("API 回傳格式不正確");
+  }
+
+  allCams = rows.map(row => {
+    const rawName = String(
+      row["攝影機編號位置"] ||
+      row["攝影機編號及位置"] ||
+      ""
+    ).trim();
+
+    const id = rawName.match(/^\d+/)?.[0];
+
+    const x = parseFloat(
+      row["WGSX"] ??
+      row["WGS84經度座標"] ??
+      row["WGSX(WGS84經度座標)"]
+    );
+
+    const y = parseFloat(
+      row["WGSY"] ??
+      row["WGS84緯度座標"] ??
+      row["WGSY(WGS84緯度座標)"]
+    );
 
     return {
       id,
@@ -85,10 +89,10 @@ async function loadData() {
       district: districtByCoord(x, y),
       url: playerUrl(id)
     };
-  }).filter(c =>
-    c.id &&
-    Number.isFinite(c.x) &&
-    Number.isFinite(c.y)
+  }).filter(cam =>
+    cam.id &&
+    Number.isFinite(cam.x) &&
+    Number.isFinite(cam.y)
   );
 
   buildDistrictOptions();
