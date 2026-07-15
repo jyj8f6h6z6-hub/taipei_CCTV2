@@ -60,6 +60,7 @@ async function loadData() {
 
   allCams = rows.map(row => {
     const rawName = String(
+      row["攝影機編號"] ||
       row["攝影機編號位置"] ||
       row["攝影機編號及位置"] ||
       ""
@@ -68,12 +69,14 @@ async function loadData() {
     const id = rawName.match(/^\d+/)?.[0];
 
     const x = parseFloat(
+      row["wgsx"] ??
       row["WGSX"] ??
       row["WGS84經度座標"] ??
       row["WGSX(WGS84經度座標)"]
     );
 
     const y = parseFloat(
+      row["wgsy"] ??
       row["WGSY"] ??
       row["WGS84緯度座標"] ??
       row["WGSY(WGS84緯度座標)"]
