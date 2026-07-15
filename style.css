@@ -110,11 +110,31 @@
     .iw-title{font-weight:800;font-size:14px;margin-bottom:6px;line-height:1.4}
     .iw-meta{font-size:12px;color:#6b7280;margin-bottom:10px}
     .iw-btn{
-      display:inline-block;background:#2563eb;color:#fff;
-      font-size:13px;font-weight:700;padding:7px 14px;
-      border-radius:8px;text-decoration:none;
+      display:inline-block;
+      background:#2563eb !important;
+      color:#ffffff !important;
+      font-size:13px;
+      font-weight:700;
+      padding:8px 14px;
+      border-radius:8px;
+      text-decoration:none !important;
+      line-height:1.2;
     }
-    .iw-btn:hover{background:#1d4ed8}
+
+    .iw-btn:visited{
+      color:#ffffff !important;
+    }
+
+    .iw-btn:hover{
+      background:#1d4ed8 !important;
+      color:#ffffff !important;
+    }
+
+    .leaflet-popup-content .iw-btn{
+      color:#ffffff !important;
+    }
+
+    
 
     /* ── Mobile ── */
     /* ── 手機版 ── */

@@ -154,53 +154,88 @@ function renderSidebar(cams){
 
 /* ── 地圖標記 ── */
 function renderMarkers(cams){
-  markers.forEach(m=>m.setMap(null));
+
+  markers.forEach(m=>{
+    map.removeLayer(m);
+  });
+
   markers=[];
+
   if(!map)return;
-  if(infoWindow)infoWindow.close();
 
   cams.forEach(c=>{
-    const marker=new google.maps.Marker({
-      position:{lat:c.y,lng:c.x},
-      map,
-      title:c.name,
-      icon:{
-        path:google.maps.SymbolPath.CIRCLE,
-        scale:7,
+
+    const marker=L.circleMarker(
+      [c.y,c.x],
+      {
+        radius:7,
         fillColor:"#2563eb",
         fillOpacity:.85,
-        strokeColor:"#fff",
-        strokeWeight:2,
+        color:"#ffffff",
+        weight:2
       }
-    });
+    );
+
     marker.camData=c;
-    marker.addListener("click",()=>openInfo(marker));
+
+    marker.on("click",()=>{
+      openInfo(marker);
+    });
+
+    marker.addTo(map);
+
     markers.push(marker);
+
   });
+
 }
 
 /* ── Info Window ── */
 function openInfo(marker){
   const c=marker.camData;
-  if(infoWindow)infoWindow.close();
-  infoWindow=new google.maps.InfoWindow({
-    content:`<div class="iw-wrap">
+
+  const content=`
+    <div class="iw-wrap">
       <div class="iw-title">${esc(c.name)}</div>
-      <div class="iw-meta">ID ${esc(c.id)} ・ ${esc(c.district)}</div>
-      <a class="iw-btn" href="${c.url}" target="_blank" rel="noopener">▶ 開啟即時影像</a>
-    </div>`
+      <div class="iw-meta">
+        ID ${esc(c.id)} ・ ${esc(c.district)}
+      </div>
+      <a
+        class="iw-btn"
+        href="${c.url}"
+        target="_blank"
+        rel="noopener"
+      >
+        ▶ 開啟即時影像
+      </a>
+    </div>
+  `;
+
+  marker.bindPopup(content,{
+    maxWidth:280
   });
-  infoWindow.open(map,marker);
+
+  marker.openPopup();
+
   highlightSidebar(c.id);
 }
 
 /* ── 側欄點擊 → 地圖飛到該點 ── */
 function focusCam(id){
   const marker=markers.find(m=>m.camData.id===id);
+
   if(!marker)return;
-  map.panTo(marker.getPosition());
-  map.setZoom(16);
+
+  map.setView(
+    marker.getLatLng(),
+    16,
+    {
+      animate:true
+    }
+  );
+
   openInfo(marker);
+
   // 捲動側欄高亮
   highlightSidebar(id);
 }
@@ -211,8 +246,70 @@ function highlightSidebar(id){
   if(el){el.classList.add("active");el.scrollIntoView({block:"nearest"});activeSidebarItem=el;}
 }
 
+function distanceInMeters(position1, position2) {
+  const earthRadius = 6371000;
+
+  const lat1 = position1.lat * Math.PI / 180;
+  const lat2 = position2.lat * Math.PI / 180;
+
+  const deltaLat =
+    (position2.lat - position1.lat) * Math.PI / 180;
+
+  const deltaLng =
+    (position2.lng - position1.lng) * Math.PI / 180;
+
+  const a =
+    Math.sin(deltaLat / 2) ** 2 +
+    Math.cos(lat1) *
+    Math.cos(lat2) *
+    Math.sin(deltaLng / 2) ** 2;
+
+  const c =
+    2 * Math.atan2(
+      Math.sqrt(a),
+      Math.sqrt(1 - a)
+    );
+
+  return earthRadius * c;
+}
+
+function findNearestCam(userPosition) {
+  if (!userPosition || allCams.length === 0) {
+    return null;
+  }
+
+  let nearest = null;
+
+  allCams.forEach(cam => {
+    const distance = distanceInMeters(
+      userPosition,
+      {
+        lat: cam.y,
+        lng: cam.x
+      }
+    );
+
+    if (!nearest || distance < nearest.distance) {
+      nearest = {
+        cam,
+        distance
+      };
+    }
+  });
+
+  return nearest;
+}
+
+function formatDistance(distance) {
+  if (distance < 1000) {
+    return `${Math.round(distance)} 公尺`;
+  }
+
+  return `${(distance / 1000).toFixed(1)} 公里`;
+}
+
 /* ── 使用者定位 ── */
-function locateUser() {
+  function locateUser() {
   const button = document.getElementById("locationBtn");
   const status = document.getElementById("status");
 
@@ -235,26 +332,31 @@ function locateUser() {
       const userPosition = currentUserPosition;
 
       if (userLocationMarker) {
-        userLocationMarker.setMap(null);
+      map.removeLayer(userLocationMarker);
+    }
+
+    userLocationMarker = L.circleMarker(
+      [userPosition.lat, userPosition.lng],
+      {
+        radius:9,
+        fillColor:"#ef4444",
+        fillOpacity:1,
+        color:"#ffffff",
+        weight:3
       }
+    );
 
-      userLocationMarker = new google.maps.Marker({
-        position: userPosition,
-        map: map,
-        title: "我的位置",
-        zIndex: 9999,
-        icon: {
-          path: google.maps.SymbolPath.CIRCLE,
-          scale: 9,
-          fillColor: "#ef4444",
-          fillOpacity: 1,
-          strokeColor: "#ffffff",
-          strokeWeight: 3
-        }
-      });
+    userLocationMarker
+      .bindTooltip("我的位置")
+      .addTo(map);
 
-      map.panTo(userPosition);
-      map.setZoom(16);
+    map.setView(
+      [userPosition.lat, userPosition.lng],
+      16,
+      {
+        animate:true
+      }
+    );
 
       button.disabled = false;
       button.textContent = "📍 我的位置";
@@ -305,24 +407,26 @@ function esc(s){
 }
 
 /* ── Google Maps 初始化 ── */
-window.initMap=async function(){
-  map=new google.maps.Map(document.getElementById("map"),{
-    center:{lat:25.0478,lng:121.5318},
-    zoom:12,
-    mapTypeControl:false,
-    fullscreenControl:true,
-    streetViewControl:false,
-    styles:[
-      {featureType:"poi",elementType:"labels",stylers:[{visibility:"off"}]},
-      {featureType:"transit",elementType:"labels",stylers:[{visibility:"off"}]},
-    ]
-  });
-  infoWindow=new google.maps.InfoWindow();
+window.initMap = async function () {
+  map = L.map("map").setView(
+    [25.0478, 121.5318],
+    12
+  );
 
-  try{
+  L.tileLayer(
+    "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
+    {
+      maxZoom: 19,
+      attribution:
+        '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+    }
+  ).addTo(map);
+
+  try {
     await loadData();
-  }catch(err){
-    document.getElementById("status").textContent="載入失敗："+err.message;
+  } catch (err) {
+    document.getElementById("status").textContent =
+      "載入失敗：" + err.message;
   }
 };
 
