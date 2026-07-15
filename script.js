@@ -51,23 +51,45 @@ let infoWindow;
 let markers = [];
 let activeSidebarItem = null;
 let userLocationMarker = null;
+let currentUserPosition = null;
 
 /* ── 載入 CSV ── */
-async function loadData(){
-  document.getElementById("status").textContent="載入 cctv.csv 中……";
-  const res = await fetch(DATA_URL,{cache:"no-store"});
-  if(!res.ok) throw new Error("HTTP "+res.status);
+async function loadData() {
+  const status = document.getElementById("status");
+  status.textContent = "載入 cctv.csv 中……";
+
+  const res = await fetch(DATA_URL, {
+    cache: "no-store"
+  });
+
+  if (!res.ok) {
+    throw new Error(`HTTP ${res.status}`);
+  }
+
   const buf = await res.arrayBuffer();
   const text = new TextDecoder("big5").decode(buf);
-  const lines = text.trim().split(/\r?\n/);
-  allCams = lines.slice(1).map(line=>{
-    const p=line.split(",");
-    const rawName=p[2]?.trim();
-    const id=rawName?.match(/^\d+/)?.[0];
-    const x=parseFloat(p[3]), y=parseFloat(p[4]);
-    return {id,name:cleanName(rawName),rawName,x,y,
-            district:districtByCoord(x,y),url:playerUrl(id)};
-  }).filter(c=>c.id&&Number.isFinite(c.x)&&Number.isFinite(c.y));
+  const rows = parseCSV(text.trim());
+
+  allCams = rows.slice(1).map(p => {
+    const rawName = p[2]?.trim();
+    const id = rawName?.match(/^\d+/)?.[0];
+    const x = parseFloat(p[3]);
+    const y = parseFloat(p[4]);
+
+    return {
+      id,
+      name: cleanName(rawName),
+      rawName,
+      x,
+      y,
+      district: districtByCoord(x, y),
+      url: playerUrl(id)
+    };
+  }).filter(c =>
+    c.id &&
+    Number.isFinite(c.x) &&
+    Number.isFinite(c.y)
+  );
 
   buildDistrictOptions();
   render();
@@ -199,10 +221,12 @@ function locateUser() {
 
   navigator.geolocation.getCurrentPosition(
     position => {
-      const userPosition = {
+      currentUserPosition = {
         lat: position.coords.latitude,
         lng: position.coords.longitude
       };
+
+      const userPosition = currentUserPosition;
 
       if (userLocationMarker) {
         userLocationMarker.setMap(null);
@@ -226,9 +250,24 @@ function locateUser() {
       map.panTo(userPosition);
       map.setZoom(16);
 
-      status.textContent = "已定位到你目前的位置。";
       button.disabled = false;
       button.textContent = "📍 我的位置";
+
+      const nearest = findNearestCam(userPosition);
+
+      if (nearest) {
+        status.textContent =
+          `已完成定位。最近的 CCTV 是「${nearest.cam.name}」，` +
+          `距離約 ${formatDistance(nearest.distance)}。`;
+
+        /*
+        * 定位完成後自動前往最近 CCTV。
+        * 不希望自動跳轉時，可以移除下一行。
+        */
+        focusNearestCam();
+      } else {
+        status.textContent = "已定位，但目前沒有可用的 CCTV 資料。";
+      }
     },
 
     error => {
