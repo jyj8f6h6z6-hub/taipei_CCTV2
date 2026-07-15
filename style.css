@@ -117,10 +117,12 @@
     .iw-btn:hover{background:#1d4ed8}
 
     /* ── Mobile ── */
-    @media(max-width:700px){
+    /* ── 手機版 ── */
+@media screen and (max-width:900px){
 
   header{
     width:100%;
+    max-width:100%;
     padding:10px 12px;
   }
 
@@ -128,13 +130,15 @@
     display:flex;
     flex-direction:column;
     align-items:stretch;
-    gap:8px;
     width:100%;
     min-width:0;
+    gap:8px;
   }
 
   h1{
+    display:block;
     width:100%;
+    max-width:100%;
     font-size:16px;
     white-space:normal;
   }
@@ -142,31 +146,38 @@
   .controls{
     display:grid;
     grid-template-columns:minmax(0,1fr) auto;
-    gap:8px;
     width:100%;
+    max-width:100%;
     min-width:0;
+    gap:8px;
   }
 
   .controls input{
+    display:block;
     grid-column:1 / -1;
     width:100%;
     min-width:0;
+    max-width:100%;
   }
 
   .controls select{
+    display:block;
     width:100%;
     min-width:0;
+    max-width:100%;
   }
 
   #locationBtn{
+    display:block;
     width:auto;
+    min-width:0;
     max-width:100%;
     padding:8px 12px;
   }
 
   .status-bar{
     width:100%;
-    overflow-wrap:anywhere;
+    max-width:100%;
   }
 
   .body{
@@ -179,9 +190,9 @@
 
   .sidebar{
     width:100%;
+    min-width:0;
     max-width:100%;
     height:220px;
-    min-width:0;
     border-right:none;
     border-top:1px solid var(--line);
   }
