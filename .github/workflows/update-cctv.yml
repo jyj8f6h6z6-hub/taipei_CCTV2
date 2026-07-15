@@ -1,0 +1,59 @@
+name: 更新 CCTV 資料
+
+on:
+  workflow_dispatch:
+
+  schedule:
+    - cron: "20 18 * * *"
+
+permissions:
+  contents: write
+
+jobs:
+  update-cctv:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 取得網站程式
+        uses: actions/checkout@v4
+
+      - name: 從臺北市資料平台下載 CCTV 資料
+        run: |
+          curl --fail --location \
+            --retry 3 \
+            --retry-delay 5 \
+            --output cctv.json \
+            "https://data.taipei/api/v1/dataset/d317a3c4-ff08-48af-894e-31dfb5155de3?scope=resourceAquire&limit=1000"
+
+      - name: 檢查下載的檔案
+        run: |
+          python - <<'PY'
+          import json
+
+          with open("cctv.json", "r", encoding="utf-8") as file:
+              data = json.load(file)
+
+          rows = data.get("result", {}).get("results")
+
+          if not isinstance(rows, list):
+              raise SystemExit("API 回傳格式不正確，找不到 result.results")
+
+          if len(rows) == 0:
+              raise SystemExit("API 沒有回傳任何 CCTV 資料")
+
+          print(f"成功取得 {len(rows)} 筆 CCTV 資料")
+          PY
+
+      - name: 儲存更新後的資料
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+          git add cctv.json
+
+          if git diff --cached --quiet; then
+            echo "資料沒有變更，不需要更新。"
+          else
+            git commit -m "自動更新 CCTV 資料"
+            git push
+          fi
