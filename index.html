@@ -1,56 +1,94 @@
 <!doctype html>
 <html lang="zh-Hant">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta charset="utf-8">
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1, viewport-fit=cover"
+  >
+
   <title>台北市道路 CCTV</title>
-  <meta name="description" content="台北市道路 CCTV 地圖，點選圖釘開啟官方即時影像。" />
+
+  <meta
+    name="description"
+    content="台北市道路 CCTV 地圖，點選圖釘開啟官方即時影像。"
+  >
+
+  <!-- Leaflet 地圖樣式 -->
   <link
     rel="stylesheet"
     href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
     integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
     crossorigin=""
   >
+
+  <!-- 你的網站樣式 -->
   <link rel="stylesheet" href="style.css?v=2">
+
+  <!-- 不顯示 favicon 404 錯誤 -->
   <link rel="icon" href="data:,">
-  
 </head>
+
 <body>
 
-<header>
-  <div class="header-row">
-    <h1>🗺 台北市道路 CCTV</h1>
-    <div class="controls">
-      <input id="q" placeholder="搜尋路名、行政區…" />
+  <header>
+    <div class="header-row">
+      <h1>🗺 台北市道路 CCTV</h1>
 
-      <select id="districtFilter">
-        <option value="全部">全部行政區</option>
-      </select>
+      <div class="controls">
+        <input
+          id="q"
+          type="search"
+          placeholder="搜尋路名、行政區…"
+          aria-label="搜尋 CCTV"
+        >
 
-      <button id="locationBtn" type="button">
-        📍 我的位置
-      </button>
+        <select
+          id="districtFilter"
+          aria-label="選擇行政區"
+        >
+          <option value="全部">全部行政區</option>
+        </select>
+
+        <button
+          id="locationBtn"
+          type="button"
+        >
+          📍 我的位置
+        </button>
+      </div>
     </div>
-  </div>
-  <div class="status-bar" id="status">載入中……</div>
-</header>
 
-<div class="body">
-  <div class="sidebar" id="sidebar"></div>
-  <div id="map"></div>
-</div>
+    <div
+      class="status-bar"
+      id="status"
+      aria-live="polite"
+    >
+      載入中……
+    </div>
+  </header>
 
-<script
-  src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
-  integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
-  crossorigin="">
-</script>
+  <main class="body">
+    <aside
+      class="sidebar"
+      id="sidebar"
+    ></aside>
 
-<script src="script.js"></script>
+    <div
+      id="map"
+      aria-label="台北市道路 CCTV 地圖"
+    ></div>
+  </main>
 
-<script 
-  async 
-  src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAKHPmFjSg3vu0c7QUDcImysmikQ1l9gfo&callback=initMap&language=zh-TW&loading=async"></script>
-</script>
+  <!-- Leaflet 必須先載入 -->
+  <script
+    src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+    integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+    crossorigin=""
+  ></script>
+
+  <!-- 再載入你的 JavaScript -->
+  <script src="script.js"></script>
+
 </body>
 </html>

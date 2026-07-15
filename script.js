@@ -222,21 +222,22 @@ function openInfo(marker){
 
 /* ── 側欄點擊 → 地圖飛到該點 ── */
 function focusCam(id){
-  const marker=markers.find(m=>m.camData.id===id);
+  const marker = markers.find(
+    m => m.camData.id === id
+  );
 
-  if(!marker)return;
+  if(!marker) return;
 
-  map.setView(
+  map.flyTo(
     marker.getLatLng(),
     16,
     {
-      animate:true
+      animate: true,
+      duration: 0.8
     }
   );
 
   openInfo(marker);
-
-  // 捲動側欄高亮
   highlightSidebar(id);
 }
 
@@ -372,7 +373,7 @@ function formatDistance(distance) {
         * 定位完成後自動前往最近 CCTV。
         * 不希望自動跳轉時，可以移除下一行。
         */
-        focusNearestCam();
+        //focusNearestCam();
       } else {
         status.textContent = "已定位，但目前沒有可用的 CCTV 資料。";
       }
@@ -433,3 +434,33 @@ window.initMap = async function () {
 document.getElementById("q").addEventListener("input",render);
 document.getElementById("districtFilter").addEventListener("change",render);
 document.getElementById("locationBtn").addEventListener("click", locateUser);
+
+window.initMap = async function () {
+  map = L.map("map").setView(
+    [25.0478, 121.5318],
+    12
+  );
+
+  L.tileLayer(
+    "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
+    {
+      maxZoom: 19,
+      attribution:
+        '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+    }
+  ).addTo(map);
+
+  try {
+    await loadData();
+  } catch (err) {
+    document.getElementById("status").textContent =
+      "載入失敗：" + err.message;
+  }
+};
+
+document.getElementById("q").addEventListener("input", render);
+document.getElementById("districtFilter").addEventListener("change", render);
+document.getElementById("locationBtn").addEventListener("click", locateUser);
+
+/* 啟動 Leaflet 地圖 */
+initMap();
