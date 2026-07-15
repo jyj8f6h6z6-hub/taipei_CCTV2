@@ -45,7 +45,12 @@ function parseCSV(text){
   return rows;
 }
 
-let allCams=[], map, infoWindow, markers=[], activeSidebarItem=null;
+let allCams = [];
+let map;
+let infoWindow;
+let markers = [];
+let activeSidebarItem = null;
+let userLocationMarker = null;
 
 /* ── 載入 CSV ── */
 async function loadData(){
@@ -178,6 +183,78 @@ function highlightSidebar(id){
   if(el){el.classList.add("active");el.scrollIntoView({block:"nearest"});activeSidebarItem=el;}
 }
 
+/* ── 使用者定位 ── */
+function locateUser() {
+  const button = document.getElementById("locationBtn");
+  const status = document.getElementById("status");
+
+  if (!navigator.geolocation) {
+    status.textContent = "你的瀏覽器不支援定位功能。";
+    return;
+  }
+
+  button.disabled = true;
+  button.textContent = "定位中…";
+  status.textContent = "正在取得你的位置……";
+
+  navigator.geolocation.getCurrentPosition(
+    position => {
+      const userPosition = {
+        lat: position.coords.latitude,
+        lng: position.coords.longitude
+      };
+
+      if (userLocationMarker) {
+        userLocationMarker.setMap(null);
+      }
+
+      userLocationMarker = new google.maps.Marker({
+        position: userPosition,
+        map: map,
+        title: "我的位置",
+        zIndex: 9999,
+        icon: {
+          path: google.maps.SymbolPath.CIRCLE,
+          scale: 9,
+          fillColor: "#ef4444",
+          fillOpacity: 1,
+          strokeColor: "#ffffff",
+          strokeWeight: 3
+        }
+      });
+
+      map.panTo(userPosition);
+      map.setZoom(16);
+
+      status.textContent = "已定位到你目前的位置。";
+      button.disabled = false;
+      button.textContent = "📍 我的位置";
+    },
+
+    error => {
+      let message = "無法取得你的位置。";
+
+      if (error.code === error.PERMISSION_DENIED) {
+        message = "你沒有允許定位權限，請在瀏覽器設定中允許位置存取。";
+      } else if (error.code === error.POSITION_UNAVAILABLE) {
+        message = "目前無法取得位置資訊。";
+      } else if (error.code === error.TIMEOUT) {
+        message = "定位逾時，請再試一次。";
+      }
+
+      status.textContent = message;
+      button.disabled = false;
+      button.textContent = "📍 我的位置";
+    },
+
+    {
+      enableHighAccuracy: true,
+      timeout: 10000,
+      maximumAge: 60000
+    }
+  );
+}
+
 function esc(s){
   return String(s).replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]));
 }
@@ -206,3 +283,4 @@ window.initMap=async function(){
 
 document.getElementById("q").addEventListener("input",render);
 document.getElementById("districtFilter").addEventListener("change",render);
+document.getElementById("locationBtn").addEventListener("click", locateUser);

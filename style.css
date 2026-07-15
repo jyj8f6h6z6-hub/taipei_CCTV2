@@ -16,13 +16,39 @@
     .header-row{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
     h1{font-size:18px;font-weight:800;white-space:nowrap}
     .controls{display:flex;gap:8px;flex:1;min-width:0}
-    input,select{
+    input,select,button{
       font-size:14px;border:1.5px solid var(--line);border-radius:10px;
       padding:8px 12px;background:#fff;color:var(--text);outline:none;
       transition:border-color .15s;
     }
     input{flex:1;min-width:0}
-    input:focus,select:focus{border-color:var(--accent)}
+    input:focus,
+    select:focus,
+    button:focus{
+    border-color:var(--accent);
+    }
+    #locationBtn{
+        flex-shrink:0;
+        border:1.5px solid var(--accent);
+        border-radius:10px;
+        padding:8px 12px;
+        background:var(--accent);
+        color:#fff;
+        font-size:14px;
+        font-weight:700;
+        cursor:pointer;
+        white-space:nowrap;
+        transition:background .15s,opacity .15s;
+    }
+
+        #locationBtn:hover{
+        background:#1d4ed8;
+    }
+
+        #locationBtn:disabled{
+        cursor:wait;
+        opacity:.65;
+    }
     .status-bar{font-size:12px;color:var(--muted);margin-top:6px}
 
     /* ── Body: map + sidebar ── */
