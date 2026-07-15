@@ -1,5 +1,4 @@
-const API_URL =
-  "https://data.taipei/api/v1/dataset/d317a3c4-ff08-48af-894e-31dfb5155de3?scope=resourceAquire&limit=1000";
+const API_URL = "./cctv.json";
 
 const DISTRICTS = ["中正區","大同區","中山區","松山區","大安區","萬華區",
                    "信義區","士林區","北投區","內湖區","南港區","文山區"];
