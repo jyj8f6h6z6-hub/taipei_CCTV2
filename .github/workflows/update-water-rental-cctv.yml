@@ -1,0 +1,533 @@
+name: 更新水情租賃 CCTV 資料
+
+on:
+  workflow_dispatch:
+
+  schedule:
+    # 臺灣時間每天凌晨 03:50
+    # GitHub Actions cron 使用 UTC，因此為前一天 19:50
+    - cron: "50 19 * * *"
+
+permissions:
+  contents: write
+
+jobs:
+  update-water-rental-cctv:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 取得網站程式
+        uses: actions/checkout@v4
+
+      - name: 安裝 Python 套件
+        run: |
+          python -m pip install --upgrade pip
+          pip install requests
+
+      - name: 下載並整理水情租賃 CCTV
+        env:
+          RENTAL_CCTV_API: "https://heovcenter.gov.taipei/cia/WebLayout/GetCCTVGroupByTaican"
+          RENTAL_COORDINATES_FILE: "water-rental-cctv-coordinates.csv"
+        run: |
+          python - <<'PY'
+          import csv
+          import hashlib
+          import json
+          import os
+          import re
+          import unicodedata
+
+          import requests
+
+
+          api_url = os.environ["RENTAL_CCTV_API"].strip()
+          coordinates_file = os.environ["RENTAL_COORDINATES_FILE"].strip()
+
+          session = requests.Session()
+          session.headers.update({
+              "User-Agent": (
+                  "Mozilla/5.0 "
+                  "taipei-cctv-map-github-action/1.0"
+              ),
+              "Accept": "application/json, text/javascript, */*; q=0.01",
+              "Referer": (
+                  "https://heovcenter.gov.taipei/"
+                  "cia/WebLayout/Index"
+              ),
+              "X-Requested-With": "XMLHttpRequest",
+          })
+
+
+          def normalize_text(value):
+              text = unicodedata.normalize(
+                  "NFKC",
+                  str(value or ""),
+              )
+              text = text.strip()
+              text = text.replace("臺", "台")
+              text = text.replace("汙", "污")
+              text = text.replace("狀", "状")
+              text = re.sub(
+                  r"^(?:水情|科技執法)CCTV\d+\s*[-－—]\s*",
+                  "",
+                  text,
+                  flags=re.IGNORECASE,
+              )
+              text = re.sub(
+                  r"\(\s*科技執法\s*\)",
+                  "",
+                  text,
+              )
+              text = text.replace("（", "(").replace("）", ")")
+              text = re.sub(r"\s+", "", text)
+              text = re.sub(r"\)+$", ")", text)
+              return text
+
+
+          # API 名稱與座標表名稱不完全一致的項目。
+          aliases = {
+              normalize_text("百齡橋"):
+                  normalize_text("百齡橋(水尺)"),
+              normalize_text("臺北橋"):
+                  normalize_text("臺北橋(水尺)"),
+              normalize_text("景美抽水站(福和橋)"):
+                  normalize_text("景美抽水站"),
+              normalize_text("婆婆橋"):
+                  normalize_text("婆婆橋(上游)"),
+              normalize_text("神大排木棧道"):
+                  normalize_text("神大排"),
+              normalize_text("東大排公園及停車場"):
+                  normalize_text("東大排"),
+              normalize_text("西大排攔汙柵"):
+                  normalize_text("西大排"),
+              normalize_text("華中堤外防汛道路(景觀廁所旁)"):
+                  normalize_text("華中堤外防汛道路1"),
+              normalize_text("中興橋"):
+                  normalize_text("中興橋(機車道淹水狀況)"),
+              normalize_text(
+                  "景美橋進景美溪河濱公園入口"
+                  "(鏡頭往下游)"
+              ):
+                  normalize_text(
+                      "景美溪橋進景美溪河濱公園入口"
+                      "(鏡頭往下游)"
+                  ),
+              normalize_text("大佳河濱公園1"):
+                  normalize_text("大佳河濱公園1"),
+              normalize_text("大佳河濱公園2"):
+                  normalize_text("大佳河濱公園2"),
+              normalize_text("大佳8號門"):
+                  normalize_text("大佳8號門"),
+              normalize_text(
+                  "基隆河左岸中山橋上游"
+                  "(鏡頭往下游)"
+              ):
+                  normalize_text(
+                      "基隆河左岸中山橋下游"
+                      "(鏡頭往下游)"
+                  ),
+              normalize_text(
+                  "基隆河左岸中山橋下游"
+                  "(鏡頭往上游)"
+              ):
+                  normalize_text(
+                      "基隆河左岸中山橋上游"
+                      "(鏡頭往上游)"
+                  ),
+              normalize_text("指南溪-政大濟賢橋-鏡頭往上游"):
+                  normalize_text("指南溪-政大濟賢橋往上游"),
+              normalize_text("指南溪-政大濟賢橋-鏡頭往下游"):
+                  normalize_text("指南溪-政大濟賢橋往下游"),
+              normalize_text("政大濟賢橋-鏡頭往上游"):
+                  normalize_text("指南溪-政大濟賢橋往上游"),
+              normalize_text("政大濟賢橋-鏡頭往下游"):
+                  normalize_text("指南溪-政大濟賢橋往下游"),
+              normalize_text("指南溪-棒球場附近"):
+                  normalize_text("指南溪-棒球場附近"),
+              normalize_text("內溝溪-01-往上游方向"):
+                  "__內溝溪01__",
+              normalize_text("內溝溪-02-往木棧道方向"):
+                  normalize_text("內溝溪-往木棧道方向"),
+              normalize_text("內溝溪-03-往新北走道方向"):
+                  normalize_text("內溝溪-往新北走道方向"),
+              normalize_text("內溝溪-04-往涼亭方向"):
+                  normalize_text("內溝溪-往涼亭方向"),
+              normalize_text("內溝溪-05-往河邊及走道方向"):
+                  normalize_text("內溝溪-往河邊及走道方向"),
+              normalize_text("內溝溪-06-往河邊及涼亭方向"):
+                  normalize_text("內溝溪-往河邊及涼亭方向"),
+              normalize_text("內溝溪-07-往橋旁斜坡方向"):
+                  normalize_text("內溝溪-往橋旁斜坡方向"),
+              normalize_text("內溝溪-08-往上游方向"):
+                  "__內溝溪08__",
+              normalize_text("內溝溪-09-往行人自行車道方向"):
+                  normalize_text("內溝溪-往行人自行車道方向"),
+          }
+
+
+          def load_coordinates(path):
+              positions = {}
+              duplicate_positions = {}
+
+              with open(
+                  path,
+                  "r",
+                  encoding="utf-8-sig",
+                  newline="",
+              ) as file:
+                  reader = csv.DictReader(file)
+
+                  required = {
+                      "kind",
+                      "number",
+                      "station_name",
+                      "lng",
+                      "lat",
+                  }
+
+                  if not required.issubset(reader.fieldnames or []):
+                      raise SystemExit(
+                          "座標 CSV 缺少必要欄位："
+                          f"{sorted(required)}"
+                      )
+
+                  for row in reader:
+                      raw_name = row["station_name"].strip()
+                      name = normalize_text(raw_name)
+
+                      try:
+                          lng = float(row["lng"])
+                          lat = float(row["lat"])
+                      except ValueError:
+                          raise SystemExit(
+                              f"座標格式錯誤：{raw_name}"
+                          )
+
+                      item = {
+                          "kind": row["kind"].strip(),
+                          "number": row["number"].strip(),
+                          "stationName": raw_name,
+                          "longitude": lng,
+                          "latitude": lat,
+                      }
+
+                      duplicate_positions.setdefault(
+                          name,
+                          [],
+                      ).append(item)
+
+                      if name not in positions:
+                          positions[name] = item
+
+              # 兩筆「內溝溪-往上游方向」必須靠 API 編號區分。
+              upstream_key = normalize_text(
+                  "內溝溪-往上游方向"
+              )
+              upstream_rows = duplicate_positions.get(
+                  upstream_key,
+                  [],
+              )
+
+              if len(upstream_rows) >= 2:
+                  positions["__內溝溪01__"] = upstream_rows[0]
+                  positions["__內溝溪08__"] = upstream_rows[1]
+
+              return positions
+
+
+          print("下載水情租賃 CCTV API……")
+          response = session.get(api_url, timeout=45)
+          response.raise_for_status()
+          data = response.json()
+
+          groups = data.get("d")
+
+          if not isinstance(groups, list):
+              print(
+                  json.dumps(
+                      data,
+                      ensure_ascii=False,
+                      indent=2,
+                  )[:3000]
+              )
+              raise SystemExit(
+                  "租賃 CCTV API 格式不正確，找不到 d。"
+              )
+
+          positions = load_coordinates(coordinates_file)
+
+          output = []
+          unmatched = []
+          seen_stream_urls = set()
+          used_coordinate_numbers = set()
+          source_count = 0
+
+          for group in groups:
+              if not isinstance(group, dict):
+                  continue
+
+              category = str(
+                  group.get("Name") or ""
+              ).strip()
+
+              cameras = group.get("Cctvs") or []
+
+              if not isinstance(cameras, list):
+                  continue
+
+              for camera in cameras:
+                  if not isinstance(camera, dict):
+                      continue
+
+                  source_count += 1
+
+                  name = str(
+                      camera.get("Name") or ""
+                  ).strip()
+
+                  stream_url = str(
+                      camera.get("Url") or ""
+                  ).strip()
+
+                  image_url = str(
+                      camera.get("ImageUrl") or ""
+                  ).strip()
+
+                  if not name or not stream_url:
+                      continue
+
+                  # 「科技執法」群組會再次列出其他群組已有的 URL。
+                  if stream_url in seen_stream_urls:
+                      continue
+
+                  seen_stream_urls.add(stream_url)
+
+                  lookup_key = normalize_text(name)
+                  lookup_key = aliases.get(
+                      lookup_key,
+                      lookup_key,
+                  )
+
+                  position = positions.get(lookup_key)
+
+                  if not position:
+                      unmatched.append({
+                          "name": name,
+                          "category": category,
+                          "streamUrl": stream_url,
+                          "imageUrl": image_url,
+                          "lookupKey": lookup_key,
+                      })
+                      continue
+
+                  used_coordinate_numbers.add(
+                      (
+                          position["kind"],
+                          position["number"],
+                      )
+                  )
+
+                  digest = hashlib.sha256(
+                      stream_url.encode("utf-8")
+                  ).hexdigest()[:16]
+
+                  output.append({
+                      "id": f"rental-{digest}",
+                      "name": name,
+                      "x": position["longitude"],
+                      "y": position["latitude"],
+                      # 現有前端直接開啟 url；
+                      # 以 JPG 當作預設連結較容易在瀏覽器顯示。
+                      "url": image_url or stream_url,
+                      "imageUrl": image_url,
+                      "streamUrl": stream_url,
+                      "type": "water-rental",
+                      "category": category,
+                      "coordinateKind": position["kind"],
+                      "coordinateNo": position["number"],
+                      "source": (
+                          "臺北市政府工務局"
+                          "水利工程處（水情租賃 CCTV）"
+                      ),
+                  })
+
+          all_coordinates = {
+              (
+                  item["kind"],
+                  item["number"],
+              ): item
+              for item in positions.values()
+              if isinstance(item, dict)
+              and item.get("kind")
+              and item.get("number")
+          }
+
+          unused_coordinates = [
+              {
+                  "kind": item["kind"],
+                  "number": item["number"],
+                  "stationName": item["stationName"],
+                  "longitude": item["longitude"],
+                  "latitude": item["latitude"],
+              }
+              for key, item in all_coordinates.items()
+              if key not in used_coordinate_numbers
+          ]
+
+          if not output:
+              raise SystemExit(
+                  "合併後沒有任何可用的水情租賃 CCTV。"
+              )
+
+          result = {
+              "count": len(output),
+              "sourceCount": source_count,
+              "results": output,
+              "unmatchedCount": len(unmatched),
+              "unmatched": unmatched,
+              "unusedCoordinateCount": len(
+                  unused_coordinates
+              ),
+              "unusedCoordinates": unused_coordinates,
+          }
+
+          with open(
+              "water-rental-cctv.json",
+              "w",
+              encoding="utf-8",
+          ) as file:
+              json.dump(
+                  result,
+                  file,
+                  ensure_ascii=False,
+                  indent=2,
+              )
+
+          print(
+              f"API 分類內原始資料：{source_count} 筆"
+          )
+          print(
+              f"成功產生：{len(output)} 筆"
+          )
+          print(
+              f"未配對 API：{len(unmatched)} 筆"
+          )
+          print(
+              "未使用座標："
+              f"{len(unused_coordinates)} 筆"
+          )
+
+          if unmatched:
+              print("未配對 API 前 30 筆：")
+              for item in unmatched[:30]:
+                  print(
+                      f'- [{item["category"]}] '
+                      f'{item["name"]}'
+                  )
+
+          if unused_coordinates:
+              print("未使用座標前 30 筆：")
+              for item in unused_coordinates[:30]:
+                  print(
+                      f'- {item["kind"]}-'
+                      f'{item["number"]} '
+                      f'{item["stationName"]}'
+                  )
+          PY
+
+      - name: 檢查輸出檔案
+        run: |
+          python - <<'PY'
+          import json
+
+          with open(
+              "water-rental-cctv.json",
+              "r",
+              encoding="utf-8",
+          ) as file:
+              data = json.load(file)
+
+          rows = data.get("results")
+
+          if not isinstance(rows, list) or not rows:
+              raise SystemExit(
+                  "water-rental-cctv.json "
+                  "沒有可用的 results。"
+              )
+
+          required = {
+              "id",
+              "name",
+              "x",
+              "y",
+              "url",
+              "imageUrl",
+              "streamUrl",
+              "type",
+              "category",
+              "source",
+          }
+
+          ids = set()
+          streams = set()
+
+          for index, row in enumerate(rows, start=1):
+              missing = required - row.keys()
+
+              if missing:
+                  raise SystemExit(
+                      f"第 {index} 筆缺少欄位："
+                      f"{sorted(missing)}"
+                  )
+
+              if row["id"] in ids:
+                  raise SystemExit(
+                      f"發現重複 id：{row['id']}"
+                  )
+
+              if row["streamUrl"] in streams:
+                  raise SystemExit(
+                      "發現重複 streamUrl："
+                      f"{row['streamUrl']}"
+                  )
+
+              if not (
+                  121.40 <= float(row["x"]) <= 121.75
+                  and
+                  24.90 <= float(row["y"]) <= 25.25
+              ):
+                  raise SystemExit(
+                      f"第 {index} 筆座標超出臺北範圍"
+                  )
+
+              ids.add(row["id"])
+              streams.add(row["streamUrl"])
+
+          print(
+              f"檢查完成，共 {len(rows)} 筆"
+              "水情租賃 CCTV。"
+          )
+          print(
+              "未配對 API："
+              f'{data.get("unmatchedCount", 0)} 筆'
+          )
+          print(
+              "未使用座標："
+              f'{data.get("unusedCoordinateCount", 0)} 筆'
+          )
+          PY
+
+      - name: 儲存更新後的資料
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email \
+            "41898282+github-actions[bot]@users.noreply.github.com"
+
+          git add water-rental-cctv.json
+
+          if git diff --cached --quiet; then
+            echo "水情租賃 CCTV 資料沒有變更。"
+          else
+            git commit -m "自動更新水情租賃 CCTV 資料"
+            git push
+          fi

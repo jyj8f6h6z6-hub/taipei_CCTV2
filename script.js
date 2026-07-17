@@ -1,5 +1,6 @@
 const ROAD_API_URL = "./cctv.json";
 const WATER_API_URL = "./water-cctv.json";
+const WATER_RENTAL_API_URL = "./water-rental-cctv.json";
 
 const DISTRICTS = [
   "中正區",
@@ -39,8 +40,13 @@ const CAMERA_TYPES = {
   },
   water: {
     label: "水情 CCTV",
-    color: "#16a34a",
+    color: "#22c55e",
     icon: "🟢"
+  },
+  "water-rental": {
+    label: "水情租賃 CCTV",
+    color: "#f59e0b",
+    icon: "🟠"
   }
 };
 
@@ -235,6 +241,86 @@ function normalizeWaterCams(json) {
     );
 }
 
+/* 整理水情租賃 CCTV 資料 */
+function normalizeWaterRentalCams(json) {
+  const rows =
+    json.results ||
+    json.result?.results ||
+    json.data;
+
+  if (!Array.isArray(rows)) {
+    throw new Error(
+      "水情租賃 CCTV 資料格式不正確"
+    );
+  }
+
+  return rows
+    .map(row => {
+      const id = String(
+        row.id ||
+        row.stationNo ||
+        ""
+      ).trim();
+
+      const name = String(
+        row.name ||
+        row.stationName ||
+        ""
+      ).trim();
+
+      const x = parseFloat(
+        row.x ??
+        row.longitude ??
+        row.lng
+      );
+
+      const y = parseFloat(
+        row.y ??
+        row.latitude ??
+        row.lat
+      );
+
+      const imageUrl = String(
+        row.imageUrl ||
+        row.url ||
+        ""
+      ).trim();
+
+      const streamUrl = String(
+        row.streamUrl ||
+        ""
+      ).trim();
+
+      return {
+        key: `water-rental-${id}`,
+        id,
+        name:
+          name ||
+          "未命名水情租賃攝影機",
+        rawName: `${id}-${name}`,
+        x,
+        y,
+        district: districtByCoord(x, y),
+        url: imageUrl || streamUrl,
+        imageUrl,
+        streamUrl,
+        category: String(
+          row.category || ""
+        ).trim(),
+        type: "water-rental",
+        source:
+          row.source ||
+          "臺北市政府工務局水利工程處"
+      };
+    })
+    .filter(cam =>
+      cam.id &&
+      cam.url &&
+      Number.isFinite(cam.x) &&
+      Number.isFinite(cam.y)
+    );
+}
+
 /* 同時載入道路與水情資料 */
 async function loadData() {
   const status = document.getElementById("status");
@@ -244,11 +330,13 @@ async function loadData() {
 
   const results = await Promise.allSettled([
     fetchJson(ROAD_API_URL),
-    fetchJson(WATER_API_URL)
+    fetchJson(WATER_API_URL),
+    fetchJson(WATER_RENTAL_API_URL)
   ]);
 
   let roadCams = [];
   let waterCams = [];
+  let waterRentalCams = [];
   const errors = [];
 
   if (results[0].status === "fulfilled") {
@@ -279,9 +367,26 @@ async function loadData() {
     );
   }
 
+  if (results[2].status === "fulfilled") {
+    try {
+      waterRentalCams =
+        normalizeWaterRentalCams(
+          results[2].value
+        );
+    } catch (error) {
+      errors.push(error.message);
+    }
+  } else {
+    errors.push(
+      `水情租賃 CCTV：` +
+      results[2].reason.message
+    );
+  }
+
   allCams = [
     ...roadCams,
-    ...waterCams
+    ...waterCams,
+    ...waterRentalCams
   ];
 
   if (allCams.length === 0) {
@@ -383,9 +488,14 @@ function render() {
     cam => cam.type === "water"
   ).length;
 
+  const waterRentalCount = allCams.filter(
+    cam => cam.type === "water-rental"
+  ).length;
+
   document.getElementById("status").textContent =
     `道路 ${roadCount} 支；` +
     `水情 ${waterCount} 支；` +
+    `水情租賃 ${waterRentalCount} 支；` +
     `目前顯示 ${cams.length} 支。`;
 
   renderSidebar(cams);
