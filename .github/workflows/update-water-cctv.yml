@@ -1,0 +1,315 @@
+name: 更新水情 CCTV 資料
+
+on:
+  workflow_dispatch:
+
+  schedule:
+    # 臺灣時間每天凌晨 03:35
+    # GitHub Actions cron 使用 UTC，因此為前一天 19:35
+    - cron: "35 19 * * *"
+
+permissions:
+  contents: write
+
+jobs:
+  update-water-cctv:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 取得網站程式
+        uses: actions/checkout@v4
+
+      - name: 安裝 Python 套件
+        run: |
+          python -m pip install --upgrade pip
+          pip install requests
+
+      - name: 下載並整理水情 CCTV 資料
+        env:
+          # 下一步取得實際 API 網址後，再填入這兩個值
+          WATER_IMAGE_API: "https://wic.gov.taipei/OpenData/API/Image/Get?stationNo=&loginId=cctv&dataKey=03BA6786"
+          WATER_POSITION_URL: "https://data.taipei/api/frontstage/tpeod/dataset/resource.download?rid=5f05dda5-a952-428b-920e-a21d6468611b"
+        run: |
+          python - <<'PY'
+          import csv
+          import io
+          import json
+          import os
+          import re
+          import sys
+
+          import requests
+
+
+          image_api = os.environ.get("WATER_IMAGE_API", "").strip()
+          position_url = os.environ.get("WATER_POSITION_URL", "").strip()
+
+          if not image_api:
+              raise SystemExit(
+                  "尚未設定 WATER_IMAGE_API，請先從臺北市資料大平臺複製水利處 CCTV API 網址。"
+              )
+
+          session = requests.Session()
+
+          session.headers.update({
+              "User-Agent": "taipei-cctv-map-github-action/1.0"
+          })
+
+
+          def normalize_text(value):
+              value = str(value or "").strip()
+              value = value.replace("臺", "台")
+              value = re.sub(r"\s+", "", value)
+              value = value.replace("（", "(").replace("）", ")")
+              return value
+
+
+          def normalize_station_no(value):
+              return normalize_text(value).upper()
+
+
+          def get_json(url):
+              response = session.get(url, timeout=30)
+              response.raise_for_status()
+              return response.json()
+
+
+          def get_text(url):
+              response = session.get(url, timeout=30)
+              response.raise_for_status()
+              response.encoding = response.apparent_encoding or "utf-8"
+              return response.text
+
+
+          print("下載水情 CCTV 影像清單……")
+          image_data = get_json(image_api)
+
+          # 相容可能的 API 包裝格式
+          if isinstance(image_data, list):
+              image_rows = image_data
+          elif isinstance(image_data, dict):
+              image_rows = (
+                  image_data.get("data")
+                  or image_data.get("results")
+                  or image_data.get("result")
+                  or image_data.get("items")
+              )
+
+              if isinstance(image_rows, dict):
+                  image_rows = (
+                      image_rows.get("results")
+                      or image_rows.get("data")
+                      or image_rows.get("items")
+                  )
+          else:
+              image_rows = None
+
+          if not isinstance(image_rows, list):
+              print(json.dumps(image_data, ensure_ascii=False, indent=2)[:3000])
+              raise SystemExit("無法辨識水情 CCTV API 格式。")
+
+          print(f"影像 API 共取得 {len(image_rows)} 筆資料。")
+
+          print("下載水情 CCTV 座標資料……")
+          csv_text = get_text(position_url)
+
+          # 去除可能存在的 UTF-8 BOM
+          csv_text = csv_text.lstrip("\ufeff")
+          position_rows = list(csv.DictReader(io.StringIO(csv_text)))
+
+          if not position_rows:
+              raise SystemExit("水情 CCTV 座標 CSV 沒有資料。")
+
+          print(f"座標資料共取得 {len(position_rows)} 筆資料。")
+
+          positions_by_no = {}
+          positions_by_name = {}
+
+          for row in position_rows:
+              station_no = (
+                  row.get("站碼")
+                  or row.get("stationNo")
+                  or row.get("StationNo")
+                  or ""
+              )
+
+              station_name = (
+                  row.get("站名")
+                  or row.get("stationName")
+                  or row.get("StationName")
+                  or ""
+              )
+
+              lon_raw = (
+                  row.get("經度")
+                  or row.get("longitude")
+                  or row.get("Longitude")
+                  or row.get("lon")
+                  or ""
+              )
+
+              lat_raw = (
+                  row.get("緯度")
+                  or row.get("latitude")
+                  or row.get("Latitude")
+                  or row.get("lat")
+                  or ""
+              )
+
+              try:
+                  lon = float(str(lon_raw).strip())
+                  lat = float(str(lat_raw).strip())
+              except (TypeError, ValueError):
+                  continue
+
+              position = {
+                  "stationNo": str(station_no).strip(),
+                  "stationName": str(station_name).strip(),
+                  "longitude": lon,
+                  "latitude": lat,
+              }
+
+              normalized_no = normalize_station_no(station_no)
+              normalized_name = normalize_text(station_name)
+
+              if normalized_no:
+                  positions_by_no[normalized_no] = position
+
+              if normalized_name:
+                  positions_by_name[normalized_name] = position
+
+          output = []
+          unmatched = []
+
+          for row in image_rows:
+              station_no = str(
+                  row.get("stationNo")
+                  or row.get("StationNo")
+                  or row.get("station_no")
+                  or ""
+              ).strip()
+
+              station_name = str(
+                  row.get("stationName")
+                  or row.get("StationName")
+                  or row.get("station_name")
+                  or ""
+              ).strip()
+
+              image_url = str(
+                  row.get("url")
+                  or row.get("URL")
+                  or row.get("imageUrl")
+                  or ""
+              ).strip()
+
+              if not station_no or not station_name or not image_url:
+                  continue
+
+              position = (
+                  positions_by_no.get(normalize_station_no(station_no))
+                  or positions_by_name.get(normalize_text(station_name))
+              )
+
+              if not position:
+                  unmatched.append({
+                      "stationNo": station_no,
+                      "stationName": station_name,
+                  })
+                  continue
+
+              output.append({
+                  "id": station_no,
+                  "name": station_name,
+                  "x": position["longitude"],
+                  "y": position["latitude"],
+                  "url": image_url,
+                  "type": "water",
+                  "source": "臺北市政府工務局水利工程處",
+              })
+
+          if not output:
+              raise SystemExit("合併後沒有任何可用的水情 CCTV。")
+
+          result = {
+              "count": len(output),
+              "results": output,
+              "unmatchedCount": len(unmatched),
+              "unmatched": unmatched,
+          }
+
+          with open("water-cctv.json", "w", encoding="utf-8") as file:
+              json.dump(
+                  result,
+                  file,
+                  ensure_ascii=False,
+                  indent=2,
+              )
+
+          print(f"成功產生 {len(output)} 筆水情 CCTV。")
+          print(f"無法配對座標：{len(unmatched)} 筆。")
+
+          if unmatched:
+              print("未配對項目前 20 筆：")
+              for item in unmatched[:20]:
+                  print(
+                      f'- {item["stationNo"]} '
+                      f'{item["stationName"]}'
+                  )
+          PY
+
+      - name: 檢查輸出檔案
+        run: |
+          python - <<'PY'
+          import json
+
+          with open("water-cctv.json", "r", encoding="utf-8") as file:
+              data = json.load(file)
+
+          rows = data.get("results")
+
+          if not isinstance(rows, list):
+              raise SystemExit(
+                  "water-cctv.json 格式不正確，找不到 results。"
+              )
+
+          if len(rows) == 0:
+              raise SystemExit(
+                  "water-cctv.json 沒有可用資料。"
+              )
+
+          required = {
+              "id",
+              "name",
+              "x",
+              "y",
+              "url",
+              "type",
+              "source",
+          }
+
+          for index, row in enumerate(rows):
+              missing = required - row.keys()
+
+              if missing:
+                  raise SystemExit(
+                      f"第 {index + 1} 筆缺少欄位：{missing}"
+                  )
+
+          print(f"檢查完成，共 {len(rows)} 筆水情 CCTV。")
+          PY
+
+      - name: 儲存更新後的資料
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email \
+            "41898282+github-actions[bot]@users.noreply.github.com"
+
+          git add water-cctv.json
+
+          if git diff --cached --quiet; then
+            echo "水情 CCTV 資料沒有變更。"
+          else
+            git commit -m "自動更新水情 CCTV 資料"
+            git push
+          fi
