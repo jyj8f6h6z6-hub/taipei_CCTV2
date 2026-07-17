@@ -227,6 +227,7 @@ function normalizeWaterCams(json) {
         y,
         district: districtByCoord(x, y),
         url,
+        streamUrl: getWaterStreamUrl({ url }),
         type: "water",
         source:
           row.source ||
@@ -239,6 +240,15 @@ function normalizeWaterCams(json) {
       Number.isFinite(cam.x) &&
       Number.isFinite(cam.y)
     );
+}
+
+function getWaterStreamUrl(cam) {
+  if (!cam.url) return null;
+
+  return cam.url.replace(
+    "/snapshot",
+    "/index.m3u8"
+  );
 }
 
 /* 整理水情租賃 CCTV 資料 */
@@ -651,9 +661,11 @@ function openInfo(marker) {
       <a
         class="iw-btn"
         href="${esc(
-          cam.type === "water-rental"
-            ? cam.streamUrl
-            : cam.url
+          cam.type === "water"
+            ? (cam.streamUrl || cam.url)
+            : cam.type === "water-rental"
+              ? cam.streamUrl
+              : cam.url
         )}"
         target="_blank"
         rel="noopener noreferrer"
