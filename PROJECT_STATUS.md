@@ -1,113 +1,359 @@
+當然可以，下面這份是以 **專案交接、GitHub Repository 長期維護** 為目的撰寫的 `PROJECT_STATUS.md`。
+
+````markdown
 # PROJECT STATUS
 
-## 專案名稱
-台北市道路 CCTV 地圖
+Last Updated: 2026-07-17
 
 ---
 
-# 目前完成進度
+# Project
 
-## ✅ 資料來源
+Taipei CCTV Map
 
-- 已由 CSV 改為台北市政府 Open Data API
-- 因 API CORS 限制，改採 GitHub Actions 定時下載
-- 自動產生 `cctv.json`
-- 網站直接讀取 `cctv.json`
-- 不再直接呼叫台北市 API
+GitHub Pages 網站，整合台北市各單位公開 CCTV，提供：
 
----
-
-## ✅ 地圖
-
-已完成 Google Maps → Leaflet 遷移（大部分）
-
-### 已完成
-
-- Leaflet 1.9.4
-- OpenStreetMap 底圖
-- Marker 改為 `L.circleMarker`
-- Popup 改為 Leaflet Popup
-- 左側清單
-- 搜尋
+- 地圖瀏覽
+- 清單瀏覽
 - 行政區篩選
-- Popup 樣式
-- 我的位置（Leaflet）
-- 最近 CCTV 計算
-- 已移除 Google API Key
+- 即時影像
+- GitHub Actions 自動更新資料
 
 ---
 
-## ✅ 已修正
+# Current Data Sources
 
-- API CORS 問題
-- 新版 API 欄位名稱
-  - `攝影機編號`
-  - `wgsx`
-  - `wgsy`
-- Popup 樣式
-- 按鈕文字顏色
-- 定位 Marker
-- Sidebar 正常
+## 1. Taipei Road CCTV
 
----
+來源：
+- 臺北市交通資訊中心
 
-# 尚未完成
-
-## Leaflet 最後整理
-
-- [ ] 完全移除 Google Maps 殘留程式
-- [ ] 整理 `script.js`
-- [ ] 移除未使用函式
-- [ ] 清除 Google Maps 註解
-
----
-
-## 功能
-
-- [ ] 定位後自動飛到最近 CCTV（重新整理為 Leaflet 寫法）
-- [ ] Sidebar 點擊動畫最佳化
-- [ ] 地圖飛行動畫最佳化
-
----
-
-## UI
-
-- [ ] Popup 外觀微調
-- [ ] Marker 顏色可設定
-- [ ] 深色模式（未開始）
-
----
-
-# GitHub
-
-## 已完成
-
-- GitHub Pages
+更新方式：
 - GitHub Actions
-- 自動更新 cctv.json
+
+資料數量：
+- 約 416 支
+
+狀態：
+- ✅ 正常
 
 ---
 
-# 下一步
+## 2. Water CCTV
 
-1. 完成 Leaflet 最終整理
-2. 完全移除 Google Maps 程式
-3. 清理 script.js
-4. 新增更多功能
+來源：
+- 臺北市政府工務局水利工程處
+
+資料數量：
+- 約 53 支
+
+JSON：
+
+```
+water-cctv.json
+```
+
+狀態：
+
+- ✅ 正常
 
 ---
 
-# 未來規劃
+## 3. Water Rental CCTV
 
-- ⭐ 收藏 CCTV
-- ⭐ 最近 CCTV 清單
-- ⭐ 即時預覽（Popup 直接播放）
-- ⭐ 衛星地圖切換
-- ⭐ 路況圖層
-- ⭐ 分享目前 CCTV
-- ⭐ 行動裝置 UI 優化
+來源：
+- 臺北市政府工務局水利工程處
+
+資料數量：
+
+- 約 110 支
+
+JSON：
+
+```
+water-rental-cctv.json
+```
+
+更新方式：
+
+GitHub Actions：
+
+```
+update-water-rental-cctv.yml
+```
+
+座標來源：
+
+```
+water-rental-cctv-coordinates.csv
+```
+
+狀態：
+
+- ✅ 正常
 
 ---
 
-更新日期：2026-07-15
-狀態：🟢 開發中（Leaflet 遷移約 90% 完成）
+# Today's Work
+
+## 1. Water CCTV HLS Support
+
+發現：
+
+原本網站使用
+
+```
+/snapshot
+```
+
+JPEG 即時快照。
+
+研究後確認同一攝影機可直接使用：
+
+```
+/index.m3u8
+```
+
+例如：
+
+JPEG
+
+```
+https://heocctv4.gov.taipei/channel16/snapshot
+```
+
+HLS
+
+```
+https://heocctv4.gov.taipei/channel16/index.m3u8
+```
+
+---
+
+## 2. Added getWaterStreamUrl()
+
+新增：
+
+```javascript
+function getWaterStreamUrl(cam) {
+    if (!cam.url) return null;
+
+    if (!cam.url.includes("/snapshot")) {
+        return null;
+    }
+
+    return cam.url.replace(
+        "/snapshot",
+        "/index.m3u8"
+    );
+}
+```
+
+用途：
+
+自動由 JPEG URL 推算 HLS URL。
+
+---
+
+## 3. normalizeWaterCams()
+
+新增欄位：
+
+```javascript
+streamUrl
+```
+
+現在每台水情攝影機都具有：
+
+```
+url
+streamUrl
+```
+
+其中：
+
+```
+url
+```
+
+仍為：
+
+```
+snapshot
+```
+
+供圖片預覽使用。
+
+```
+streamUrl
+```
+
+則為：
+
+```
+index.m3u8
+```
+
+供直播播放使用。
+
+---
+
+## 4. Popup Link
+
+修改 Popup 按鈕。
+
+目前邏輯：
+
+Road CCTV
+
+```
+cam.url
+```
+
+Water CCTV
+
+```
+cam.streamUrl || cam.url
+```
+
+Water Rental CCTV
+
+```
+cam.streamUrl
+```
+
+因此：
+
+- 道路攝影機維持原本
+- 水情攝影機改開 HLS
+- 水情租賃攝影機維持 HLS
+
+---
+
+# Current Architecture
+
+Road CCTV
+
+```
+Road API
+        │
+        ▼
+ road-cctv.json
+        │
+        ▼
+ normalizeRoadCams()
+```
+
+Water CCTV
+
+```
+Water API
+        │
+        ▼
+water-cctv.json
+        │
+        ▼
+normalizeWaterCams()
+        │
+        ├── url
+        └── streamUrl
+```
+
+Water Rental CCTV
+
+```
+Rental API
+        │
+        ▼
+water-rental-cctv.json
+        │
+        ▼
+normalizeWaterRentalCams()
+        │
+        ├── imageUrl
+        └── streamUrl
+```
+
+---
+
+# Current Camera Counts
+
+Road
+
+≈416
+
+Water
+
+≈53
+
+Water Rental
+
+≈110
+
+Total
+
+≈579 cameras
+
+---
+
+# GitHub Actions
+
+Working
+
+- update-road-cctv.yml
+- update-water-cctv.yml
+- update-water-rental-cctv.yml
+
+Status
+
+✅ All passing
+
+---
+
+# Remaining Ideas
+
+Possible future improvements：
+
+- HLS inline player（hls.js）
+- Camera clustering
+- Favorites
+- Search by camera ID
+- Search by road name
+- Camera status detection
+- Fullscreen live player
+- Mobile UI optimization
+
+---
+
+# Current Status
+
+Project Status
+
+🟢 Stable
+
+Data Update
+
+🟢 Automatic
+
+GitHub Actions
+
+🟢 Normal
+
+Road CCTV
+
+🟢 Working
+
+Water CCTV
+
+🟢 HLS Enabled
+
+Water Rental CCTV
+
+🟢 HLS Enabled
+
+Overall
+
+🟢 Production Ready
+````
+
+我建議之後每完成一個功能，就更新這個 `PROJECT_STATUS.md`，它可以作為專案的開發日誌與交接文件，之後要回顧或繼續開發都會方便很多。
