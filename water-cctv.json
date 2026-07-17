@@ -1,0 +1,529 @@
+{
+  "count": 53,
+  "results": [
+    {
+      "id": "PB077",
+      "name": "南湖大橋",
+      "x": 121.61173,
+      "y": 25.063078,
+      "url": "https://heocctv3.gov.taipei/channel87//snapshot",
+      "type": "water",
+      "source": "臺北市政府工務局水利工程處"
+    },
+    {
+      "id": "PB055",
+      "name": "彩虹橋(松山分局)",
+      "x": 121.576518,
+      "y": 25.05142,
+      "url": "https://heocctv3.gov.taipei/channel55//snapshot",
+      "type": "water",
+      "source": "臺北市政府工務局水利工程處"
+    },
+    {
+      "id": "PB074",
+      "name": "大直橋",
+      "x": 121.544175,
+      "y": 25.076389,
+      "url": "https://heocctv3.gov.taipei/dzc02024608552022//snapshot",
+      "type": "water",
+      "source": "臺北市政府工務局水利工程處"
+    },
+    {
+      "id": "PB071",
+      "name": "福德宮",
+      "x": 121.483053,
+      "y": 25.114319,
+      "url": "https://heocctv3.gov.taipei/channel71//snapshot",
+      "type": "water",
+      "source": "臺北市政府工務局水利工程處"
+    },
+    {
+      "id": "PB111",
+      "name": "東吳大學網球場",
+      "x": 121.544,
+      "y": 25.096,
+      "url": "https://heocctv2.gov.taipei/channel33/snapshot",
+      "type": "water",
+      "source": "臺北市政府工務局水利工程處"
+    },
+    {
+      "id": "PB072",
+      "name": "士林橋左岸陸閘",
+      "x": 121.523403,
+      "y": 25.098441,
+      "url": "https://heocctv3.gov.taipei/channel72//snapshot",
+      "type": "water",
+      "source": "臺北市政府工務局水利工程處"
+    },
+    {
+      "id": "PB",
+      "name": "分洪入口1",
+      "x": 121.501525,
+      "y": 25.133583,
+      "url": "https://heocctv3.gov.taipei/channel8//snapshot",
+      "type": "water",
+      "source": "臺北市政府工務局水利工程處"
+    },
+    {
+      "id": "PB105",
+      "name": "指南溪斷面5",
+      "x": 121.578907,
+      "y": 24.98385,
+      "url": "https://heocctv2.gov.taipei/channel30/snapshot",
+      "type": "water",
+      "source": "臺北市政府工務局水利工程處"
+    },
+    {
+      "id": "PB123",
+      "name": "延平河濱公園大稻埕碼頭廣場",
+      "x": 121.508,
+      "y": 25.057,
+      "url": "https://heocctv2.gov.taipei/channel25/snapshot",
+      "type": "water",
+      "source": "臺北市政府工務局水利工程處"
+    },
+    {
+      "id": "PB114",
+      "name": "臺北大橋下",
+      "x": 121.509,
+      "y": 25.063,
+      "url": "https://heocctv2.gov.taipei/channel29/snapshot",
+      "type": "water",
+      "source": "臺北市政府工務局水利工程處"
+    },
+    {
+      "id": "PB001",
+      "name": "南港公園閘門",
+      "x": 121.592536,
+      "y": 25.043491,
+      "url": "https://heocctv3.gov.taipei/channel1//snapshot",
+      "type": "water",
+      "source": "臺北市政府工務局水利工程處"
+    },
+    {
+      "id": "PB002",
+      "name": "碧湖公園溢流口",
+      "x": 121.583435,
+      "y": 25.080156,
+      "url": "https://heocctv3.gov.taipei/channel2//snapshot",
+      "type": "water",
+      "source": "臺北市政府工務局水利工程處"
+    },
+    {
+      "id": "PB003",
+      "name": "大溝溪園區滯洪池",
+      "x": 121.601817,
+      "y": 25.089318,
+      "url": "https://heocctv3.gov.taipei/channel3//snapshot",
+      "type": "water",
+      "source": "臺北市政府工務局水利工程處"
+    },
+    {
+      "id": "PB004",
+      "name": "大湖公園清疏閘門",
+      "x": 121.606896,
+      "y": 25.078367,
+      "url": "https://heocctv3.gov.taipei/channel4//snapshot",
+      "type": "water",
+      "source": "臺北市政府工務局水利工程處"
+    },
+    {
+      "id": "PB005",
+      "name": "大溝溪園區溢流明渠",
+      "x": 121.599083,
+      "y": 25.090611,
+      "url": "https://heocctv3.gov.taipei/channel5//snapshot",
+      "type": "water",
+      "source": "臺北市政府工務局水利工程處"
+    },
+    {
+      "id": "PB081",
+      "name": "金瑞治水園區滯洪池",
+      "x": 121.585308,
+      "y": 25.096289,
+      "url": "https://heocctv3.gov.taipei/channel81//snapshot",
+      "type": "water",
+      "source": "臺北市政府工務局水利工程處"
+    },
+    {
+      "id": "PB082",
+      "name": "金瑞治水園區進水口",
+      "x": 121.589225,
+      "y": 25.095714,
+      "url": "https://heocctv3.gov.taipei/channel82//snapshot",
+      "type": "water",
+      "source": "臺北市政府工務局水利工程處"
+    },
+    {
+      "id": "PB083",
+      "name": "文山滯洪池1",
+      "x": 121.5602,
+      "y": 24.997033,
+      "url": "https://heocctv3.gov.taipei/channel74//snapshot",
+      "type": "water",
+      "source": "臺北市政府工務局水利工程處"
+    },
+    {
+      "id": "PB084",
+      "name": "文山滯洪池2",
+      "x": 121.560822,
+      "y": 24.997372,
+      "url": "https://heocctv3.gov.taipei/channel73//snapshot",
+      "type": "water",
+      "source": "臺北市政府工務局水利工程處"
+    },
+    {
+      "id": "PB085",
+      "name": "大湖山莊街243巷",
+      "x": 121.599304,
+      "y": 25.089299,
+      "url": "https://heocctv3.gov.taipei/channel76//snapshot",
+      "type": "water",
+      "source": "臺北市政府工務局水利工程處"
+    },
+    {
+      "id": "PB086",
+      "name": "大湖國小公車站",
+      "x": 121.599399,
+      "y": 25.088116,
+      "url": "https://heocctv3.gov.taipei/channel77//snapshot",
+      "type": "water",
+      "source": "臺北市政府工務局水利工程處"
+    },
+    {
+      "id": "PB087",
+      "name": "合江公園",
+      "x": 121.539252,
+      "y": 25.058729,
+      "url": "https://heocctv3.gov.taipei/channel20//snapshot",
+      "type": "water",
+      "source": "臺北市政府工務局水利工程處"
+    },
+    {
+      "id": "PB088",
+      "name": "文山滯洪池(池內)",
+      "x": 121.5589,
+      "y": 24.9972,
+      "url": "https://heocctv3.gov.taipei/channel80//snapshot",
+      "type": "water",
+      "source": "臺北市政府工務局水利工程處"
+    },
+    {
+      "id": "PB089",
+      "name": "憲兵滯洪池(池內)",
+      "x": 121.55638,
+      "y": 25.002947,
+      "url": "https://heocctv3.gov.taipei/channel79//snapshot",
+      "type": "water",
+      "source": "臺北市政府工務局水利工程處"
+    },
+    {
+      "id": "PB103",
+      "name": "磺捷橋",
+      "x": 121.491,
+      "y": 25.138,
+      "url": "https://heocctv2.gov.taipei/channel27/snapshot",
+      "type": "water",
+      "source": "臺北市政府工務局水利工程處"
+    },
+    {
+      "id": "PB109",
+      "name": "大安路1段84巷",
+      "x": 121.545,
+      "y": 25.041,
+      "url": "https://heocctv2.gov.taipei/channel1/snapshot",
+      "type": "water",
+      "source": "臺北市政府工務局水利工程處"
+    },
+    {
+      "id": "PB119",
+      "name": "士林橋右岸陸閘",
+      "x": 121.523,
+      "y": 25.1001,
+      "url": "https://heocctv2.gov.taipei/channel99/snapshot",
+      "type": "water",
+      "source": "臺北市政府工務局水利工程處"
+    },
+    {
+      "id": "PB120",
+      "name": "士林橋",
+      "x": 121.5231,
+      "y": 25.1,
+      "url": "https://heocctv2.gov.taipei/channel6/snapshot",
+      "type": "water",
+      "source": "臺北市政府工務局水利工程處"
+    },
+    {
+      "id": "PB121",
+      "name": "分洪入口4",
+      "x": 121.501692,
+      "y": 25.137314,
+      "url": "https://heocctv2.gov.taipei/channel22/snapshot",
+      "type": "water",
+      "source": "臺北市政府工務局水利工程處"
+    },
+    {
+      "id": "PB124",
+      "name": "四維路44巷26號",
+      "x": 121.546463,
+      "y": 25.035558,
+      "url": "https://heocctv2.gov.taipei/channel9/snapshot",
+      "type": "water",
+      "source": "臺北市政府工務局水利工程處"
+    },
+    {
+      "id": "PB208",
+      "name": "東湖國中1",
+      "x": 121.620687,
+      "y": 25.073575,
+      "url": "https://heocctv2.gov.taipei/channel31/snapshot",
+      "type": "water",
+      "source": "臺北市政府工務局水利工程處"
+    },
+    {
+      "id": "PB210",
+      "name": "大湖1號閘門1",
+      "x": 121.607,
+      "y": 25.077,
+      "url": "https://heocctv2.gov.taipei/channel14/snapshot",
+      "type": "water",
+      "source": "臺北市政府工務局水利工程處"
+    },
+    {
+      "id": "PB211",
+      "name": "大湖1號閘門2",
+      "x": 121.607,
+      "y": 25.077,
+      "url": "https://heocctv2.gov.taipei/channel15/snapshot",
+      "type": "water",
+      "source": "臺北市政府工務局水利工程處"
+    },
+    {
+      "id": "PB212",
+      "name": "大湖2號閘門1",
+      "x": 121.607,
+      "y": 25.079,
+      "url": "https://heocctv2.gov.taipei/channel16/snapshot",
+      "type": "water",
+      "source": "臺北市政府工務局水利工程處"
+    },
+    {
+      "id": "PB213",
+      "name": "大湖2號閘門2",
+      "x": 121.607,
+      "y": 25.079,
+      "url": "https://heocctv2.gov.taipei/channel17/snapshot",
+      "type": "water",
+      "source": "臺北市政府工務局水利工程處"
+    },
+    {
+      "id": "PB218",
+      "name": "碧湖公園1",
+      "x": 121.583,
+      "y": 25.08,
+      "url": "https://heocctv2.gov.taipei/channel34/snapshot",
+      "type": "water",
+      "source": "臺北市政府工務局水利工程處"
+    },
+    {
+      "id": "PB219",
+      "name": "碧湖公園2",
+      "x": 121.583,
+      "y": 25.08,
+      "url": "https://heocctv2.gov.taipei/channel35/snapshot",
+      "type": "water",
+      "source": "臺北市政府工務局水利工程處"
+    },
+    {
+      "id": "PB220",
+      "name": "碧湖公園3",
+      "x": 121.583,
+      "y": 25.08,
+      "url": "https://heocctv2.gov.taipei/channel36/snapshot",
+      "type": "water",
+      "source": "臺北市政府工務局水利工程處"
+    },
+    {
+      "id": "PB233",
+      "name": "雙溪右岸復興橋",
+      "x": 121.536723,
+      "y": 25.100909,
+      "url": "https://heocctv4.gov.taipei/channel1/snapshot",
+      "type": "water",
+      "source": "臺北市政府工務局水利工程處"
+    },
+    {
+      "id": "PB234",
+      "name": "基隆河左岸洲美橋下",
+      "x": 121.497402,
+      "y": 25.09679,
+      "url": "https://heocctv4.gov.taipei/channel2/snapshot",
+      "type": "water",
+      "source": "臺北市政府工務局水利工程處"
+    },
+    {
+      "id": "PB206",
+      "name": "大直堤防4號閘門",
+      "x": 121.525948,
+      "y": 25.076331,
+      "url": "https://heocctv2.gov.taipei/channel23/snapshot",
+      "type": "water",
+      "source": "臺北市政府工務局水利工程處"
+    },
+    {
+      "id": "PB207",
+      "name": "大直堤防8號閘門",
+      "x": 121.544772,
+      "y": 25.085373,
+      "url": "https://heocctv2.gov.taipei/channel24/snapshot",
+      "type": "water",
+      "source": "臺北市政府工務局水利工程處"
+    },
+    {
+      "id": "PB243",
+      "name": "大佳河濱公園巨蛋廣場",
+      "x": 121.539108,
+      "y": 25.074999,
+      "url": "https://heocctv4.gov.taipei/channel11/snapshot",
+      "type": "water",
+      "source": "臺北市政府工務局水利工程處"
+    },
+    {
+      "id": "PB244",
+      "name": "大佳河濱公園網球場旁廣場",
+      "x": 121.530851,
+      "y": 25.07465,
+      "url": "https://heocctv4.gov.taipei/channel12/snapshot",
+      "type": "water",
+      "source": "臺北市政府工務局水利工程處"
+    },
+    {
+      "id": "PB246",
+      "name": "永福橋",
+      "x": 121.527937,
+      "y": 25.01161,
+      "url": "https://heocctv4.gov.taipei/channel14/snapshot",
+      "type": "water",
+      "source": "臺北市政府工務局水利工程處"
+    },
+    {
+      "id": "PB247",
+      "name": "恆光橋及道南遊戲區1",
+      "x": 121.567481,
+      "y": 24.981398,
+      "url": "https://heocctv4.gov.taipei/channel15/snapshot",
+      "type": "water",
+      "source": "臺北市政府工務局水利工程處"
+    },
+    {
+      "id": "PB248",
+      "name": "恆光橋及道南遊戲區2",
+      "x": 121.566387,
+      "y": 24.981585,
+      "url": "https://heocctv4.gov.taipei/channel16/snapshot",
+      "type": "water",
+      "source": "臺北市政府工務局水利工程處"
+    },
+    {
+      "id": "PB249",
+      "name": "恆光橋及道南遊戲區3",
+      "x": 121.566387,
+      "y": 24.981585,
+      "url": "https://heocctv4.gov.taipei/channel17/snapshot",
+      "type": "water",
+      "source": "臺北市政府工務局水利工程處"
+    },
+    {
+      "id": "PB250",
+      "name": "景美溪橋",
+      "x": 121.545329,
+      "y": 24.986577,
+      "url": "https://heocctv4.gov.taipei/channel18/snapshot",
+      "type": "water",
+      "source": "臺北市政府工務局水利工程處"
+    },
+    {
+      "id": "PB252",
+      "name": "百齡橋越堤自行車牽引道",
+      "x": 121.515125,
+      "y": 25.090359,
+      "url": "https://heocctv4.gov.taipei/channel20/snapshot",
+      "type": "water",
+      "source": "臺北市政府工務局水利工程處"
+    },
+    {
+      "id": "PB256",
+      "name": "華中遊戲區",
+      "x": 121.491776,
+      "y": 25.017078,
+      "url": "https://heocctv4.gov.taipei/channel24/snapshot",
+      "type": "water",
+      "source": "臺北市政府工務局水利工程處"
+    },
+    {
+      "id": "PB257",
+      "name": "景美橋(世新)",
+      "x": 121.54092,
+      "y": 24.988278,
+      "url": "https://heocctv4.gov.taipei/channel25/snapshot",
+      "type": "water",
+      "source": "臺北市政府工務局水利工程處"
+    },
+    {
+      "id": "PB106",
+      "name": "關渡碼頭停車場",
+      "x": 121.462,
+      "y": 25.121,
+      "url": "https://heocctv3.gov.taipei/channel28//snapshot",
+      "type": "water",
+      "source": "臺北市政府工務局水利工程處"
+    }
+  ],
+  "unmatchedCount": 11,
+  "unmatched": [
+    {
+      "stationNo": "P203",
+      "stationName": "分洪入口3"
+    },
+    {
+      "stationNo": "PB096",
+      "stationName": "猴狪坑溪沉砂池"
+    },
+    {
+      "stationNo": "PB122",
+      "stationName": "敦化北路155巷100弄"
+    },
+    {
+      "stationNo": "PB125",
+      "stationName": "泰順街50巷口"
+    },
+    {
+      "stationNo": "PB214",
+      "stationName": "大溝溪園區渠首工"
+    },
+    {
+      "stationNo": "PB215",
+      "stationName": "大溝溪園區滯洪池2"
+    },
+    {
+      "stationNo": "PB216",
+      "stationName": "大溝溪園區滯洪池3"
+    },
+    {
+      "stationNo": "PB217",
+      "stationName": "大溝溪園區豎井(井內)"
+    },
+    {
+      "stationNo": "PB221",
+      "stationName": "碧湖公園4"
+    },
+    {
+      "stationNo": "PB222",
+      "stationName": "碧湖公園5"
+    },
+    {
+      "stationNo": "PB223",
+      "stationName": "碧湖公園6"
+    }
+  ]
+}
