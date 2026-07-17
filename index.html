@@ -2,16 +2,17 @@
 <html lang="zh-Hant">
 <head>
   <meta charset="utf-8">
+
   <meta
     name="viewport"
     content="width=device-width, initial-scale=1, viewport-fit=cover"
   >
 
-  <title>台北市道路 CCTV</title>
+  <title>台北市即時 CCTV 地圖</title>
 
   <meta
     name="description"
-    content="台北市道路 CCTV 地圖，點選圖釘開啟官方即時影像。"
+    content="整合台北市道路 CCTV 與水情 CCTV 的即時影像地圖。"
   >
 
   <!-- Leaflet 地圖樣式 -->
@@ -22,10 +23,10 @@
     crossorigin=""
   >
 
-  <!-- 你的網站樣式 -->
-  <link rel="stylesheet" href="style.css?v=2">
+  <!-- 網站樣式 -->
+  <link rel="stylesheet" href="style.css?v=3">
 
-  <!-- 不顯示 favicon 404 錯誤 -->
+  <!-- 避免 favicon 404 -->
   <link rel="icon" href="data:,">
 </head>
 
@@ -33,15 +34,25 @@
 
   <header>
     <div class="header-row">
-      <h1>🗺 台北市道路 CCTV</h1>
+      <h1>🗺 台北市即時 CCTV</h1>
 
       <div class="controls">
+
         <input
           id="q"
           type="search"
-          placeholder="搜尋路名、行政區…"
+          placeholder="搜尋路名、站名、行政區…"
           aria-label="搜尋 CCTV"
         >
+
+        <select
+          id="sourceFilter"
+          aria-label="選擇 CCTV 類型"
+        >
+          <option value="all">全部 CCTV</option>
+          <option value="road">道路 CCTV</option>
+          <option value="water">水情 CCTV</option>
+        </select>
 
         <select
           id="districtFilter"
@@ -56,6 +67,7 @@
         >
           📍 我的位置
         </button>
+
       </div>
     </div>
 
@@ -69,26 +81,29 @@
   </header>
 
   <main class="body">
+
     <aside
       class="sidebar"
       id="sidebar"
+      aria-label="CCTV 清單"
     ></aside>
 
     <div
       id="map"
-      aria-label="台北市道路 CCTV 地圖"
+      aria-label="台北市即時 CCTV 地圖"
     ></div>
+
   </main>
 
-  <!-- Leaflet 必須先載入 -->
+  <!-- 先載入 Leaflet -->
   <script
     src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
     integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
     crossorigin=""
   ></script>
 
-  <!-- 再載入你的 JavaScript -->
-  <script src="script.js"></script>
+  <!-- 再載入網站程式 -->
+  <script src="script.js?v=3"></script>
 
 </body>
-</html>
+</html> 
