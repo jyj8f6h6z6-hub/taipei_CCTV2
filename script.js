@@ -650,7 +650,11 @@ function openInfo(marker) {
 
       <a
         class="iw-btn"
-        href="${esc(cam.url)}"
+        href="${esc(
+          cam.type === "water-rental"
+            ? cam.streamUrl
+            : cam.url
+        )}"
         target="_blank"
         rel="noopener noreferrer"
       >
