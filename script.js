@@ -1,4 +1,6 @@
 const ROAD_API_URL = "./cctv.json";
+const NEWTAIPEI_ROAD_API_URL = "./newtaipei-road-cctv.json";
+
 const WATER_API_URL = "./water-cctv.json";
 const WATER_RENTAL_API_URL = "./water-rental-cctv.json";
 
@@ -164,6 +166,7 @@ function normalizeRoadCams(json) {
         y,
         district: districtByCoord(x, y),
         url: playerUrl(id),
+        city: "台北市",
         type: "road",
         source: "臺北市交通管制工程處"
       };
@@ -173,6 +176,38 @@ function normalizeRoadCams(json) {
       Number.isFinite(cam.x) &&
       Number.isFinite(cam.y)
     );
+}
+
+function normalizeNewTaipeiDistrict(district) {
+  const name = String(district || "").trim();
+
+  if (!name) {
+    return "未判定";
+  }
+
+  return name.endsWith("區")
+    ? name
+    : `${name}區`;
+}
+
+function normalizeNewTaipeiRoad(data) {
+  if (!Array.isArray(data)) return [];
+
+  return data.map(cam => ({
+    key: `ntpc-road-${cam.cctv_id}`,
+    id: cam.cctv_id,
+    name: cam.address,
+    x: Number(cam.longitude),
+    y: Number(cam.latitude),
+    district: normalizeNewTaipeiDistrict(cam.district),
+    city: "新北市",
+
+    url:
+      `https://atis.ntpc.gov.tw/ATIS/ShowFrame4CCTV/${cam.areacode}`,
+
+    type: "road",
+    source: "新北市政府交通局"
+  }));
 }
 
 /* 整理水情 CCTV 資料 */
@@ -228,6 +263,7 @@ function normalizeWaterCams(json) {
         district: districtByCoord(x, y),
         url,
         streamUrl: getWaterStreamUrl({ url }),
+        city: "台北市",
         type: "water",
         source:
           row.source ||
@@ -317,6 +353,7 @@ function normalizeWaterRentalCams(json) {
         category: String(
           row.category || ""
         ).trim(),
+        city: "台北市",
         type: "water-rental",
         source:
           row.source ||
@@ -340,11 +377,13 @@ async function loadData() {
 
   const results = await Promise.allSettled([
     fetchJson(ROAD_API_URL),
+    fetchJson(NEWTAIPEI_ROAD_API_URL),   // ← 新增
     fetchJson(WATER_API_URL),
     fetchJson(WATER_RENTAL_API_URL)
   ]);
 
   let roadCams = [];
+  let newTaipeiRoadCams = [];   // ← 新增，先不用
   let waterCams = [];
   let waterRentalCams = [];
   const errors = [];
@@ -365,23 +404,45 @@ async function loadData() {
 
   if (results[1].status === "fulfilled") {
     try {
+      newTaipeiRoadCams =
+        normalizeNewTaipeiRoad(
+          results[1].value
+        );
+      
+      console.log("台北道路：", roadCams.length);
+      console.log("新北道路：", newTaipeiRoadCams.length);
+
+    } catch (error) {
+      errors.push(
+        `新北道路 CCTV：${error.message}`
+      );
+    }
+  } else {
+    errors.push(
+      `新北道路 CCTV：` +
+      results[1].reason.message
+    );
+  }
+
+  if (results[2].status === "fulfilled") {
+    try {
       waterCams = normalizeWaterCams(
-        results[1].value
+        results[2].value
       );
     } catch (error) {
       errors.push(error.message);
     }
   } else {
     errors.push(
-      `水情 CCTV：${results[1].reason.message}`
+      `水情 CCTV：${results[2].reason.message}`
     );
   }
 
-  if (results[2].status === "fulfilled") {
+  if (results[3].status === "fulfilled") {
     try {
       waterRentalCams =
         normalizeWaterRentalCams(
-          results[2].value
+          results[3].value
         );
     } catch (error) {
       errors.push(error.message);
@@ -389,15 +450,18 @@ async function loadData() {
   } else {
     errors.push(
       `水情租賃 CCTV：` +
-      results[2].reason.message
+      results[3].reason.message
     );
   }
 
   allCams = [
     ...roadCams,
+    ...newTaipeiRoadCams,
     ...waterCams,
     ...waterRentalCams
   ];
+
+  console.log("全部 CCTV：", allCams.length);
 
   if (allCams.length === 0) {
     throw new Error(
@@ -418,19 +482,67 @@ async function loadData() {
 }
 
 /* 建立行政區選單 */
+/* 建立行政區選單 */
 function buildDistrictOptions() {
   const select =
     document.getElementById("districtFilter");
 
-  select.innerHTML =
-    `<option value="全部">全部行政區</option>` +
-    [...DISTRICTS, "未判定"]
+  const optionsByCity = {};
+
+  allCams.forEach(cam => {
+    const city = cam.city || "其他";
+    const district = cam.district || "未判定";
+
+    if (!optionsByCity[city]) {
+      optionsByCity[city] = new Set();
+    }
+
+    optionsByCity[city].add(district);
+  });
+
+  const preferredCities = [
+    "台北市",
+    "臺北市",
+    "新北市"
+  ];
+
+  const cityOrder = [
+    ...preferredCities.filter(
+      city => optionsByCity[city]
+    ),
+    ...Object.keys(optionsByCity)
+      .filter(
+        city => !preferredCities.includes(city)
+      )
+      .sort((a, b) =>
+        a.localeCompare(b, "zh-Hant")
+      )
+  ];
+
+  let html =
+    `<option value="全部">全部行政區</option>`;
+
+  cityOrder.forEach(city => {
+    const districts = [
+      ...optionsByCity[city]
+    ].sort((a, b) =>
+      a.localeCompare(b, "zh-Hant")
+    );
+
+    html += `<optgroup label="${esc(city)}">`;
+
+    html += districts
       .map(
         district =>
           `<option value="${esc(district)}">` +
           `${esc(district)}</option>`
       )
       .join("");
+
+    html += `</optgroup>`;
+  });
+
+  select.innerHTML = html;
 }
 
 /* 取得符合目前搜尋條件的 CCTV */
@@ -514,73 +626,104 @@ function render() {
 
 /* 顯示左側 CCTV 清單 */
 function renderSidebar(cams) {
-  const order = [
-    ...DISTRICTS,
-    "未判定"
-  ];
-
-  const grouped = Object.fromEntries(
-    order.map(district => [district, []])
-  );
+  const grouped = {};
 
   cams.forEach(cam => {
-    if (!grouped[cam.district]) {
-      grouped[cam.district] = [];
+    const city = cam.city || "其他";
+    const district =
+      cam.district || "未判定";
+
+    if (!grouped[city]) {
+      grouped[city] = {};
     }
 
-    grouped[cam.district].push(cam);
+    if (!grouped[city][district]) {
+      grouped[city][district] = [];
+    }
+
+    grouped[city][district].push(cam);
   });
+
+  const preferredCities = [
+    "台北市",
+    "臺北市",
+    "新北市"
+  ];
+
+  const cityOrder = [
+    ...preferredCities.filter(
+      city => grouped[city]
+    ),
+    ...Object.keys(grouped)
+      .filter(
+        city => !preferredCities.includes(city)
+      )
+      .sort((a, b) =>
+        a.localeCompare(b, "zh-Hant")
+      )
+  ];
 
   let html = "";
 
-  order.forEach(district => {
-    const list = grouped[district];
+  cityOrder.forEach(city => {
+    const districts = Object.keys(
+      grouped[city]
+    ).sort((a, b) =>
+      a.localeCompare(b, "zh-Hant")
+    );
 
-    if (!list || list.length === 0) {
-      return;
-    }
+    districts.forEach(district => {
+      const list =
+        grouped[city][district];
 
-    html += `
-      <div class="district-group">
-        <div class="district-header">
-          ${esc(district)}
-          <span class="badge">${list.length}</span>
-        </div>
-    `;
+      if (!list || list.length === 0) {
+        return;
+      }
 
-    list
-      .sort((a, b) =>
-        a.name.localeCompare(
-          b.name,
-          "zh-Hant"
-        )
-      )
-      .forEach(cam => {
-        const typeInfo =
-          getCameraType(cam.type);
-
-        html += `
-          <div
-            class="cam-item"
-            data-key="${esc(cam.key)}"
-            onclick="focusCam('${esc(cam.key)}')"
-          >
-            <div class="cam-name">
-              <span class="cam-type-icon">
-                ${typeInfo.icon}
-              </span>
-              ${esc(cam.name)}
-            </div>
-
-            <div class="cam-id">
-              ${esc(typeInfo.label)}
-              ・ID ${esc(cam.id)}
-            </div>
+      html += `
+        <div class="district-group">
+          <div class="district-header">
+            ${esc(city)}・${esc(district)}
+            <span class="badge">
+              ${list.length}
+            </span>
           </div>
-        `;
-      });
+      `;
 
-    html += "</div>";
+      list
+        .sort((a, b) =>
+          a.name.localeCompare(
+            b.name,
+            "zh-Hant"
+          )
+        )
+        .forEach(cam => {
+          const typeInfo =
+            getCameraType(cam.type);
+
+          html += `
+            <div
+              class="cam-item"
+              data-key="${esc(cam.key)}"
+              onclick="focusCam('${esc(cam.key)}')"
+            >
+              <div class="cam-name">
+                <span class="cam-type-icon">
+                  ${typeInfo.icon}
+                </span>
+                ${esc(cam.name)}
+              </div>
+
+              <div class="cam-id">
+                ${esc(typeInfo.label)}
+                ・ID ${esc(cam.id)}
+              </div>
+            </div>
+          `;
+        });
+
+      html += "</div>";
+    });
   });
 
   document.getElementById("sidebar").innerHTML =
@@ -637,10 +780,35 @@ function openInfo(marker) {
   const typeInfo =
     getCameraType(cam.type);
 
+  const mediaUrl =
+    cam.type === "water"
+      ? (cam.streamUrl || cam.url)
+      : cam.type === "water-rental"
+        ? cam.streamUrl
+        : cam.url;
+
   const buttonText =
     cam.type === "water"
       ? "🖼 查看目前影像"
       : "▶ 開啟即時影像";
+
+  const actionHtml = mediaUrl
+    ? `
+      <a
+        class="iw-btn"
+        href="${esc(mediaUrl)}"
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        ${buttonText}
+      </a>
+    `
+    : `
+      <div class="iw-no-media">
+        目前僅提供 CCTV 點位資料，
+        尚無可開啟的即時影像網址。
+      </div>
+    `;
 
   const content = `
     <div class="iw-wrap">
@@ -658,20 +826,7 @@ function openInfo(marker) {
         資料來源：${esc(cam.source)}
       </div>
 
-      <a
-        class="iw-btn"
-        href="${esc(
-          cam.type === "water"
-            ? (cam.streamUrl || cam.url)
-            : cam.type === "water-rental"
-              ? cam.streamUrl
-              : cam.url
-        )}"
-        target="_blank"
-        rel="noopener noreferrer"
-      >
-        ${buttonText}
-      </a>
+      ${actionHtml}
     </div>
   `;
 
