@@ -4,20 +4,6 @@ const NEWTAIPEI_ROAD_API_URL = "./newtaipei-road-cctv.json";
 const WATER_API_URL = "./water-cctv.json";
 const WATER_RENTAL_API_URL = "./water-rental-cctv.json";
 
-const DISTRICTS = [
-  "中正區",
-  "大同區",
-  "中山區",
-  "松山區",
-  "大安區",
-  "萬華區",
-  "信義區",
-  "士林區",
-  "北投區",
-  "內湖區",
-  "南港區",
-  "文山區"
-];
 
 const TAIWAN_TOWNS_TOPOJSON_URL =
   "https://cdn.jsdelivr.net/npm/taiwan-atlas/towns-10t.json";
@@ -44,14 +30,19 @@ const CAMERA_TYPES = {
 };
 
 let allCams = [];
+
+let cameraCounts = {
+  road: 0,
+  water: 0,
+  "water-rental": 0
+};
+
 let map;
 let markers = [];
 let activeSidebarItem = null;
 let userLocationMarker = null;
 let currentUserPosition = null;
 let taipeiDistrictGeoJSON = null;
-let districtBoundaryLayer = null;
-let selectedDistrictLayer = null;
 
 
 /* 動態載入外部 JavaScript */
@@ -174,7 +165,7 @@ function getDistrictName(feature) {
   const properties =
     feature?.properties || {};
 
-  return normalizeTaipeiDistrict(
+  return normalizeDistrict(
     properties.TOWNNAME ||
     properties.TOWN ||
     properties.TNAME ||
@@ -327,29 +318,6 @@ function zoomToDistrict(districtName) {
   }
 }
 
-/* 在地圖上畫出臺北市全部行政區邊界 */
-function drawTaipeiDistrictBoundaries() {
-  if (!map || !taipeiDistrictGeoJSON) {
-    return;
-  }
-
-  if (districtBoundaryLayer) {
-    map.removeLayer(districtBoundaryLayer);
-  }
-
-  districtBoundaryLayer = L.geoJSON(
-    taipeiDistrictGeoJSON,
-    {
-      style: {
-        color: "#666666",
-        weight: 1,
-        opacity: 0.7,
-        fillColor: "#ffffff",
-        fillOpacity: 0
-      }
-    }
-  ).addTo(map);
-}
 
 /* 顯示被選取的行政區 */
 function showSelectedDistrictBoundary(districtName) {
@@ -457,11 +425,14 @@ async function fetchJson(url) {
   return response.json();
 }
 
-function normalizeTaipeiDistrict(value) {
+function normalizeDistrict(
+  value,
+  defaultValue = ""
+) {
   const name = String(value || "").trim();
 
   if (!name) {
-    return "";
+    return defaultValue;
   }
 
   return name.endsWith("區")
@@ -503,7 +474,7 @@ function normalizeRoadCams(json) {
       );
 
       const officialDistrict =
-        normalizeTaipeiDistrict(
+        normalizeDistrict(
           row["行政區"] ??
           row["行政區域"] ??
           row["區域"] ??
@@ -536,17 +507,6 @@ function normalizeRoadCams(json) {
     );
 }
 
-function normalizeNewTaipeiDistrict(district) {
-  const name = String(district || "").trim();
-
-  if (!name) {
-    return "未判定";
-  }
-
-  return name.endsWith("區")
-    ? name
-    : `${name}區`;
-}
 
 function normalizeNewTaipeiRoad(data) {
   if (!Array.isArray(data)) return [];
@@ -557,7 +517,10 @@ function normalizeNewTaipeiRoad(data) {
     name: cam.address,
     x: Number(cam.longitude),
     y: Number(cam.latitude),
-    district: normalizeNewTaipeiDistrict(cam.district),
+    district: normalizeDistrict(
+        cam.district,
+        "未判定"
+      ),
     city: "新北市",
 
     url:
@@ -819,6 +782,12 @@ async function loadData() {
     ...waterRentalCams
   ];
 
+  cameraCounts = {
+    road: roadCams.length + newTaipeiRoadCams.length,
+    water: waterCams.length,
+    "water-rental": waterRentalCams.length
+  };
+
   console.log("全部 CCTV：", allCams.length);
 
   window.debugCameras = allCams;
@@ -962,17 +931,10 @@ function filteredCams() {
 function render() {
   const cams = filteredCams();
 
-  const roadCount = allCams.filter(
-    cam => cam.type === "road"
-  ).length;
-
-  const waterCount = allCams.filter(
-    cam => cam.type === "water"
-  ).length;
-
-  const waterRentalCount = allCams.filter(
-    cam => cam.type === "water-rental"
-  ).length;
+  const roadCount = cameraCounts.road;
+  const waterCount = cameraCounts.water;
+  const waterRentalCount =
+    cameraCounts["water-rental"];
 
   document.getElementById("status").textContent =
     `道路 ${roadCount} 支；` +
@@ -1483,7 +1445,6 @@ async function initMap() {
       "正在載入行政區邊界……";
 
     await loadTaipeiDistrictBoundaries();
-    drawTaipeiDistrictBoundaries();
     await loadData();
   } catch (error) {
     console.error(error);
