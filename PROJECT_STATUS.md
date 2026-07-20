@@ -1,359 +1,269 @@
-當然可以，下面這份是以 **專案交接、GitHub Repository 長期維護** 為目的撰寫的 `PROJECT_STATUS.md`。
+---
 
-````markdown
-# PROJECT STATUS
+# PROJECT_STATUS.md
 
-Last Updated: 2026-07-17
+## 專案名稱
+
+**台北 / 新北 即時 CCTV 地圖**
 
 ---
 
-# Project
+# 目前版本
 
-Taipei CCTV Map
+**Version：2.0**
 
-GitHub Pages 網站，整合台北市各單位公開 CCTV，提供：
+更新日期：
 
-- 地圖瀏覽
-- 清單瀏覽
-- 行政區篩選
-- 即時影像
-- GitHub Actions 自動更新資料
+> 2026-07-20
 
 ---
 
-# Current Data Sources
+# 已完成功能
 
-## 1. Taipei Road CCTV
+## 台北市
 
-來源：
-- 臺北市交通資訊中心
+### 道路 CCTV
 
-更新方式：
-- GitHub Actions
-
-資料數量：
-- 約 416 支
-
-狀態：
-- ✅ 正常
+* ✅ 約 416 支
+* ✅ 官方播放器
+* ✅ 搜尋
+* ✅ Popup
+* ✅ 側欄
 
 ---
 
-## 2. Water CCTV
+### 水情 CCTV
 
-來源：
-- 臺北市政府工務局水利工程處
-
-資料數量：
-- 約 53 支
-
-JSON：
-
-```
-water-cctv.json
-```
-
-狀態：
-
-- ✅ 正常
+* ✅ 約 53 支
+* ✅ HLS 播放
+* ✅ Snapshot
+* ✅ Popup
 
 ---
 
-## 3. Water Rental CCTV
+### 水情租賃 CCTV
 
-來源：
-- 臺北市政府工務局水利工程處
-
-資料數量：
-
-- 約 110 支
-
-JSON：
-
-```
-water-rental-cctv.json
-```
-
-更新方式：
-
-GitHub Actions：
-
-```
-update-water-rental-cctv.yml
-```
-
-座標來源：
-
-```
-water-rental-cctv-coordinates.csv
-```
-
-狀態：
-
-- ✅ 正常
+* ✅ 約 110 支
+* ✅ HLS 播放
+* ✅ Popup
 
 ---
 
-# Today's Work
+## 新北市
 
-## 1. Water CCTV HLS Support
+### 道路 CCTV
 
-發現：
+* ✅ 官方 OpenData
+* ✅ 約 459 支
+* ✅ Marker
+* ✅ 搜尋
+* ✅ Sidebar
+* ✅ 行政區篩選
+* ✅ Popup
+* ✅ 官方即時影像網址
 
-原本網站使用
+影像網址格式：
 
-```
-/snapshot
-```
-
-JPEG 即時快照。
-
-研究後確認同一攝影機可直接使用：
-
-```
-/index.m3u8
+```text
+https://atis.ntpc.gov.tw/ATIS/ShowFrame4CCTV/{areacode}
 ```
 
 例如：
 
-JPEG
-
-```
-https://heocctv4.gov.taipei/channel16/snapshot
-```
-
-HLS
-
-```
-https://heocctv4.gov.taipei/channel16/index.m3u8
+```text
+https://atis.ntpc.gov.tw/ATIS/ShowFrame4CCTV/C000228
 ```
 
 ---
 
-## 2. Added getWaterStreamUrl()
+# 資料來源
+
+## 台北
+
+* 道路 CCTV
+* 水情 CCTV
+* 水情租賃 CCTV
+
+---
+
+## 新北
+
+交通局 OpenData
+
+欄位：
+
+* cctv_id
+* areacode
+* district
+* address
+* latitude
+* longitude
+
+---
+
+# 程式修改
+
+## 新增
+
+```
+normalizeNewTaipeiRoad()
+```
+
+功能：
+
+* 轉換官方 JSON
+* 建立 city
+* 建立 district
+* 建立官方影像網址
+
+---
+
+新增
+
+```
+normalizeNewTaipeiDistrict()
+```
+
+功能：
+
+統一：
+
+```
+新店
+↓
+新店區
+
+淡水
+↓
+淡水區
+```
+
+避免行政區重複。
+
+---
+
+修改
+
+```
+loadData()
+```
+
+目前載入：
+
+```
+台北道路
+新北道路
+台北水情
+台北水情租賃
+```
+
+---
+
+修改
+
+```
+buildDistrictOptions()
+```
+
+改為：
+
+* 動態行政區
+* 台北 / 新北 分組
+* 不再使用固定 DISTRICTS
+
+---
+
+修改
+
+```
+renderSidebar()
+```
+
+改為：
+
+依 city + district 分組。
+
+---
+
+修改
+
+```
+openInfo()
+```
 
 新增：
 
-```javascript
-function getWaterStreamUrl(cam) {
-    if (!cam.url) return null;
-
-    if (!cam.url.includes("/snapshot")) {
-        return null;
-    }
-
-    return cam.url.replace(
-        "/snapshot",
-        "/index.m3u8"
-    );
-}
-```
-
-用途：
-
-自動由 JPEG URL 推算 HLS URL。
-
----
-
-## 3. normalizeWaterCams()
-
-新增欄位：
-
-```javascript
-streamUrl
-```
-
-現在每台水情攝影機都具有：
-
-```
-url
-streamUrl
-```
-
-其中：
-
-```
-url
-```
-
-仍為：
-
-```
-snapshot
-```
-
-供圖片預覽使用。
-
-```
-streamUrl
-```
-
-則為：
-
-```
-index.m3u8
-```
-
-供直播播放使用。
-
----
-
-## 4. Popup Link
-
-修改 Popup 按鈕。
-
-目前邏輯：
-
-Road CCTV
+若沒有
 
 ```
 cam.url
 ```
 
-Water CCTV
+則顯示：
 
 ```
-cam.streamUrl || cam.url
+目前僅提供 CCTV 點位資料，
+尚無可開啟的即時影像網址。
 ```
 
-Water Rental CCTV
-
-```
-cam.streamUrl
-```
-
-因此：
-
-- 道路攝影機維持原本
-- 水情攝影機改開 HLS
-- 水情租賃攝影機維持 HLS
+避免重新開啟本站。
 
 ---
 
-# Current Architecture
+# 目前資料量
 
-Road CCTV
+| 類型     |       數量 |
+| ------ | -------: |
+| 台北道路   |      416 |
+| 新北道路   |      459 |
+| 台北水情   |       53 |
+| 台北水情租賃 |      110 |
+| **總計** | **1038** |
 
-```
-Road API
-        │
-        ▼
- road-cctv.json
-        │
-        ▼
- normalizeRoadCams()
-```
+---
 
-Water CCTV
+# 待完成
 
-```
-Water API
-        │
-        ▼
-water-cctv.json
-        │
-        ▼
-normalizeWaterCams()
-        │
-        ├── url
-        └── streamUrl
-```
+## 高優先
 
-Water Rental CCTV
+* ⏳ 新北水情 CCTV
+* ⏳ GitHub Actions 自動更新新北道路資料
 
-```
-Rental API
-        │
-        ▼
-water-rental-cctv.json
-        │
-        ▼
-normalizeWaterRentalCams()
-        │
-        ├── imageUrl
-        └── streamUrl
+---
+
+## 中優先
+
+* Marker Cluster（大量 Marker 聚合）
+* fitBounds 自動縮放
+* 側欄城市可收合
+
+---
+
+## 低優先
+
+* 北北基桃擴充
+* 科技執法 CCTV
+* 收藏功能
+* 分享功能
+
+---
+
+# Git Commit 建議
+
+```text
+feat: 新增新北市道路 CCTV 與官方即時影像支援
 ```
 
 ---
 
-# Current Camera Counts
+## 我另外建議
 
-Road
+我發現這個專案已經不是簡單的練習了，而是逐漸成為一個完整的應用程式。建議從下一版開始採用版本號管理，例如：
 
-≈416
+* **v1.0**：台北市 CCTV
+* **v2.0**：加入新北市道路 CCTV（目前）
+* **v2.1**：加入新北水情 CCTV
+* **v2.2**：Marker Cluster
+* **v3.0**：北北基桃 CCTV
 
-Water
-
-≈53
-
-Water Rental
-
-≈110
-
-Total
-
-≈579 cameras
-
----
-
-# GitHub Actions
-
-Working
-
-- update-road-cctv.yml
-- update-water-cctv.yml
-- update-water-rental-cctv.yml
-
-Status
-
-✅ All passing
-
----
-
-# Remaining Ideas
-
-Possible future improvements：
-
-- HLS inline player（hls.js）
-- Camera clustering
-- Favorites
-- Search by camera ID
-- Search by road name
-- Camera status detection
-- Fullscreen live player
-- Mobile UI optimization
-
----
-
-# Current Status
-
-Project Status
-
-🟢 Stable
-
-Data Update
-
-🟢 Automatic
-
-GitHub Actions
-
-🟢 Normal
-
-Road CCTV
-
-🟢 Working
-
-Water CCTV
-
-🟢 HLS Enabled
-
-Water Rental CCTV
-
-🟢 HLS Enabled
-
-Overall
-
-🟢 Production Ready
-````
-
-我建議之後每完成一個功能，就更新這個 `PROJECT_STATUS.md`，它可以作為專案的開發日誌與交接文件，之後要回顧或繼續開發都會方便很多。
+之後每次更新 `PROJECT_STATUS.md` 都記錄版本號與更新內容，未來回顧專案歷程會清楚很多。
