@@ -175,6 +175,26 @@ function getDistrictName(feature) {
   );
 }
 
+function getCountyName(feature) {
+  const properties =
+    feature?.properties || {};
+
+  const county = String(
+    properties.COUNTYNAME ||
+    properties.COUNTY ||
+    ""
+  ).trim();
+
+  if (
+    county === "臺北市" ||
+    county === "台北市"
+  ) {
+    return "台北市";
+  }
+
+  return county;
+}
+
 /* 判斷一個點是否在線環裡 */
 function pointInRing(point, ring) {
   const [x, y] = point;
@@ -818,7 +838,7 @@ async function loadData() {
   }
 }
 
-/* 建立行政區選單 */
+
 /* 建立行政區選單 */
 function buildDistrictOptions() {
   const select =
@@ -826,20 +846,49 @@ function buildDistrictOptions() {
 
   const optionsByCity = {};
 
+  // 建立「行政區 → 城市」對照表
+  const districtCityMap = new Map();
+
+  districtGeoJSON?.features.forEach(feature => {
+    const district =
+      getDistrictName(feature);
+
+    const city =
+      getCountyName(feature);
+
+    if (district && city) {
+      districtCityMap.set(
+        district,
+        city
+      );
+    }
+  });
+
   allCams.forEach(cam => {
-    const city = cam.city || "其他";
-    const district = cam.district || "未判定";
+    const district =
+      normalizeDistrict(
+        cam.district,
+        "未判定"
+      );
+
+    // 優先使用行政區 Polygon 所屬城市
+    const city =
+      districtCityMap.get(district) ||
+      cam.city ||
+      "其他";
 
     if (!optionsByCity[city]) {
-      optionsByCity[city] = new Set();
+      optionsByCity[city] =
+        new Set();
     }
 
-    optionsByCity[city].add(district);
+    optionsByCity[city].add(
+      district
+    );
   });
 
   const preferredCities = [
     "台北市",
-    "臺北市",
     "新北市"
   ];
 
@@ -849,10 +898,14 @@ function buildDistrictOptions() {
     ),
     ...Object.keys(optionsByCity)
       .filter(
-        city => !preferredCities.includes(city)
+        city =>
+          !preferredCities.includes(city)
       )
       .sort((a, b) =>
-        a.localeCompare(b, "zh-Hant")
+        a.localeCompare(
+          b,
+          "zh-Hant"
+        )
       )
   ];
 
@@ -863,10 +916,14 @@ function buildDistrictOptions() {
     const districts = [
       ...optionsByCity[city]
     ].sort((a, b) =>
-      a.localeCompare(b, "zh-Hant")
+      a.localeCompare(
+        b,
+        "zh-Hant"
+      )
     );
 
-    html += `<optgroup label="${esc(city)}">`;
+    html +=
+      `<optgroup label="${esc(city)}">`;
 
     html += districts
       .map(
