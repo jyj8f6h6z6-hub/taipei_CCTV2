@@ -42,7 +42,7 @@ let markers = [];
 let activeSidebarItem = null;
 let userLocationMarker = null;
 let currentUserPosition = null;
-let taipeiDistrictGeoJSON = null;
+let districtGeoJSON = null;
 
 
 /* 動態載入外部 JavaScript */
@@ -104,7 +104,7 @@ function loadScriptOnce(src) {
 }
 
 /* 載入臺北市行政區邊界 */
-async function loadTaipeiDistrictBoundaries() {
+async function loadDistrictBoundaries() {
   await loadScriptOnce(TOPOJSON_CLIENT_URL);
 
   if (!window.topojson?.feature) {
@@ -143,21 +143,22 @@ async function loadTaipeiDistrictBoundaries() {
         ""
       ).trim();
 
-      return (
-        county === "臺北市" ||
-        county === "台北市"
-      );
+      return [
+        "臺北市",
+        "台北市",
+        "新北市"
+      ].includes(county);
     });
 
-  taipeiDistrictGeoJSON = {
-    type: "FeatureCollection",
-    features
-  };
+    districtGeoJSON = {
+      type: "FeatureCollection",
+      features
+    };
 
-  console.log(
-    "已載入臺北市行政區：",
-    features.length
-  );
+    console.log(
+      "已載入臺北市及新北市行政區：",
+      features.length
+    );
 }
 
 /* 取得行政區名稱 */
@@ -254,13 +255,13 @@ function districtByCoord(x, y) {
   if (
     !Number.isFinite(x) ||
     !Number.isFinite(y) ||
-    !taipeiDistrictGeoJSON
+    !districtGeoJSON
   ) {
     return "未判定";
   }
 
   const feature =
-    taipeiDistrictGeoJSON.features.find(
+    districtGeoJSON.features.find(
       item =>
         pointInFeature(
           [x, y],
@@ -275,22 +276,29 @@ function districtByCoord(x, y) {
 
 /* 地圖自動縮放到選取的行政區 */
 function zoomToDistrict(districtName) {
-  if (!map || !taipeiDistrictGeoJSON) {
+  if (!map || !districtGeoJSON) {
     return;
   }
 
-  /* 選擇「全部」時，回到臺北市全景 */
   if (!districtName || districtName === "全部") {
-    map.setView(
-      [25.0478, 121.5318],
-      12
-    );
+    const allDistrictLayer =
+      L.geoJSON(districtGeoJSON);
+
+    const bounds =
+      allDistrictLayer.getBounds();
+
+    if (bounds.isValid()) {
+      map.fitBounds(bounds, {
+        padding: [20, 20],
+        maxZoom: 11
+      });
+    }
 
     return;
   }
 
   const feature =
-    taipeiDistrictGeoJSON.features.find(
+    districtGeoJSON.features.find(
       item =>
         getDistrictName(item) === districtName
     );
@@ -321,7 +329,7 @@ function zoomToDistrict(districtName) {
 
 /* 顯示被選取的行政區 */
 function showSelectedDistrictBoundary(districtName) {
-  if (!map || !taipeiDistrictGeoJSON) {
+  if (!map || !districtGeoJSON) {
     return;
   }
 
@@ -335,7 +343,7 @@ function showSelectedDistrictBoundary(districtName) {
   }
 
   const feature =
-    taipeiDistrictGeoJSON.features.find(item => {
+    districtGeoJSON.features.find(item => {
       return getDistrictName(item) === districtName;
     });
 
@@ -1444,7 +1452,7 @@ async function initMap() {
     document.getElementById("status").textContent =
       "正在載入行政區邊界……";
 
-    await loadTaipeiDistrictBoundaries();
+    await loadDistrictBoundaries(); 
     await loadData();
   } catch (error) {
     console.error(error);
