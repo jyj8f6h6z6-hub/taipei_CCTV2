@@ -40,12 +40,10 @@
       <div class="controls">
 
         <!-- 搜尋 -->
-        <input
-          id="q"
-          type="search"
-          placeholder="搜尋路名、站名、行政區…"
-          aria-label="搜尋 CCTV"
-        >
+        <div
+          id="placeAutocomplete"
+          aria-label="搜尋地址、車站、地標或店家"
+        ></div>
 
         <!-- 縣市 -->
         <select
@@ -119,6 +117,11 @@
   <!-- HLS 串流播放 -->
   <script
     src="https://cdn.jsdelivr.net/npm/hls.js@latest"
+  ></script>
+
+  <!-- Google Maps 地點搜尋 -->
+  <script
+    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDHJ18rC0CuG4OGUbF-c4H7xavGoKOrTgw&libraries=places&language=zh-TW&region=TW"
   ></script>
 
   <!-- 再載入網站程式 -->

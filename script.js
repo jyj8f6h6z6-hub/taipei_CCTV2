@@ -1133,11 +1133,7 @@ function buildDistrictOptions() {
 
 /* 取得符合目前搜尋條件的 CCTV */
 function filteredCams() {
-  const query = document
-    .getElementById("q")
-    .value
-    .trim()
-    .toLowerCase();
+  const query = "";
 
   const city =
   document.getElementById("cityFilter")
@@ -1735,13 +1731,7 @@ async function initMap() {
   }
 }
 
-/* 搜尋框 */
-document
-  .getElementById("q")
-  .addEventListener(
-    "input",
-    render
-  );
+
 
 /* CCTV 類型選單 */
 document
@@ -1788,5 +1778,32 @@ document
     }
   );
 
+/* 建立 Google 地點搜尋框 */
+function initPlaceAutocomplete() {
+  const container =
+    document.getElementById("placeAutocomplete");
+
+  const PlaceAutocompleteElement =
+    window.google?.maps?.places
+      ?.PlaceAutocompleteElement;
+
+  if (!container || !PlaceAutocompleteElement) {
+    console.error("Google 地點搜尋元件載入失敗");
+    return;
+  }
+
+  const autocomplete =
+    new PlaceAutocompleteElement({
+      includedRegionCodes: ["tw"]
+    });
+
+  autocomplete.placeholder =
+    "搜尋地址、車站、地標或店家";
+
+  container.replaceChildren(autocomplete);
+}
+
+
 /* 正式啟動 */
+initPlaceAutocomplete();
 initMap();

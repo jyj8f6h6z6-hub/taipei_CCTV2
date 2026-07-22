@@ -383,3 +383,28 @@ button:focus{
     min-height:420px;
   }
 }
+
+/* Google 地點搜尋框外觀 */
+#placeAutocomplete{
+  width:280px;
+  flex:none;
+}
+
+#placeAutocomplete gmp-place-autocomplete{
+  width:100%;
+  color-scheme:light;
+
+  border:1.5px solid var(--line);
+  border-radius:10px;
+  background:#fff;
+
+  font-size:14px;
+  color:var(--text);
+
+  overflow:hidden;
+  box-shadow:none;
+}
+
+#placeAutocomplete gmp-place-autocomplete:focus-within{
+  border-color:var(--accent);
+}
