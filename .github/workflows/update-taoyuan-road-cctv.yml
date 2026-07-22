@@ -72,7 +72,6 @@ jobs:
           def clean_location(value):
               text = str(value or "").strip()
 
-              # 移除名稱前方的「(CCTV274)」之類編號。
               text = re.sub(
                   r"^\s*[\(（]CCTV\d+[\)）]\s*",
                   "",
@@ -84,9 +83,6 @@ jobs:
 
 
           def extract_district(location):
-              # 例如：
-              # 八德區 和平路-和平路991巷
-              # 大園區 中山南路二段與領航北路三段
               match = re.search(
                   r"([\u4e00-\u9fff]{2,4}區)",
                   location,
@@ -98,66 +94,63 @@ jobs:
               return "未判定"
 
 
+          def download_json_with_retry(
+              url,
+              attempts=6,
+              connect_timeout=30,
+              read_timeout=120,
+          ):
+              last_error = None
+
+              for attempt in range(1, attempts + 1):
+                  try:
+                      print(
+                          f"第 {attempt}/{attempts} 次下載……"
+                      )
+
+                      response = session.get(
+                          url,
+                          timeout=(
+                              connect_timeout,
+                              read_timeout,
+                          ),
+                      )
+
+                      response.raise_for_status()
+
+                      print(
+                          "下載成功，HTTP 狀態：",
+                          response.status_code,
+                      )
+
+                      return response.json()
+
+                  except requests.RequestException as error:
+                      last_error = error
+
+                      print(
+                          f"第 {attempt} 次下載失敗："
+                          f"{error}"
+                      )
+
+                      if attempt < attempts:
+                          wait_seconds = attempt * 20
+
+                          print(
+                              f"{wait_seconds} 秒後重試……"
+                          )
+
+                          time.sleep(wait_seconds)
+
+              raise SystemExit(
+                  "多次嘗試後仍無法下載桃園 CCTV："
+                  f"{last_error}"
+              )
+
+
           print("下載桃園道路 CCTV API……")
 
-          import time
-
-
-            def download_json_with_retry(
-                url,
-                attempts=6,
-                connect_timeout=30,
-                read_timeout=120,
-            ):
-                last_error = None
-
-                for attempt in range(1, attempts + 1):
-                    try:
-                        print(
-                            f"第 {attempt}/{attempts} 次下載……"
-                        )
-
-                        response = session.get(
-                            url,
-                            timeout=(
-                                connect_timeout,
-                                read_timeout,
-                            ),
-                        )
-
-                        response.raise_for_status()
-
-                        print(
-                            "下載成功，HTTP 狀態：",
-                            response.status_code,
-                        )
-
-                        return response.json()
-
-                    except requests.RequestException as error:
-                        last_error = error
-
-                        print(
-                            f"第 {attempt} 次下載失敗："
-                            f"{error}"
-                        )
-
-                        if attempt < attempts:
-                            wait_seconds = attempt * 20
-
-                            print(
-                                f"{wait_seconds} 秒後重試……"
-                            )
-
-                            time.sleep(wait_seconds)
-
-                raise SystemExit(
-                    "多次嘗試後仍無法下載桃園 CCTV："
-                    f"{last_error}"
-                )
-
-
-            data = download_json_with_retry(api_url)
+          data = download_json_with_retry(api_url)
 
           if not isinstance(data, list):
               print(
@@ -187,8 +180,6 @@ jobs:
                   row.get("Area") or ""
               ).strip().upper()
 
-              # 第一階段只匯入桃園市政府攝影機，
-              # 排除 NFB 高速公路局等其他來源。
               if area != "TAO":
                   skipped_non_taoyuan += 1
                   continue
@@ -209,11 +200,15 @@ jobs:
 
               try:
                   latitude = float(
-                      str(row.get("Latitude") or "").strip()
+                      str(
+                          row.get("Latitude") or ""
+                      ).strip()
                   )
 
                   longitude = float(
-                      str(row.get("Longitude") or "").strip()
+                      str(
+                          row.get("Longitude") or ""
+                      ).strip()
                   )
               except (TypeError, ValueError):
                   skipped_invalid += 1
@@ -230,7 +225,6 @@ jobs:
               if device_id in seen_ids:
                   continue
 
-              # 桃園市及鄰近邊界的寬鬆座標檢查。
               if not (
                   120.90 <= longitude <= 121.50
                   and
@@ -247,7 +241,9 @@ jobs:
                   "x": longitude,
                   "y": latitude,
                   "city": "桃園市",
-                  "district": extract_district(location),
+                  "district": extract_district(
+                      location
+                  ),
                   "url": stream_url,
                   "streamUrl": stream_url,
                   "type": "road",
@@ -270,7 +266,8 @@ jobs:
           result = {
               "count": len(output),
               "sourceCount": len(data),
-              "excludedNonTaoyuanCount": skipped_non_taoyuan,
+              "excludedNonTaoyuanCount":
+                  skipped_non_taoyuan,
               "invalidCount": skipped_invalid,
               "results": output,
           }
@@ -292,11 +289,13 @@ jobs:
           )
 
           print(
-              f"排除非 TAO 資料：{skipped_non_taoyuan} 筆。"
+              "排除非 TAO 資料："
+              f"{skipped_non_taoyuan} 筆。"
           )
 
           print(
-              f"排除格式或座標異常：{skipped_invalid} 筆。"
+              "排除格式或座標異常："
+              f"{skipped_invalid} 筆。"
           )
           PY
 
@@ -317,7 +316,8 @@ jobs:
 
           if not isinstance(rows, list) or not rows:
               raise SystemExit(
-                  "taoyuan-road-cctv.json 沒有可用的 results。"
+                  "taoyuan-road-cctv.json "
+                  "沒有可用的 results。"
               )
 
           required = {
@@ -374,7 +374,8 @@ jobs:
               ids.add(row["id"])
 
           print(
-              f"檢查完成，共 {len(rows)} 筆桃園道路 CCTV。"
+              f"檢查完成，共 {len(rows)} 筆"
+              "桃園道路 CCTV。"
           )
           PY
 
