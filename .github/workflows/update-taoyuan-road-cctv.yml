@@ -32,6 +32,7 @@ jobs:
           import json
           import os
           import re
+          import time
 
           import requests
 
@@ -80,13 +81,64 @@ jobs:
 
           print("下載桃園道路 CCTV API……")
 
-          response = session.get(
-              api_url,
-              timeout=45,
-          )
+          import time
 
-          response.raise_for_status()
-          data = response.json()
+
+            def download_json_with_retry(
+                url,
+                attempts=6,
+                connect_timeout=30,
+                read_timeout=120,
+            ):
+                last_error = None
+
+                for attempt in range(1, attempts + 1):
+                    try:
+                        print(
+                            f"第 {attempt}/{attempts} 次下載……"
+                        )
+
+                        response = session.get(
+                            url,
+                            timeout=(
+                                connect_timeout,
+                                read_timeout,
+                            ),
+                        )
+
+                        response.raise_for_status()
+
+                        print(
+                            "下載成功，HTTP 狀態：",
+                            response.status_code,
+                        )
+
+                        return response.json()
+
+                    except requests.RequestException as error:
+                        last_error = error
+
+                        print(
+                            f"第 {attempt} 次下載失敗："
+                            f"{error}"
+                        )
+
+                        if attempt < attempts:
+                            wait_seconds = attempt * 20
+
+                            print(
+                                f"{wait_seconds} 秒後重試……"
+                            )
+
+                            time.sleep(wait_seconds)
+
+                raise SystemExit(
+                    "多次嘗試後仍無法下載桃園 CCTV："
+                    f"{last_error}"
+                )
+
+
+            data = download_json_with_retry(api_url)
 
           if not isinstance(data, list):
               print(
