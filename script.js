@@ -1700,6 +1700,83 @@ function locateUser() {
   );
 }
 
+/* 建立 Google 地點搜尋框 */
+async function initPlaceAutocomplete() {
+  const container =
+    document.getElementById("placeAutocomplete");
+
+  if (!container) {
+    console.error("找不到 Google 地點搜尋框容器");
+    return;
+  }
+
+  try {
+    const { PlaceAutocompleteElement } =
+      await google.maps.importLibrary("places");
+
+    const autocomplete =
+      new PlaceAutocompleteElement();
+
+    autocomplete.includedRegionCodes = ["tw"];
+
+    autocomplete.placeholder =
+      "搜尋地址、車站、地標或店家";
+
+    autocomplete.addEventListener(
+      "gmp-select",
+      async event => {
+        try {
+          const place =
+            event.placePrediction.toPlace();
+
+          await place.fetchFields({
+            fields: [
+              "displayName",
+              "formattedAddress",
+              "location"
+            ]
+          });
+
+          if (!place.location) {
+            console.error("這個地點沒有座標");
+            return;
+          }
+
+          const lat = place.location.lat();
+          const lng = place.location.lng();
+
+          map.setView(
+            [lat, lng],
+            16,
+            {
+              animate: true
+            }
+          );
+
+          document.getElementById(
+            "status"
+          ).textContent =
+            `已找到：${place.displayName || "搜尋地點"}`;
+
+        } catch (error) {
+          console.error(
+            "取得搜尋地點失敗：",
+            error
+          );
+        }
+      }
+    );
+
+    container.replaceChildren(autocomplete);
+
+  } catch (error) {
+    console.error(
+      "Google 地點搜尋載入失敗：",
+      error
+    );
+  }
+}
+
 /* 啟動 Leaflet 地圖 */
 async function initMap() {
   map = L.map("map").setView(
@@ -1777,31 +1854,6 @@ document
       render();
     }
   );
-
-/* 建立 Google 地點搜尋框 */
-function initPlaceAutocomplete() {
-  const container =
-    document.getElementById("placeAutocomplete");
-
-  const PlaceAutocompleteElement =
-    window.google?.maps?.places
-      ?.PlaceAutocompleteElement;
-
-  if (!container || !PlaceAutocompleteElement) {
-    console.error("Google 地點搜尋元件載入失敗");
-    return;
-  }
-
-  const autocomplete =
-    new PlaceAutocompleteElement({
-      includedRegionCodes: ["tw"]
-    });
-
-  autocomplete.placeholder =
-    "搜尋地址、車站、地標或店家";
-
-  container.replaceChildren(autocomplete);
-}
 
 
 /* 正式啟動 */

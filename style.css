@@ -401,10 +401,29 @@ button:focus{
   font-size:14px;
   color:var(--text);
 
-  overflow:hidden;
   box-shadow:none;
 }
 
 #placeAutocomplete gmp-place-autocomplete:focus-within{
   border-color:var(--accent);
+}
+
+/* 讓 Google 地點建議清單顯示在地圖上方 */
+#placeAutocomplete{
+  position:relative;
+  z-index:1000;
+}
+
+gmp-place-autocomplete{
+  position:relative;
+  z-index:1001;
+}
+
+header{
+  position:relative;
+  z-index:2000;
+}
+
+#map{
+  z-index:1;
 }
