@@ -43,6 +43,7 @@ let map;
 let markers = [];
 let activeSidebarItem = null;
 let userLocationMarker = null;
+let searchLocationMarker = null;
 let currentUserPosition = null;
 let districtGeoJSON = null;
 
@@ -1573,6 +1574,68 @@ function formatDistance(distance) {
   return `${(distance / 1000).toFixed(1)} 公里`;
 }
 
+/* 清除地點搜尋，恢復原本瀏覽模式 */
+function clearPlaceSearch() {
+  if (searchLocationMarker) {
+    map.removeLayer(searchLocationMarker);
+    searchLocationMarker = null;
+  }
+
+  const clearButton =
+    document.getElementById("clearSearchBtn");
+
+  if (clearButton) {
+    clearButton.hidden = true;
+  }
+
+  const citySelect =
+    document.getElementById("cityFilter");
+
+  const districtSelect =
+    document.getElementById("districtFilter");
+
+  if (citySelect) {
+    citySelect.value = "全部";
+  }
+
+  buildDistrictOptions();
+
+  if (districtSelect) {
+    districtSelect.value = "全部";
+  }
+
+  render();
+}
+
+/* 找出搜尋位置 1 公里內的 CCTV */
+function findNearbyCams(searchPosition) {
+  const radiusMeters = 1000;
+
+  return allCams
+    .map(cam => {
+      const distance = distanceInMeters(
+        searchPosition,
+        {
+          lat: cam.y,
+          lng: cam.x
+        }
+      );
+
+      return {
+        ...cam,
+        distance
+      };
+    })
+    .filter(cam =>
+      Number.isFinite(cam.distance) &&
+      cam.distance <= radiusMeters
+    )
+    .sort((a, b) =>
+      a.distance - b.distance
+    )
+    .slice(0, 50);
+}
+
 /* 使用者定位 */
 function locateUser() {
   const button =
@@ -1745,13 +1808,54 @@ async function initPlaceAutocomplete() {
           const lat = place.location.lat();
           const lng = place.location.lng();
 
-          map.setView(
-            [lat, lng],
-            16,
-            {
-              animate: true
-            }
+          const nearbyCams = findNearbyCams({
+            lat,
+            lng
+          });
+
+          const clearButton =
+            document.getElementById("clearSearchBtn");
+
+          if (clearButton) {
+            clearButton.hidden = false;
+          }
+
+          console.log(
+            "1 公里內 CCTV：",
+            nearbyCams
           );
+
+          renderSidebar(nearbyCams);
+          renderMarkers(nearbyCams);
+
+          const bounds = L.latLngBounds(
+            [
+              [lat, lng],
+              ...nearbyCams.map(cam => [cam.y, cam.x])
+            ]
+          );
+
+          if (bounds.isValid()) {
+            map.fitBounds(bounds, {
+              padding: [40, 40],
+              maxZoom: 16
+            });
+          }
+
+          if (searchLocationMarker) {
+            map.removeLayer(searchLocationMarker);
+          }
+
+          searchLocationMarker = L.marker(
+            [lat, lng]
+          )
+            .addTo(map)
+            .bindPopup(
+              `<strong>${esc(
+                place.displayName || "搜尋位置"
+              )}</strong>`
+            )
+            .openPopup();
 
           document.getElementById(
             "status"
@@ -1851,10 +1955,22 @@ document
         districtSelect.value = "全部";
       }
 
+      if (searchLocationMarker) {
+        map.removeLayer(searchLocationMarker);
+        searchLocationMarker = null;
+      }
+
       render();
     }
   );
 
+/* 清除搜尋按鈕 */
+document
+  .getElementById("clearSearchBtn")
+  ?.addEventListener(
+    "click",
+    clearPlaceSearch
+  );
 
 /* 正式啟動 */
 initPlaceAutocomplete();
