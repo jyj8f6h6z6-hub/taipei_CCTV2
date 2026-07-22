@@ -4,6 +4,8 @@ const NEWTAIPEI_ROAD_API_URL = "./newtaipei-road-cctv.json";
 const WATER_API_URL = "./water-cctv.json";
 const WATER_RENTAL_API_URL = "./water-rental-cctv.json";
 
+const TAOYUAN_ROAD_API_URL =
+  "./taoyuan-road-cctv.json";
 
 const TAIWAN_TOWNS_TOPOJSON_URL =
   "https://cdn.jsdelivr.net/npm/taiwan-atlas/towns-10t.json";
@@ -832,13 +834,15 @@ async function loadData() {
 
   const results = await Promise.allSettled([
     fetchJson(ROAD_API_URL),
-    fetchJson(NEWTAIPEI_ROAD_API_URL),   // ← 新增
+    fetchJson(NEWTAIPEI_ROAD_API_URL),   
+    fetchJson(TAOYUAN_ROAD_API_URL),// ← 新增
     fetchJson(WATER_API_URL),
     fetchJson(WATER_RENTAL_API_URL)
   ]);
 
   let roadCams = [];
   let newTaipeiRoadCams = [];   // ← 新增，先不用
+  let taoyuanRoadCams = [];
   let waterCams = [];
   let waterRentalCams = [];
   const errors = [];
@@ -881,23 +885,99 @@ async function loadData() {
 
   if (results[2].status === "fulfilled") {
     try {
+      const rows =
+        results[2].value?.results;
+
+      taoyuanRoadCams =
+        Array.isArray(rows)
+          ? rows
+              .map(cam => ({
+                ...cam,
+                key:
+                  `taoyuan-road-${cam.id}`,
+
+                id: String(
+                  cam.id || ""
+                ).trim(),
+
+                name: String(
+                  cam.name || ""
+                ).trim(),
+
+                x: Number(cam.x),
+                y: Number(cam.y),
+
+                city: normalizeCity(
+                  cam.city,
+                  "桃園市"
+                ),
+
+                district:
+                  normalizeDistrict(
+                    cam.district,
+                    "未判定"
+                  ),
+
+                url: String(
+                  cam.url || ""
+                ).trim(),
+
+                streamUrl: String(
+                  cam.streamUrl ||
+                  cam.url ||
+                  ""
+                ).trim(),
+
+                type: "road",
+
+                source:
+                  cam.source ||
+                  "桃園市政府交通局"
+              }))
+              .filter(cam =>
+                cam.id &&
+                cam.name &&
+                cam.url &&
+                Number.isFinite(cam.x) &&
+                Number.isFinite(cam.y)
+              )
+          : [];
+
+      console.log(
+        "桃園道路：",
+        taoyuanRoadCams.length
+      );
+    } catch (error) {
+      errors.push(
+        `桃園道路 CCTV：${error.message}`
+      );
+    }
+  } else {
+    errors.push(
+      `桃園道路 CCTV：` +
+      results[2].reason.message
+    );
+  }
+
+  if (results[3].status === "fulfilled") {
+    try {
       waterCams = normalizeWaterCams(
-        results[2].value
+        results[3].value
       );
     } catch (error) {
       errors.push(error.message);
     }
   } else {
     errors.push(
-      `水情 CCTV：${results[2].reason.message}`
+      `水情 CCTV：${results[3].reason.message}`
     );
   }
 
-  if (results[3].status === "fulfilled") {
+  if (results[4].status === "fulfilled") {
     try {
       waterRentalCams =
         normalizeWaterRentalCams(
-          results[3].value
+          results[4].value
         );
     } catch (error) {
       errors.push(error.message);
@@ -905,19 +985,20 @@ async function loadData() {
   } else {
     errors.push(
       `水情租賃 CCTV：` +
-      results[3].reason.message
+      results[4].reason.message
     );
   }
 
   allCams = [
     ...roadCams,
     ...newTaipeiRoadCams,
+    ...taoyuanRoadCams,
     ...waterCams,
     ...waterRentalCams
   ];
 
   cameraCounts = {
-    road: roadCams.length + newTaipeiRoadCams.length,
+    road: roadCams.length + newTaipeiRoadCams.length + taoyuanRoadCams.length,
     water: waterCams.length,
     "water-rental": waterRentalCams.length
   };
