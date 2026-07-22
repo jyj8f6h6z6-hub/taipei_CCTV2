@@ -3,10 +3,7 @@ name: 更新桃園道路 CCTV 資料
 on:
   workflow_dispatch:
 
-  schedule:
-    # 臺灣時間每天凌晨 04:05
-    # GitHub Actions cron 使用 UTC，因此為前一天 20:05
-    - cron: "5 20 * * *"
+
 
 permissions:
   contents: write
