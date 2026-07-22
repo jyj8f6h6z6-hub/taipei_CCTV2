@@ -318,29 +318,69 @@ button:focus{
   h1{
     display:block;
     width:100%;
-    max-width:100%;
     font-size:16px;
     white-space:normal;
   }
 
+
+  /* 手機版控制區：共 12 欄 */
   .controls{
     display:grid;
-    grid-template-columns:
-      minmax(0,1fr)
-      minmax(0,1fr);
-
+    grid-template-columns:repeat(12, minmax(0, 1fr));
     width:100%;
-    max-width:100%;
     min-width:0;
     gap:8px;
   }
 
-  .controls input{
-    display:block;
-    grid-column:1 / -1;
+
+  /* 搜尋欄：第一列左側，占 9 欄 */
+  #placeAutocomplete{
+    grid-column:1 / span 9;
+    grid-row:1;
     width:100%;
     min-width:0;
-    max-width:100%;
+  }
+
+  #placeAutocomplete gmp-place-autocomplete{
+    width:100%;
+  }
+
+
+  /* 我的位置：第一列右側，正方形 */
+  #locationBtn{
+    grid-column:10 / span 3;
+    grid-row:1;
+
+    width:100%;
+    min-width:0;
+    aspect-ratio:1 / 1;
+
+    padding:4px;
+    font-size:13px;
+    line-height:1.25;
+    white-space:normal;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    text-align:center;
+  }
+
+
+  /* 三個選單放在同一列，寬度相同 */
+  #cityFilter{
+    grid-column:1 / span 4;
+    grid-row:2;
+  }
+
+  #districtFilter{
+    grid-column:5 / span 4;
+    grid-row:2;
+  }
+
+  #sourceFilter{
+    grid-column:9 / span 4;
+    grid-row:2;
   }
 
   .controls select{
@@ -348,64 +388,60 @@ button:focus{
     width:100%;
     min-width:0;
     max-width:100%;
+    padding-left:8px;
+    padding-right:6px;
+    font-size:13px;
   }
 
-  #cityFilter{
-    grid-column:1;
-  }
 
-  #districtFilter{
-    grid-column:2;
-  }
-
-  #sourceFilter{
+  /* 清除搜尋出現時，獨占一列 */
+  #clearSearchBtn{
     grid-column:1 / -1;
-  }
-
-  #locationBtn{
-    display:block;
-    grid-column:1 / -1;
+    grid-row:3;
     width:100%;
     min-width:0;
-    max-width:100%;
-    padding:8px 12px;
   }
+
 
   .status-bar{
     width:100%;
-    max-width:100%;
+    margin-top:6px;
   }
 
+
+  /* 地圖與清單 */
   .body{
+    display:flex;
     flex-direction:column;
+    flex:1;
+    min-height:0;
     width:100%;
-    min-width:0;
-    max-width:100%;
     overflow:hidden;
   }
 
-  .sidebar{
+
+  /* 地圖占主要空間 */
+  #map{
+    order:1;
+    flex:1 1 auto;
     width:100%;
     min-width:0;
-    max-width:100%;
-    height:140px;
+    min-height:0;
+  }
+
+
+  /* CCTV 清單縮小，放在地圖下方 */
+  .sidebar{
+    order:2;
+    flex:0 0 110px;
+    width:100%;
+    height:110px;
+    min-width:0;
     overflow-y:auto;
     -webkit-overflow-scrolling:touch;
+
     border-right:none;
     border-top:1px solid var(--line);
-  }
-
-  #map{
-    width:100%;
-    min-width:0;
-    max-width:100%;
-    flex:1;
-    min-height:420px;
-  }
-
-  #clearSearchBtn{
-    grid-column:1 / -1;
-    width:100%;
   }
 }
 
