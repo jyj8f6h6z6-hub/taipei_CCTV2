@@ -23,6 +23,25 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           pip install requests
+        
+    - name: 測試桃園 API 連線
+    continue-on-error: true
+    run: |
+        echo "DNS 查詢："
+        getent hosts tcintgr.tycg.gov.tw || true
+
+        echo
+        echo "HTTPS 連線測試："
+        curl \
+        --verbose \
+        --location \
+        --connect-timeout 20 \
+        --max-time 60 \
+        --retry 3 \
+        --retry-delay 10 \
+        --output /dev/null \
+        "https://tcintgr.tycg.gov.tw/" \
+        || true
 
       - name: 下載並整理桃園道路 CCTV
         env:
