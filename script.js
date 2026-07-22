@@ -156,7 +156,8 @@ async function loadDistrictBoundaries() {
       return [
         "臺北市",
         "台北市",
-        "新北市"
+        "新北市",
+        "桃園市"
       ].includes(county);
     });
 
