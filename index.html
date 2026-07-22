@@ -8,11 +8,11 @@
     content="width=device-width, initial-scale=1, viewport-fit=cover"
   >
 
-  <title>雙北即時 CCTV 地圖</title>
+  <title>即時 CCTV 地圖</title>
 
   <meta
     name="description"
-    content="整合台北市與新北市道路 CCTV，以及台北市水情 CCTV 的即時影像地圖。"
+    content="整合各縣市道路 CCTV、水情 CCTV 與水情租賃 CCTV 的即時影像地圖。"
   >
 
   <!-- Leaflet 地圖樣式 -->
@@ -24,7 +24,7 @@
   >
 
   <!-- 網站樣式 -->
-  <link rel="stylesheet" href="style.css?v=3">
+  <link rel="stylesheet" href="style.css?v=4">
 
   <!-- 避免 favicon 404 -->
   <link rel="icon" href="data:,">
@@ -34,10 +34,12 @@
 
   <header>
     <div class="header-row">
-      <h1>🗺 雙北即時 CCTV</h1>
+
+      <h1>🗺 即時 CCTV 地圖</h1>
 
       <div class="controls">
 
+        <!-- 搜尋 -->
         <input
           id="q"
           type="search"
@@ -45,6 +47,23 @@
           aria-label="搜尋 CCTV"
         >
 
+        <!-- 縣市 -->
+        <select
+          id="cityFilter"
+          aria-label="選擇縣市"
+        >
+          <option value="全部">全部縣市</option>
+        </select>
+
+        <!-- 行政區 -->
+        <select
+          id="districtFilter"
+          aria-label="選擇行政區"
+        >
+          <option value="全部">全部行政區</option>
+        </select>
+
+        <!-- CCTV 類型 -->
         <select
           id="sourceFilter"
           aria-label="選擇 CCTV 類型"
@@ -55,13 +74,7 @@
           <option value="water-rental">水情租賃 CCTV</option>
         </select>
 
-        <select
-          id="districtFilter"
-          aria-label="選擇行政區"
-        >
-          <option value="全部">全部行政區</option>
-        </select>
-
+        <!-- 定位 -->
         <button
           id="locationBtn"
           type="button"
@@ -91,7 +104,7 @@
 
     <div
       id="map"
-      aria-label="雙北即時 CCTV 地圖"
+      aria-label="即時 CCTV 地圖"
     ></div>
 
   </main>
@@ -103,10 +116,13 @@
     crossorigin=""
   ></script>
 
-  <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
+  <!-- HLS 串流播放 -->
+  <script
+    src="https://cdn.jsdelivr.net/npm/hls.js@latest"
+  ></script>
 
   <!-- 再載入網站程式 -->
-  <script src="script.js?v=3"></script>
+  <script src="script.js?v=4"></script>
 
 </body>
-</html> 
+</html>

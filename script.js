@@ -44,6 +44,14 @@ let userLocationMarker = null;
 let currentUserPosition = null;
 let districtGeoJSON = null;
 
+/* 縣市顯示順序 */
+const CITY_ORDER = [
+  "臺北市",
+  "新北市",
+  "基隆市",
+  "桃園市"
+];
+
 
 /* 動態載入外部 JavaScript */
 function loadScriptOnce(src) {
@@ -295,7 +303,10 @@ function districtByCoord(x, y) {
 }
 
 /* 地圖自動縮放到選取的行政區 */
-function zoomToDistrict(districtName) {
+function zoomToDistrict(
+  districtName,
+  cityName = "全部"
+) {
   if (!map || !districtGeoJSON) {
     return;
   }
@@ -318,14 +329,36 @@ function zoomToDistrict(districtName) {
   }
 
   const feature =
-    districtGeoJSON.features.find(
-      item =>
-        getDistrictName(item) === districtName
-    );
+    districtGeoJSON.features.find(item => {
+      const featureDistrict =
+        normalizeDistrict(
+          getDistrictName(item)
+        );
+
+      const featureCity =
+        normalizeCity(
+          getCountyName(item)
+        );
+
+      const districtMatches =
+        featureDistrict ===
+        normalizeDistrict(districtName);
+
+      const cityMatches =
+        cityName === "全部" ||
+        featureCity ===
+          normalizeCity(cityName);
+
+      return (
+        districtMatches &&
+        cityMatches
+      );
+    });
 
   if (!feature) {
     console.warn(
       "找不到行政區：",
+      cityName,
       districtName
     );
 
@@ -346,6 +379,58 @@ function zoomToDistrict(districtName) {
   }
 }
 
+/* 地圖縮放到指定縣市 */
+function zoomToCity(cityName) {
+  if (!map || !districtGeoJSON) {
+    return;
+  }
+
+  if (!cityName || cityName === "全部") {
+    const allLayer = L.geoJSON(districtGeoJSON);
+    const bounds = allLayer.getBounds();
+
+    if (bounds.isValid()) {
+      map.fitBounds(bounds, {
+        padding: [20, 20],
+        maxZoom: 11
+      });
+    }
+
+    return;
+  }
+
+  const cityFeatures =
+    districtGeoJSON.features.filter(feature => {
+      return normalizeCity(
+        getCountyName(feature)
+      ) === normalizeCity(cityName);
+    });
+
+  
+  if (cityFeatures.length === 0) {
+    console.warn(
+      "找不到縣市邊界：",
+      cityName
+    );
+
+    return;
+  }
+
+  const cityGeoJSON = {
+    type: "FeatureCollection",
+    features: cityFeatures
+  };
+
+  const cityLayer = L.geoJSON(cityGeoJSON);
+  const bounds = cityLayer.getBounds();
+
+  if (bounds.isValid()) {
+    map.fitBounds(bounds, {
+      padding: [30, 30],
+      maxZoom: 12
+    });
+  }
+}
 
 /* 顯示被選取的行政區 */
 function showSelectedDistrictBoundary(districtName) {
@@ -453,6 +538,27 @@ async function fetchJson(url) {
   return response.json();
 }
 
+/* 統一縣市名稱 */
+function normalizeCity(value, fallback = "") {
+  const text = String(value || "")
+    .trim()
+    .replace(/\s+/g, "");
+
+  if (!text) {
+    return fallback;
+  }
+
+  const cityAliases = {
+    台北市: "臺北市",
+    臺北市: "臺北市",
+    新北市: "新北市",
+    基隆市: "基隆市",
+    桃園市: "桃園市"
+  };
+
+  return cityAliases[text] || text;
+}
+
 function normalizeDistrict(
   value,
   defaultValue = ""
@@ -523,7 +629,7 @@ function normalizeRoadCams(json) {
         y,
         district,
         url: playerUrl(id),
-        city: "台北市",
+        city: "臺北市",
         type: "road",
         source: "臺北市交通管制工程處"
       };
@@ -612,7 +718,7 @@ function normalizeWaterCams(json) {
         district: districtByCoord(x, y),
         url,
         streamUrl: getWaterStreamUrl({ url }),
-        city: "台北市",
+        city: "臺北市",
         type: "water",
         source:
           row.source ||
@@ -702,7 +808,7 @@ function normalizeWaterRentalCams(json) {
         category: String(
           row.category || ""
         ).trim(),
-        city: "台北市",
+        city: "臺北市",
         type: "water-rental",
         source:
           row.source ||
@@ -827,6 +933,7 @@ async function loadData() {
     );
   }
 
+  buildCityOptions();
   buildDistrictOptions();
   render();
 
@@ -838,105 +945,108 @@ async function loadData() {
   }
 }
 
+/* 建立縣市選單 */
+/* 建立縣市選單 */
+function buildCityOptions() {
+  const citySelect =
+    document.getElementById("cityFilter");
 
-/* 建立行政區選單 */
+  if (!citySelect) {
+    return;
+  }
+
+  const availableCities = [
+    ...new Set(
+      allCams
+        .map(cam =>
+          normalizeCity(cam.city)
+        )
+        .filter(Boolean)
+    )
+  ];
+
+  availableCities.sort((a, b) => {
+    const indexA = CITY_ORDER.indexOf(a);
+    const indexB = CITY_ORDER.indexOf(b);
+
+    if (indexA !== -1 && indexB !== -1) {
+      return indexA - indexB;
+    }
+
+    if (indexA !== -1) {
+      return -1;
+    }
+
+    if (indexB !== -1) {
+      return 1;
+    }
+
+    return a.localeCompare(b, "zh-Hant");
+  });
+
+  citySelect.innerHTML = [
+    `<option value="全部">全部縣市</option>`,
+
+    ...availableCities.map(city => {
+      return (
+        `<option value="${esc(city)}">` +
+        `${esc(city)}` +
+        `</option>`
+      );
+    })
+  ].join("");
+}
+
+/* 依照目前縣市建立行政區選單 */
 function buildDistrictOptions() {
-  const select =
+  const citySelect =
+    document.getElementById("cityFilter");
+
+  const districtSelect =
     document.getElementById("districtFilter");
 
-  const optionsByCity = {};
+  if (!districtSelect) {
+    return;
+  }
 
-  // 建立「行政區 → 城市」對照表
-  const districtCityMap = new Map();
+  const selectedCity =
+    citySelect?.value || "全部";
 
-  districtGeoJSON?.features.forEach(feature => {
-    const district =
-      getDistrictName(feature);
+  const districts = [
+    ...new Set(
+      allCams
+        .filter(cam => {
+          const cameraCity =
+            normalizeCity(cam.city);
 
-    const city =
-      getCountyName(feature);
-
-    if (district && city) {
-      districtCityMap.set(
-        district,
-        city
-      );
-    }
-  });
-
-  allCams.forEach(cam => {
-    const district =
-      normalizeDistrict(
-        cam.district,
-        "未判定"
-      );
-
-    // 優先使用行政區 Polygon 所屬城市
-    const city =
-      districtCityMap.get(district) ||
-      cam.city ||
-      "其他";
-
-    if (!optionsByCity[city]) {
-      optionsByCity[city] =
-        new Set();
-    }
-
-    optionsByCity[city].add(
-      district
-    );
-  });
-
-  const preferredCities = [
-    "台北市",
-    "新北市"
-  ];
-
-  const cityOrder = [
-    ...preferredCities.filter(
-      city => optionsByCity[city]
-    ),
-    ...Object.keys(optionsByCity)
-      .filter(
-        city =>
-          !preferredCities.includes(city)
-      )
-      .sort((a, b) =>
-        a.localeCompare(
-          b,
-          "zh-Hant"
+          return (
+            selectedCity === "全部" ||
+            cameraCity === selectedCity
+          );
+        })
+        .map(cam =>
+          normalizeDistrict(
+            cam.district,
+            "未判定"
+          )
         )
-      )
-  ];
+        .filter(Boolean)
+    )
+  ].sort((a, b) =>
+    a.localeCompare(b, "zh-Hant")
+  );
 
-  let html =
-    `<option value="全部">全部行政區</option>`;
+  districtSelect.innerHTML = [
+    `<option value="全部">全部行政區</option>`,
 
-  cityOrder.forEach(city => {
-    const districts = [
-      ...optionsByCity[city]
-    ].sort((a, b) =>
-      a.localeCompare(
-        b,
-        "zh-Hant"
-      )
-    );
-
-    html +=
-      `<optgroup label="${esc(city)}">`;
-
-    html += districts
-      .map(
-        district =>
-          `<option value="${esc(district)}">` +
-          `${esc(district)}</option>`
-      )
-      .join("");
-
-    html += `</optgroup>`;
-  });
-
-  select.innerHTML = html;
+    ...districts.map(district => {
+      return (
+        `<option value="${esc(district)}">` +
+        `${esc(district)}` +
+        `</option>`
+      );
+    })
+  ].join("");
 }
 
 /* 取得符合目前搜尋條件的 CCTV */
@@ -946,6 +1056,10 @@ function filteredCams() {
     .value
     .trim()
     .toLowerCase();
+
+  const city =
+  document.getElementById("cityFilter")
+    ?.value || "全部";
 
   const district = document
     .getElementById("districtFilter")
@@ -984,8 +1098,16 @@ function filteredCams() {
       source === "all" ||
       cam.type === source;
 
+    const cameraCity =
+      normalizeCity(cam.city);
+
+    const matchesCity =
+      city === "全部" ||
+      cameraCity === city;
+
     return (
       matchesSearch &&
+      matchesCity &&
       matchesDistrict &&
       matchesSource
     );
@@ -1010,12 +1132,24 @@ function render() {
   renderSidebar(cams);
   renderMarkers(cams);
 
+  const selectedCity =
+  document.getElementById(
+    "cityFilter"
+  )?.value || "全部";
+
   const selectedDistrict =
     document.getElementById(
       "districtFilter"
-    ).value;
+    )?.value || "全部";
 
-  zoomToDistrict(selectedDistrict);
+  if (selectedDistrict !== "全部") {
+    zoomToDistrict(
+      selectedDistrict,
+      selectedCity
+    );
+  } else {
+    zoomToCity(selectedCity);
+  }
 }
 
 /* 顯示左側 CCTV 清單 */
@@ -1549,6 +1683,27 @@ document
   .addEventListener(
     "click",
     locateUser
+  );
+
+/* 縣市選單 */
+document
+  .getElementById("cityFilter")
+  ?.addEventListener(
+    "change",
+    () => {
+      const districtSelect =
+        document.getElementById(
+          "districtFilter"
+        );
+
+      buildDistrictOptions();
+
+      if (districtSelect) {
+        districtSelect.value = "全部";
+      }
+
+      render();
+    }
   );
 
 /* 正式啟動 */

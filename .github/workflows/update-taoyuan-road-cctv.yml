@@ -1,0 +1,323 @@
+name: 更新桃園道路 CCTV 資料
+
+on:
+  workflow_dispatch:
+
+  schedule:
+    # 臺灣時間每天凌晨 04:05
+    # GitHub Actions cron 使用 UTC，因此為前一天 20:05
+    - cron: "5 20 * * *"
+
+permissions:
+  contents: write
+
+jobs:
+  update-taoyuan-road-cctv:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 取得網站程式
+        uses: actions/checkout@v4
+
+      - name: 安裝 Python 套件
+        run: |
+          python -m pip install --upgrade pip
+          pip install requests
+
+      - name: 下載並整理桃園道路 CCTV
+        env:
+          TAOYUAN_CCTV_API: "https://tcintgr.tycg.gov.tw/cptapi/Other/api/getCctvData?$format=json&$token=FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF"
+        run: |
+          python - <<'PY'
+          import json
+          import os
+          import re
+
+          import requests
+
+
+          api_url = os.environ["TAOYUAN_CCTV_API"].strip()
+
+          session = requests.Session()
+          session.headers.update({
+              "User-Agent": (
+                  "Mozilla/5.0 "
+                  "taipei-cctv-map-github-action/1.0"
+              ),
+              "Accept": "application/json, text/plain, */*",
+              "Referer": "https://tcc.tycg.gov.tw/ATISNew/",
+          })
+
+
+          def clean_location(value):
+              text = str(value or "").strip()
+
+              # 移除名稱前方的「(CCTV274)」之類編號。
+              text = re.sub(
+                  r"^\s*[\(（]CCTV\d+[\)）]\s*",
+                  "",
+                  text,
+                  flags=re.IGNORECASE,
+              )
+
+              return text.strip()
+
+
+          def extract_district(location):
+              # 例如：
+              # 八德區 和平路-和平路991巷
+              # 大園區 中山南路二段與領航北路三段
+              match = re.search(
+                  r"([\u4e00-\u9fff]{2,4}區)",
+                  location,
+              )
+
+              if match:
+                  return match.group(1)
+
+              return "未判定"
+
+
+          print("下載桃園道路 CCTV API……")
+
+          response = session.get(
+              api_url,
+              timeout=45,
+          )
+
+          response.raise_for_status()
+          data = response.json()
+
+          if not isinstance(data, list):
+              print(
+                  json.dumps(
+                      data,
+                      ensure_ascii=False,
+                      indent=2,
+                  )[:3000]
+              )
+
+              raise SystemExit(
+                  "桃園 CCTV API 格式不正確，預期為陣列。"
+              )
+
+          print(f"API 原始資料：{len(data)} 筆")
+
+          output = []
+          skipped_non_taoyuan = 0
+          skipped_invalid = 0
+          seen_ids = set()
+
+          for row in data:
+              if not isinstance(row, dict):
+                  continue
+
+              area = str(
+                  row.get("Area") or ""
+              ).strip().upper()
+
+              # 第一階段只匯入桃園市政府攝影機，
+              # 排除 NFB 高速公路局等其他來源。
+              if area != "TAO":
+                  skipped_non_taoyuan += 1
+                  continue
+
+              device_id = str(
+                  row.get("DeviceId") or ""
+              ).strip()
+
+              location = clean_location(
+                  row.get("Location")
+              )
+
+              stream_url = str(
+                  row.get("UrlStreaming")
+                  or row.get("Url")
+                  or ""
+              ).strip()
+
+              try:
+                  latitude = float(
+                      str(row.get("Latitude") or "").strip()
+                  )
+
+                  longitude = float(
+                      str(row.get("Longitude") or "").strip()
+                  )
+              except (TypeError, ValueError):
+                  skipped_invalid += 1
+                  continue
+
+              if (
+                  not device_id
+                  or not location
+                  or not stream_url
+              ):
+                  skipped_invalid += 1
+                  continue
+
+              if device_id in seen_ids:
+                  continue
+
+              # 桃園市及鄰近邊界的寬鬆座標檢查。
+              if not (
+                  120.90 <= longitude <= 121.50
+                  and
+                  24.60 <= latitude <= 25.20
+              ):
+                  skipped_invalid += 1
+                  continue
+
+              seen_ids.add(device_id)
+
+              output.append({
+                  "id": device_id,
+                  "name": location,
+                  "x": longitude,
+                  "y": latitude,
+                  "city": "桃園市",
+                  "district": extract_district(location),
+                  "url": stream_url,
+                  "streamUrl": stream_url,
+                  "type": "road",
+                  "source": "桃園市政府交通局",
+              })
+
+          if not output:
+              raise SystemExit(
+                  "整理後沒有任何可用的桃園道路 CCTV。"
+              )
+
+          output.sort(
+              key=lambda item: (
+                  item["district"],
+                  item["name"],
+                  item["id"],
+              )
+          )
+
+          result = {
+              "count": len(output),
+              "sourceCount": len(data),
+              "excludedNonTaoyuanCount": skipped_non_taoyuan,
+              "invalidCount": skipped_invalid,
+              "results": output,
+          }
+
+          with open(
+              "taoyuan-road-cctv.json",
+              "w",
+              encoding="utf-8",
+          ) as file:
+              json.dump(
+                  result,
+                  file,
+                  ensure_ascii=False,
+                  indent=2,
+              )
+
+          print(
+              f"成功產生 {len(output)} 筆桃園道路 CCTV。"
+          )
+
+          print(
+              f"排除非 TAO 資料：{skipped_non_taoyuan} 筆。"
+          )
+
+          print(
+              f"排除格式或座標異常：{skipped_invalid} 筆。"
+          )
+          PY
+
+      - name: 檢查輸出檔案
+        run: |
+          python - <<'PY'
+          import json
+
+
+          with open(
+              "taoyuan-road-cctv.json",
+              "r",
+              encoding="utf-8",
+          ) as file:
+              data = json.load(file)
+
+          rows = data.get("results")
+
+          if not isinstance(rows, list) or not rows:
+              raise SystemExit(
+                  "taoyuan-road-cctv.json 沒有可用的 results。"
+              )
+
+          required = {
+              "id",
+              "name",
+              "x",
+              "y",
+              "city",
+              "district",
+              "url",
+              "streamUrl",
+              "type",
+              "source",
+          }
+
+          ids = set()
+
+          for index, row in enumerate(
+              rows,
+              start=1,
+          ):
+              missing = required - row.keys()
+
+              if missing:
+                  raise SystemExit(
+                      f"第 {index} 筆缺少欄位："
+                      f"{sorted(missing)}"
+                  )
+
+              if row["id"] in ids:
+                  raise SystemExit(
+                      f"發現重複 id：{row['id']}"
+                  )
+
+              if row["city"] != "桃園市":
+                  raise SystemExit(
+                      f"第 {index} 筆縣市不是桃園市"
+                  )
+
+              if row["type"] != "road":
+                  raise SystemExit(
+                      f"第 {index} 筆類型不是 road"
+                  )
+
+              if not (
+                  120.90 <= float(row["x"]) <= 121.50
+                  and
+                  24.60 <= float(row["y"]) <= 25.20
+              ):
+                  raise SystemExit(
+                      f"第 {index} 筆座標超出合理範圍"
+                  )
+
+              ids.add(row["id"])
+
+          print(
+              f"檢查完成，共 {len(rows)} 筆桃園道路 CCTV。"
+          )
+          PY
+
+      - name: 儲存更新後的資料
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email \
+            "41898282+github-actions[bot]@users.noreply.github.com"
+
+          git add taoyuan-road-cctv.json
+
+          if git diff --cached --quiet; then
+            echo "桃園道路 CCTV 資料沒有變更。"
+          else
+            git commit -m "自動更新桃園道路 CCTV 資料"
+            git push
+          fi
