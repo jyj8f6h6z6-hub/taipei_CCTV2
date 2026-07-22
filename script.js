@@ -47,6 +47,8 @@ let searchLocationMarker = null;
 let currentUserPosition = null;
 let districtGeoJSON = null;
 
+
+
 /* 縣市顯示順序 */
 const CITY_ORDER = [
   "臺北市",
@@ -1607,6 +1609,33 @@ function clearPlaceSearch() {
   render();
 }
 
+/* 離開地點搜尋模式 */
+function exitPlaceSearchMode() {
+  if (searchLocationMarker) {
+    map.removeLayer(searchLocationMarker);
+    searchLocationMarker = null;
+  }
+
+  const clearButton =
+    document.getElementById("clearSearchBtn");
+
+  if (clearButton) {
+    clearButton.hidden = true;
+  }
+
+  const container =
+    document.getElementById(
+      "placeAutocomplete"
+    );
+
+  if (container) {
+    container.replaceChildren();
+    initPlaceAutocomplete();
+  }
+
+  map.closePopup();
+}
+
 /* 找出搜尋位置 1 公里內的 CCTV */
 function findNearbyCams(searchPosition) {
   const radiusMeters = 1000;
@@ -1780,6 +1809,8 @@ async function initPlaceAutocomplete() {
     const autocomplete =
       new PlaceAutocompleteElement();
 
+    placeAutocompleteElement = autocomplete;
+
     autocomplete.includedRegionCodes = ["tw"];
 
     autocomplete.placeholder =
@@ -1919,7 +1950,10 @@ document
   .getElementById("sourceFilter")
   .addEventListener(
     "change",
-    render
+    () => {
+      exitPlaceSearchMode();
+      render();
+    }
   );
 
 /* 行政區選單 */
@@ -1927,8 +1961,12 @@ document
   .getElementById("districtFilter")
   .addEventListener(
     "change",
-    render
+    () => {
+      exitPlaceSearchMode();
+      render();
+    }
   );
+
 
 /* 我的定位按鈕 */
 document
@@ -1955,11 +1993,7 @@ document
         districtSelect.value = "全部";
       }
 
-      if (searchLocationMarker) {
-        map.removeLayer(searchLocationMarker);
-        searchLocationMarker = null;
-      }
-
+      exitPlaceSearchMode();
       render();
     }
   );
