@@ -7,6 +7,9 @@ const WATER_RENTAL_API_URL = "./water-rental-cctv.json";
 const TAOYUAN_ROAD_API_URL =
   "./taoyuan-road-cctv.json";
 
+const KEELUNG_ROAD_API_URL =
+  "./keelung-road-cctv.json";
+
 const TAIWAN_TOWNS_TOPOJSON_URL =
   "https://cdn.jsdelivr.net/npm/taiwan-atlas/towns-10t.json";
 
@@ -157,10 +160,11 @@ async function loadDistrictBoundaries() {
       ).trim();
 
       return [
-        "臺北市",
-        "台北市",
-        "新北市",
-        "桃園市"
+          "臺北市",
+          "台北市",
+          "新北市",
+          "基隆市",
+          "桃園市"
       ].includes(county);
     });
 
@@ -170,7 +174,7 @@ async function loadDistrictBoundaries() {
     };
 
     console.log(
-      "已載入臺北市及新北市行政區：",
+      "已載入臺北市、新北市、基隆市及桃園市行政區：",
       features.length
     );
 }
@@ -671,6 +675,95 @@ function normalizeNewTaipeiRoad(data) {
   }));
 }
 
+function normalizeKeelungRoad(json) {
+  const rows =
+    json.results ||
+    json.result?.results ||
+    json.data;
+
+  if (!Array.isArray(rows)) {
+    throw new Error(
+      "基隆道路 CCTV 資料格式不正確"
+    );
+  }
+
+  return rows
+    .map(cam => {
+      const id = String(
+        cam.id || ""
+      ).trim();
+
+      const x = Number(cam.x);
+      const y = Number(cam.y);
+
+      const suppliedDistrict =
+        cam.district &&
+        cam.district !== "未判定"
+          ? normalizeDistrict(cam.district)
+          : "";
+
+      return {
+        key:
+          cam.key ||
+          `keelung-road-${id}`,
+
+        id,
+
+        name: String(
+          cam.name ||
+          cam.roadName ||
+          cam.description ||
+          id
+        ).trim(),
+
+        x,
+        y,
+
+        city: "基隆市",
+
+        district:
+          suppliedDistrict ||
+          districtByCoord(x, y),
+
+        url: String(
+          cam.url ||
+          cam.streamUrl ||
+          ""
+        ).trim(),
+
+        streamUrl: String(
+          cam.streamUrl ||
+          cam.url ||
+          ""
+        ).trim(),
+
+        type: "road",
+
+        source:
+          cam.source ||
+          "基隆市政府交通處",
+
+        roadName: String(
+          cam.roadName || ""
+        ).trim(),
+
+        direction: String(
+          cam.direction || ""
+        ).trim(),
+
+        description: String(
+          cam.description || ""
+        ).trim()
+      };
+    })
+    .filter(cam =>
+      cam.id &&
+      cam.url &&
+      Number.isFinite(cam.x) &&
+      Number.isFinite(cam.y)
+    );
+}
+
 /* 整理水情 CCTV 資料 */
 function normalizeWaterCams(json) {
   const rows =
@@ -839,14 +932,16 @@ async function loadData() {
   const results = await Promise.allSettled([
     fetchJson(ROAD_API_URL),
     fetchJson(NEWTAIPEI_ROAD_API_URL),   
-    fetchJson(TAOYUAN_ROAD_API_URL),// ← 新增
+    fetchJson(TAOYUAN_ROAD_API_URL),
+    fetchJson(KEELUNG_ROAD_API_URL),// ← 新增
     fetchJson(WATER_API_URL),
     fetchJson(WATER_RENTAL_API_URL)
   ]);
 
   let roadCams = [];
-  let newTaipeiRoadCams = [];   // ← 新增，先不用
+  let newTaipeiRoadCams = [];
   let taoyuanRoadCams = [];
+  let keelungRoadCams = [];
   let waterCams = [];
   let waterRentalCams = [];
   const errors = [];
@@ -965,23 +1060,46 @@ async function loadData() {
 
   if (results[3].status === "fulfilled") {
     try {
+      keelungRoadCams =
+        normalizeKeelungRoad(
+          results[3].value
+        );
+
+      console.log(
+        "基隆道路：",
+        keelungRoadCams.length
+      );
+    } catch (error) {
+      errors.push(
+        `基隆道路 CCTV：${error.message}`
+      );
+    }
+  } else {
+    errors.push(
+      `基隆道路 CCTV：` +
+      results[3].reason.message
+    );
+  }
+
+  if (results[4].status === "fulfilled") {
+    try {
       waterCams = normalizeWaterCams(
-        results[3].value
+        results[4].value
       );
     } catch (error) {
       errors.push(error.message);
     }
   } else {
     errors.push(
-      `水情 CCTV：${results[3].reason.message}`
+      `水情 CCTV：${results[4].reason.message}`
     );
   }
 
-  if (results[4].status === "fulfilled") {
+  if (results[5].status === "fulfilled") {
     try {
       waterRentalCams =
         normalizeWaterRentalCams(
-          results[4].value
+          results[5].value
         );
     } catch (error) {
       errors.push(error.message);
@@ -989,7 +1107,7 @@ async function loadData() {
   } else {
     errors.push(
       `水情租賃 CCTV：` +
-      results[4].reason.message
+      results[5].reason.message
     );
   }
 
@@ -997,12 +1115,13 @@ async function loadData() {
     ...roadCams,
     ...newTaipeiRoadCams,
     ...taoyuanRoadCams,
+    ...keelungRoadCams,
     ...waterCams,
     ...waterRentalCams
   ];
 
   cameraCounts = {
-    road: roadCams.length + newTaipeiRoadCams.length + taoyuanRoadCams.length,
+    road: roadCams.length + newTaipeiRoadCams.length + taoyuanRoadCams.length + keelungRoadCams.length,
     water: waterCams.length,
     "water-rental": waterRentalCams.length
   };
@@ -1019,6 +1138,7 @@ async function loadData() {
   }
 
   buildCityOptions();
+  buildSourceOptions();
   buildDistrictOptions();
   render();
 
@@ -1080,6 +1200,78 @@ function buildCityOptions() {
       );
     })
   ].join("");
+}
+
+/* 依照縣市建立 CCTV 類型選單 */
+function buildSourceOptions() {
+  const citySelect =
+    document.getElementById("cityFilter");
+
+  const sourceSelect =
+    document.getElementById("sourceFilter");
+
+  if (!sourceSelect) {
+    return;
+  }
+
+  const selectedCity =
+    normalizeCity(
+      citySelect?.value || "全部"
+    );
+
+  const previousValue =
+    sourceSelect.value || "all";
+
+  const options = [
+    {
+      value: "all",
+      label: "全部 CCTV"
+    },
+    {
+      value: "road",
+      label: CAMERA_TYPES.road.label
+    }
+  ];
+
+  const showTaipeiWaterTypes =
+    selectedCity === "全部" ||
+    selectedCity === "臺北市";
+
+  if (showTaipeiWaterTypes) {
+    options.push(
+      {
+        value: "water",
+        label: CAMERA_TYPES.water.label
+      },
+      {
+        value: "water-rental",
+        label:
+          CAMERA_TYPES["water-rental"].label
+      }
+    );
+  }
+
+  sourceSelect.innerHTML =
+    options
+      .map(option => {
+        return (
+          `<option value="${esc(option.value)}">` +
+          `${esc(option.label)}` +
+          `</option>`
+        );
+      })
+      .join("");
+
+  const previousStillAvailable =
+    options.some(
+      option =>
+        option.value === previousValue
+    );
+
+  sourceSelect.value =
+    previousStillAvailable
+      ? previousValue
+      : "all";
 }
 
 /* 依照目前縣市建立行政區選單 */
@@ -1196,7 +1388,11 @@ function filteredCams() {
 }
 
 /* 重新顯示側欄與地圖標記 */
-function render() {
+function render(options = {}) {
+  const {
+    autoZoom = true
+  } = options;
+
   const cams = filteredCams();
 
   const roadCount = cameraCounts.road;
@@ -1223,13 +1419,15 @@ function render() {
       "districtFilter"
     )?.value || "全部";
 
-  if (selectedDistrict !== "全部") {
-    zoomToDistrict(
-      selectedDistrict,
-      selectedCity
-    );
-  } else {
-    zoomToCity(selectedCity);
+  if (autoZoom) {
+    if (selectedDistrict !== "全部") {
+      zoomToDistrict(
+        selectedDistrict,
+        selectedCity
+      );
+    } else {
+      zoomToCity(selectedCity);
+    }
   }
 }
 
@@ -1590,17 +1788,27 @@ function clearPlaceSearch() {
     clearButton.hidden = true;
   }
 
+  const container =
+    document.getElementById(
+      "placeAutocomplete"
+    );
+
+  if (container) {
+    container.replaceChildren();
+    initPlaceAutocomplete();
+  }
+
   const citySelect =
     document.getElementById("cityFilter");
-
-  const districtSelect =
-    document.getElementById("districtFilter");
 
   if (citySelect) {
     citySelect.value = "全部";
   }
 
   buildDistrictOptions();
+
+  const districtSelect =
+    document.getElementById("districtFilter");
 
   if (districtSelect) {
     districtSelect.value = "全部";
@@ -1666,6 +1874,7 @@ function findNearbyCams(searchPosition) {
 }
 
 /* 使用者定位 */
+/* 使用者定位 */
 function locateUser() {
   const button =
     document.getElementById("locationBtn");
@@ -1673,8 +1882,40 @@ function locateUser() {
   const status =
     document.getElementById("status");
 
+  const citySelect =
+    document.getElementById("cityFilter");
+
+  const districtSelect =
+    document.getElementById(
+      "districtFilter"
+    );
+
+  const sourceSelect =
+    document.getElementById(
+      "sourceFilter"
+    );
+
   exitPlaceSearchMode();
-  render();
+
+  if (citySelect) {
+    citySelect.value = "全部";
+  }
+
+  buildSourceOptions();
+
+  if (sourceSelect) {
+    sourceSelect.value = "all";
+  }
+
+  buildDistrictOptions();
+
+  if (districtSelect) {
+    districtSelect.value = "全部";
+  }
+
+  render({
+    autoZoom: false
+  });
 
   if (!navigator.geolocation) {
     status.textContent =
@@ -1720,6 +1961,8 @@ function locateUser() {
         .bindTooltip("我的位置")
         .addTo(map);
 
+      map.stop();
+      
       map.setView(
         [
           currentUserPosition.lat,
@@ -1979,7 +2222,7 @@ document
     locateUser
   );
 
-/* 縣市選單 */
+
 document
   .getElementById("cityFilter")
   ?.addEventListener(
@@ -1990,6 +2233,7 @@ document
           "districtFilter"
         );
 
+      buildSourceOptions();
       buildDistrictOptions();
 
       if (districtSelect) {
