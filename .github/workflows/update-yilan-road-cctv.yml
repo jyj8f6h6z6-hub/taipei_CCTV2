@@ -163,7 +163,92 @@ jobs:
           echo "前 3 筆官方對照資料："
           jq '.[0:3]' \
             yilan-official-cams.json
-    
+
+      - name: 比較宜蘭攝影機名稱差異
+        run: |
+          jq -n \
+            --slurpfile twipcam twipcam-cam-list.json \
+            --slurpfile official yilan-official-cams.json \
+            '
+            def normalize:
+              tostring
+              | gsub("^宜蘭縣道路\\s*"; "")
+              | gsub("^\\([^)]*\\)"; "")
+              | gsub("[[:space:]]+"; "")
+              | gsub("[、，,。．・／/]"; "")
+              | gsub("臺"; "台")
+              | gsub("線路口"; "線口")
+              | gsub("交岔路口"; "路口")
+              | gsub("交叉路口"; "路口");
+
+            [
+              $twipcam[0][]
+              | select(
+                  (.name // "") |
+                  startswith("宜蘭縣道路 ")
+                )
+              | . as $cam
+              | (
+                  $official[0]
+                  | map(
+                      select(
+                        (.cleanName | normalize) ==
+                        ($cam.name | normalize)
+                      )
+                    )
+                  | first
+                ) as $exact
+              | select($exact == null)
+              | {
+                  twipcamId: $cam.id,
+                  twipcamName:
+                    ($cam.name |
+                     sub("^宜蘭縣道路 "; "")),
+
+                  possibleOfficialMatches: (
+                    $official[0]
+                    | map(
+                        select(
+                          (
+                            (.description | normalize)
+                            | contains(
+                                (
+                                  $cam.name
+                                  | normalize
+                                  | .[0:12]
+                                )
+                              )
+                          )
+                          or
+                          (
+                            ($cam.name | normalize)
+                            | contains(
+                                (
+                                  .description
+                                  | normalize
+                                  | .[0:12]
+                                )
+                              )
+                          )
+                        )
+                      )
+                    | map({
+                        did,
+                        cleanName,
+                        location
+                      })
+                    | .[0:5]
+                  )
+                }
+            ]
+          ' > yilan-name-differences.json
+
+          echo "未精確配對數量："
+          jq 'length' yilan-name-differences.json
+
+          echo "前 10 筆名稱差異："
+          jq '.[0:10]' yilan-name-differences.json
+
       - name: 驗證原始 JSON
         run: |
           jq empty twipcam-cam-list.json
@@ -366,7 +451,7 @@ jobs:
                   name,
                   district
                 }
-            ][0:10]
+            ]
           ' yilan-road-cctv.json
           
           echo "前 3 筆資料："
@@ -380,6 +465,7 @@ jobs:
           rm -f yilan-official-cams.html
           rm -f yilan-official-cams.json
           rm -f yilan-official-lines.html
+          rm -f yilan-name-differences.json
 
       - name: 提交更新
         run: |
