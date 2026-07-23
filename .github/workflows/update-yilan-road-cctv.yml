@@ -188,55 +188,69 @@ jobs:
                   startswith("宜蘭縣道路 ")
                 )
               | . as $cam
+
               | (
                   $official[0]
                   | map(
-                      select(
-                        (.cleanName | normalize) ==
-                        ($cam.name | normalize)
-                      )
+                      . as $officialCam
+                      | select(
+                          ($officialCam.cleanName | normalize) ==
+                          ($cam.name | normalize)
+                        )
                     )
                   | first
                 ) as $exact
+
               | select($exact == null)
+
               | {
                   twipcamId: $cam.id,
-                  twipcamName:
-                    ($cam.name |
-                     sub("^宜蘭縣道路 "; "")),
+
+                  twipcamName: (
+                    $cam.name |
+                    sub("^宜蘭縣道路 "; "")
+                  ),
 
                   possibleOfficialMatches: (
                     $official[0]
                     | map(
-                        select(
-                          (
-                            (.description | normalize)
-                            | contains(
-                                (
-                                  $cam.name
-                                  | normalize
-                                  | .[0:12]
+                        . as $officialCam
+
+                        | select(
+                            (
+                              ($officialCam.description | normalize)
+                              | contains(
+                                  (
+                                    $cam.name
+                                    | normalize
+                                    | .[0:12]
+                                  )
                                 )
-                              )
-                          )
-                          or
-                          (
-                            ($cam.name | normalize)
-                            | contains(
-                                (
-                                  .description
-                                  | normalize
-                                  | .[0:12]
+                            )
+                            or
+                            (
+                              ($cam.name | normalize)
+                              | contains(
+                                  (
+                                    $officialCam.description
+                                    | normalize
+                                    | .[0:12]
+                                  )
                                 )
-                              )
+                            )
                           )
-                        )
+
+                        | {
+                            did:
+                              $officialCam.did,
+
+                            cleanName:
+                              $officialCam.cleanName,
+
+                            location:
+                              $officialCam.location
+                          }
                       )
-                    | map({
-                        did,
-                        cleanName,
-                        location
-                      })
                     | .[0:5]
                   )
                 }
@@ -248,6 +262,7 @@ jobs:
 
           echo "前 10 筆名稱差異："
           jq '.[0:10]' yilan-name-differences.json
+
 
       - name: 驗證原始 JSON
         run: |
