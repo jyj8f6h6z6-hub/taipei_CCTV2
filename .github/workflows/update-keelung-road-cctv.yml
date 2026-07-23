@@ -1,5 +1,5 @@
 name: 更新基隆道路 CCTV 資料
-    
+
 on:
   workflow_dispatch:
 
@@ -19,14 +19,304 @@ jobs:
       - name: 取得網站程式
         uses: actions/checkout@v4
 
-      - name: 設定 Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: "3.12"
-
-      - name: 更新基隆道路 CCTV JSON
+      - name: 安裝 Python 套件
         run: |
-          python update-keelung-road-cctv.py
+          python -m pip install --upgrade pip
+          pip install requests
+
+      - name: 下載並整理基隆道路 CCTV 資料
+        env:
+          KEELUNG_CCTV_CSV: "https://www.klcg.gov.tw/wSite/public/Attachment/016/f1728008895657.csv"
+        run: |
+          python - <<'PY'
+          import csv
+          import io
+          import json
+          import os
+
+          import requests
+
+
+          csv_url = os.environ["KEELUNG_CCTV_CSV"].strip()
+
+          session = requests.Session()
+          session.headers.update({
+              "User-Agent": (
+                  "Mozilla/5.0 "
+                  "taipei-cctv-map-github-action/1.0"
+              ),
+              "Accept": (
+                  "text/csv,text/plain,"
+                  "application/octet-stream,*/*"
+              ),
+              "Referer": (
+                  "https://www.klcg.gov.tw/"
+                  "tw/tourism/2644-136867.html"
+              ),
+          })
+
+          print("下載基隆市道路 CCTV CSV……")
+
+          response = session.get(
+              csv_url,
+              timeout=60,
+          )
+          response.raise_for_status()
+
+          raw = response.content
+          csv_text = None
+          used_encoding = None
+
+          for encoding in (
+              "utf-8-sig",
+              "utf-8",
+              "cp950",
+              "big5",
+          ):
+              try:
+                  csv_text = raw.decode(encoding)
+                  used_encoding = encoding
+                  break
+              except UnicodeDecodeError:
+                  continue
+
+          if csv_text is None:
+              raise SystemExit(
+                  "無法判斷基隆 CCTV CSV 的文字編碼。"
+              )
+
+          print(f"CSV 編碼：{used_encoding}")
+
+          csv_text = csv_text.lstrip("\ufeff")
+
+          reader = csv.DictReader(
+              io.StringIO(csv_text)
+          )
+
+          rows = list(reader)
+
+          if not reader.fieldnames:
+              raise SystemExit(
+                  "基隆 CCTV CSV 沒有標題列。"
+              )
+
+          print("CSV 欄位：")
+          print(reader.fieldnames)
+
+          if not rows:
+              raise SystemExit(
+                  "基隆 CCTV CSV 沒有任何資料。"
+              )
+
+
+          def first_value(row, *names):
+              for name in names:
+                  value = row.get(name)
+
+                  if value is not None:
+                      text = str(value).strip()
+
+                      if text:
+                          return text
+
+              return ""
+
+
+          output = []
+          skipped = []
+          seen_ids = set()
+
+          for index, row in enumerate(
+              rows,
+              start=1,
+          ):
+              cctv_id = first_value(
+                  row,
+                  "CCTVID",
+                  "CCTVId",
+                  "cctvid",
+                  "id",
+              )
+
+              stream_url = first_value(
+                  row,
+                  "VideoStreamURL",
+                  "VideoURL",
+                  "StreamURL",
+                  "url",
+              )
+
+              longitude_raw = first_value(
+                  row,
+                  "PositionLon",
+                  "Longitude",
+                  "longitude",
+                  "lon",
+                  "x",
+              )
+
+              latitude_raw = first_value(
+                  row,
+                  "PositionLat",
+                  "Latitude",
+                  "latitude",
+                  "lat",
+                  "y",
+              )
+
+              road_name = first_value(
+                  row,
+                  "RoadName",
+                  "roadName",
+                  "道路名稱",
+              )
+
+              description = first_value(
+                  row,
+                  "SurveillanceDescription",
+                  "Description",
+                  "description",
+                  "位置說明",
+              )
+
+              direction = first_value(
+                  row,
+                  "RoadDirection",
+                  "Direction",
+                  "direction",
+                  "方向",
+              )
+
+              try:
+                  longitude = float(
+                      longitude_raw
+                  )
+                  latitude = float(
+                      latitude_raw
+                  )
+              except (TypeError, ValueError):
+                  skipped.append({
+                      "index": index,
+                      "id": cctv_id,
+                      "reason": "座標無效",
+                  })
+                  continue
+
+              if not cctv_id or not stream_url:
+                  skipped.append({
+                      "index": index,
+                      "id": cctv_id,
+                      "reason": (
+                          "缺少編號或影像網址"
+                      ),
+                  })
+                  continue
+
+              if cctv_id in seen_ids:
+                  skipped.append({
+                      "index": index,
+                      "id": cctv_id,
+                      "reason": "重複編號",
+                  })
+                  continue
+
+              if not (
+                  121.60 <= longitude <= 122.05
+                  and
+                  24.95 <= latitude <= 25.25
+              ):
+                  skipped.append({
+                      "index": index,
+                      "id": cctv_id,
+                      "reason": (
+                          "座標超出基隆合理範圍"
+                      ),
+                  })
+                  continue
+
+              name_parts = []
+
+              for value in (
+                  road_name,
+                  description,
+                  direction,
+              ):
+                  if (
+                      value
+                      and value not in name_parts
+                  ):
+                      name_parts.append(value)
+
+              name = (
+                  "・".join(name_parts)
+                  or cctv_id
+              )
+
+              output.append({
+                  "key": (
+                      f"keelung-road-{cctv_id}"
+                  ),
+                  "id": cctv_id,
+                  "name": name,
+                  "x": longitude,
+                  "y": latitude,
+                  "city": "基隆市",
+                  "district": "未判定",
+                  "url": stream_url,
+                  "streamUrl": stream_url,
+                  "type": "road",
+                  "source": (
+                      "基隆市政府交通處"
+                  ),
+                  "roadName": road_name,
+                  "direction": direction,
+                  "description": description,
+              })
+
+              seen_ids.add(cctv_id)
+
+          if not output:
+              raise SystemExit(
+                  "整理後沒有任何可用的"
+                  "基隆市道路 CCTV。"
+              )
+
+          result = {
+              "count": len(output),
+              "results": output,
+              "skippedCount": len(skipped),
+              "skipped": skipped,
+              "source": "基隆市政府交通處",
+              "sourceUrl": csv_url,
+          }
+
+          with open(
+              "keelung-road-cctv.json",
+              "w",
+              encoding="utf-8",
+          ) as file:
+              json.dump(
+                  result,
+                  file,
+                  ensure_ascii=False,
+                  indent=2,
+              )
+
+          print(
+              f"成功產生 {len(output)} 筆"
+              "基隆市道路 CCTV。"
+          )
+
+          print(
+              f"略過 {len(skipped)} 筆資料。"
+          )
+
+          if skipped:
+              print("略過項目前 20 筆：")
+
+              for item in skipped[:20]:
+                  print(item)
+          PY
 
       - name: 檢查 JSON 是否有效
         run: |
@@ -34,33 +324,104 @@ jobs:
           import json
           from pathlib import Path
 
-          path = Path("keelung-road-cctv.json")
+
+          path = Path(
+              "keelung-road-cctv.json"
+          )
 
           if not path.exists():
-              raise SystemExit("找不到 keelung-road-cctv.json")
+              raise SystemExit(
+                  "找不到 keelung-road-cctv.json"
+              )
 
-          data = json.loads(path.read_text(encoding="utf-8"))
-          rows = data.get("results", [])
+          data = json.loads(
+              path.read_text(
+                  encoding="utf-8"
+              )
+          )
+
+          rows = data.get("results")
 
           if not isinstance(rows, list):
-              raise SystemExit("results 不是陣列")
+              raise SystemExit(
+                  "results 不是陣列"
+              )
 
           if len(rows) == 0:
-              raise SystemExit("基隆 CCTV 資料為空，停止提交")
+              raise SystemExit(
+                  "基隆 CCTV 資料為空，"
+                  "停止提交"
+              )
 
-          print(f"基隆 CCTV 共 {len(rows)} 支")
+          required = {
+              "key",
+              "id",
+              "name",
+              "x",
+              "y",
+              "city",
+              "district",
+              "url",
+              "streamUrl",
+              "type",
+              "source",
+          }
+
+          ids = set()
+
+          for index, row in enumerate(
+              rows,
+              start=1,
+          ):
+              missing = required - row.keys()
+
+              if missing:
+                  raise SystemExit(
+                      f"第 {index} 筆缺少欄位："
+                      f"{sorted(missing)}"
+                  )
+
+              if row["id"] in ids:
+                  raise SystemExit(
+                      "發現重複 id："
+                      f"{row['id']}"
+                  )
+
+              longitude = float(row["x"])
+              latitude = float(row["y"])
+
+              if not (
+                  121.60 <= longitude <= 122.05
+                  and
+                  24.95 <= latitude <= 25.25
+              ):
+                  raise SystemExit(
+                      f"第 {index} 筆座標"
+                      "超出基隆合理範圍"
+                  )
+
+              ids.add(row["id"])
+
+          print(
+              f"基隆 CCTV 共 {len(rows)} 支"
+          )
           PY
 
       - name: 提交更新結果
         run: |
-          if git diff --quiet -- keelung-road-cctv.json; then
-            echo "基隆 CCTV 資料沒有變更"
-            exit 0
-          fi
+          git config user.name \
+            "github-actions[bot]"
 
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git config user.email \
+            "41898282+github-actions[bot]@users.noreply.github.com"
 
           git add keelung-road-cctv.json
-          git commit -m "chore: 自動更新基隆道路 CCTV 資料"
-          git push
+
+          if git diff --cached --quiet; then
+            echo "基隆 CCTV 資料沒有變更"
+          else
+            git commit \
+              -m "chore: 自動更新基隆道路 CCTV 資料"
+
+            git push
+          fi
