@@ -1,16 +1,6 @@
-NEXT_STEP.md
-
 即時 CCTV 地圖專案交接
 
-專案版本：v2.3
-
-更新日期：2026-07-22
-
-專案網址：https://jyj8f6h6z6-hub.github.io/taipei_CCTV2/
-
-專案方向：由雙北逐步擴充至北北基桃，未來延伸至全臺
-
-下一階段重點：完善搜尋模式、加入基隆市、評估整合國道 CCTV
+專案版本： v2.3更新日期： 2026-07-23專案網址： https://jyj8f6h6z6-hub.github.io/taipei_CCTV2/專案方向： 由雙北逐步擴充至北北基桃，未來延伸至全臺下一階段核心目標： 完成基隆市 CCTV，之後建立自有網域、網站內容與流量分析，再評估廣告變現
 
 一、目前已完成
 
@@ -32,15 +22,17 @@ NEXT_STEP.md
 
 道路 CCTV
 
-已完成資料下載與整理
+目前已完成：
 
-已完成縣市與行政區篩選
+資料下載與整理
 
-已完成地圖標記
+縣市與行政區篩選
 
-已完成 CCTV 影像播放
+地圖標記
 
-已完成縣市與行政區自動縮放
+CCTV 影像播放
+
+縣市與行政區自動縮放
 
 桃園市 CCTV API 目前無法由 GitHub Actions 雲端主機穩定連線，因此暫時採本機手動更新。
 
@@ -48,13 +40,11 @@ NEXT_STEP.md
 
 1. 縣市與行政區兩層篩選
 
-目前操作流程：
-
 縣市
 ↓
 行政區
 
-縣市選單目前可顯示：
+目前縣市選單可顯示：
 
 全部縣市
 
@@ -283,11 +273,13 @@ API Key 不可公開貼在聊天、Issue 或文件中
 
 API Key 若曾公開，應立即更換
 
-正式部署後需加入正式網站網域
+綁定自有網域後，需加入正式網域來源限制
 
 本機可保留 127.0.0.1 與 localhost
 
 API Key 應持續保留網站來源限制與 API 限制
+
+自有網域不能隱藏前端 API Key，仍需搭配來源限制、API 限制、配額與帳單警示
 
 六、桃園 CCTV 更新方式
 
@@ -310,7 +302,7 @@ Commit
 
 詳細操作說明：
 
-手動更新桃園CCTV資料.md
+docs/手動更新桃園CCTV資料.md
 
 七、目前搜尋流程
 
@@ -344,23 +336,124 @@ Leaflet 顯示搜尋位置 Marker
 
 清除搜尋後恢復縣市與行政區瀏覽模式
 
-八、明天優先處理
+八、下一階段固定執行順序
 
-第一優先：完善搜尋模式
+目前已決定依照以下順序處理：
 
-確認「清除搜尋」按鈕會同步清空 Google 搜尋框文字
+完成基隆 CCTV
 
-搜尋模式下切換 CCTV 類型時，重新計算附近 CCTV
+決定長期網站名稱
 
-切換 CCTV 類型後保留搜尋位置 Marker
+購買自己的網域
 
-明確區分搜尋模式與縣市瀏覽模式
+網域先綁定 GitHub Pages
 
-搜尋範圍內沒有 CCTV 時顯示提示
+加入關於、使用說明、資料來源、隱私權頁面
 
-確認清除搜尋後，縣市、行政區、Marker 與側邊欄全部正確恢復
+安裝 Search Console 與 Analytics
 
-建議先建立狀態：
+累積一段時間的真實流量
+
+再申請 AdSense
+
+通過後少量放置廣告
+
+執行原則：
+
+現階段不搬離 GitHub Pages
+
+先完成網站功能、內容與穩定度
+
+自有網域主要用於品牌、網址穩定與長期經營
+
+申請 AdSense 前需補齊內容頁、資料來源與隱私權政策
+
+廣告不得遮擋地圖、搜尋框、播放按鈕或 CCTV 清單
+
+九、下一次開工：基隆市 CCTV
+
+第一階段：確認資料來源
+
+找到基隆市官方道路 CCTV 資料來源
+
+確認資料下載網址與更新頻率
+
+下載來源 CSV、JSON 或其他格式
+
+檢查攝影機編號、名稱、經緯度與串流網址欄位
+
+確認是否有行政區欄位
+
+確認串流格式、HTTPS 與 CORS
+
+第二階段：建立資料更新流程
+
+建議新增：
+
+update-keelung-road-cctv.py
+keelung-road-cctv.json
+
+統一資料格式：
+
+{
+  key: "keelung-road-攝影機編號",
+  id: "攝影機編號",
+  name: "道路名稱或位置",
+  x: 121.7,
+  y: 25.1,
+  city: "基隆市",
+  district: "未判定",
+  url: "影像網址",
+  streamUrl: "影像網址",
+  type: "road",
+  source: "基隆市政府"
+}
+
+第三階段：接入前端
+
+新增 KEELUNG_ROAD_API_URL
+
+新增基隆市資料標準化函式
+
+在 loadData() 載入 keelung-road-cctv.json
+
+將基隆 CCTV 加入 allCams
+
+將基隆 CCTV 數量加入 cameraCounts
+
+確認縣市選單自動顯示基隆市
+
+第四階段：加入行政區邊界
+
+行政區邊界過濾需包含：
+
+[
+  "臺北市",
+  "台北市",
+  "新北市",
+  "基隆市",
+  "桃園市"
+]
+
+測試：
+
+基隆市縣市縮放
+
+基隆市行政區縮放
+
+行政區判定
+
+側邊欄行政區分組
+
+Google 地點搜尋
+
+1 公里內附近 CCTV
+
+CCTV 播放
+
+十、搜尋模式仍需完善
+
+建議建立狀態：
 
 let viewMode = "browse"; // browse | search
 let activeSearchPlace = null;
@@ -374,47 +467,127 @@ viewMode = "search";
 
 viewMode = "browse";
 
-第二優先：正式部署設定
+待處理：
 
-正式部署後加入正式網域的 Google API Key 來源限制
+確認「清除搜尋」按鈕會同步清空 Google 搜尋框文字
 
-將 Google Maps JavaScript API 改為建議的非同步載入方式
+搜尋模式下切換 CCTV 類型時，重新計算附近 CCTV
 
-更新 HTML、CSS、JavaScript 快取版本號
+切換 CCTV 類型後保留搜尋位置 Marker
 
-確認 GitHub Pages 不會載入舊版快取
+明確區分搜尋模式與縣市瀏覽模式
 
-第三優先：基隆市
+搜尋範圍內沒有 CCTV 時顯示提示
 
-找到並確認基隆市道路 CCTV 資料來源
+確認清除搜尋後，縣市、行政區、Marker 與側邊欄全部正確恢復
 
-建立基隆市資料下載或更新程式
+十一、自有網域與網站內容階段
 
-統一轉換成既有 CCTV 格式
+基隆市完成後再開始：
 
-加入 loadData()
+1. 決定長期網站名稱
 
-將基隆市行政區邊界加入判定
+原則：
 
-測試縣市與行政區縮放
+不要只限定臺北市
 
-測試地點搜尋與附近 CCTV
+可支援北北基桃與未來全臺擴充
 
-行政區邊界過濾需包含：
+名稱容易記憶與輸入
 
-[
-  "臺北市",
-  "台北市",
-  "新北市",
-  "基隆市",
-  "桃園市"
-]
+避免與政府官方網站混淆
 
-九、國道 CCTV 整合方案
+2. 購買網域並綁定 GitHub Pages
 
-國道 CCTV 可以納入現有專案，但不建議由 GitHub Pages 前端直接呼叫 TDX API。
+網站程式與資料仍保留在 GitHub
 
-原因
+自有網域指向 GitHub Pages
+
+開啟 HTTPS
+
+確認原 GitHub Pages 網址與新網域導向正常
+
+更新 Google API Key 允許來源
+
+3. 補齊內容頁面
+
+至少加入：
+
+關於本站
+
+使用說明
+
+資料來源與更新時間
+
+隱私權政策
+
+建議後續加入：
+
+聯絡方式
+
+常見問題
+
+免責聲明
+
+各縣市 CCTV 資料說明
+
+十二、Search Console、Analytics 與廣告準備
+
+Search Console
+
+驗證網站所有權
+
+提交 Sitemap
+
+觀察索引狀態
+
+觀察搜尋關鍵字與點擊
+
+Google Analytics
+
+安裝追蹤碼
+
+觀察每日使用者
+
+觀察熱門搜尋與熱門地區
+
+觀察手機版與桌面版比例
+
+觀察使用者停留時間
+
+AdSense 前置條件
+
+網站功能穩定
+
+有清楚的原創說明內容
+
+有資料來源與更新說明
+
+有隱私權政策
+
+有一段時間的真實流量
+
+頁面不能只是單一廣告載體
+
+廣告不能妨礙地圖與 CCTV 操作
+
+通過後先少量放置廣告，避免：
+
+廣告覆蓋地圖
+
+廣告緊貼播放按鈕
+
+廣告混入 CCTV 清單造成誤點
+
+手機版廣告遮擋主要操作區
+
+十三、國道 CCTV 整合方案
+
+國道 CCTV 可以納入現有專案，但目前優先順序排在基隆、自有網域與網站內容之後。
+
+不建議由 GitHub Pages 前端直接呼叫 TDX API。
+
+原因：
 
 TDX CCTV API 需要：
 
@@ -426,7 +599,7 @@ Access Token
 
 以上資訊不可放在前端 JavaScript，否則會公開。
 
-建議流程
+建議流程：
 
 TDX 國道 CCTV API
 ↓
@@ -438,9 +611,7 @@ GitHub Pages 載入 JSON
 ↓
 加入 allCams
 
-GitHub Secrets
-
-若使用 GitHub Actions，憑證放在：
+GitHub Secrets：
 
 TDX_CLIENT_ID
 TDX_CLIENT_SECRET
@@ -459,117 +630,14 @@ Issue
 
 Commit 訊息
 
-建議國道資料格式
-
-{
-  key: "freeway-CCTV-N1-S-25.000-M",
-  id: "CCTV-N1-S-25.000-M",
-  name: "國道1號南向 25K",
-  x: 121.5,
-  y: 25.0,
-  city: "新北市",
-  district: "未判定",
-  url: "https://example.com/live/index.m3u8",
-  streamUrl: "https://example.com/live/index.m3u8",
-  type: "freeway",
-  source: "交通部 TDX",
-  roadName: "國道1號",
-  direction: "南向",
-  mile: "25K"
-}
-
-建議新增 CCTV 類型：
-
-type: "freeway"
-
-篩選器可改成：
-
-全部 CCTV
-
-市區道路 CCTV
-
-國道 CCTV
-
-水情 CCTV
-
-水情租賃 CCTV
-
-建議新增檔案
+建議新增：
 
 update-freeway-cctv.py
 freeway-cctv.json
 
-前端需要修改
+第一階段先只納入北北基桃範圍內的國道 CCTV，避免一次載入全臺資料。
 
-新增 FREEWAY_CCTV_URL
-
-新增 freewayCams
-
-新增 normalizeFreewayCams()
-
-在 loadData() 載入 freeway-cctv.json
-
-將 freewayCams 加入 allCams
-
-在 cameraCounts 增加 freeway
-
-在 CCTV 類型選單增加「國道 CCTV」
-
-播放時優先使用 streamUrl || url
-
-Popup 顯示國道路線、方向及里程
-
-測試 HLS、MJPEG、HTTPS 與 CORS
-
-建議播放網址處理
-
-const mediaUrl = cam.streamUrl || cam.url;
-
-國道串流可能限制
-
-HLS CORS 不允許 GitHub Pages
-
-串流網址具有時效性
-
-來源限制 Referer
-
-來源只支援 HTTP
-
-部分來源為 MJPEG
-
-部分攝影機暫時離線
-
-無法直接播放時，應顯示：
-
-開啟官方影像
-
-不要使用 GitHub Actions 或 GitHub Pages 代理影片串流。
-
-第一階段範圍
-
-先只納入北北基桃範圍內的國道 CCTV，避免一次載入全臺資料。
-
-十、中期待辦
-
-加入 Marker Cluster
-
-CCTV 載入效能優化
-
-行動版搜尋介面優化
-
-顯示各資料來源最後更新時間
-
-評估加入搜尋半徑選單
-
-評估顯示 CCTV 距離
-
-評估桃園其他 CCTV 資料來源
-
-建立資料來源健康檢查
-
-統一各縣市資料更新流程
-
-十一、版本規劃
+十四、版本規劃
 
 v2.4
 
@@ -583,19 +651,29 @@ Marker Cluster
 
 v2.5
 
-新增 TDX 國道 CCTV
+自有網域與 GitHub Pages 綁定
 
-新增國道 CCTV 類型篩選
+關於本站、使用說明、資料來源與隱私權頁面
 
-顯示國道路線、方向與里程
+Google Search Console
 
-建立 TDX 更新流程
+Google Analytics
 
-顯示資料更新時間
+SEO 基礎設定
+
+v2.6
+
+累積真實流量
+
+AdSense 申請準備
+
+通過後少量放置廣告
 
 v3.0
 
-北北基桃市區與國道 CCTV 整合完成
+北北基桃市區 CCTV 整合完成
+
+評估北北基桃國道 CCTV
 
 v4.0
 
@@ -605,59 +683,55 @@ v4.0
 
 建立資料來源健康檢查
 
-十二、建議 Commit 訊息
-
-搜尋功能：
-
-feat: 新增 Google 地點搜尋與附近 CCTV 查詢
-
-feat: 顯示搜尋地點 1 公里內 CCTV 並自動縮放地圖
-
-feat: 新增清除地點搜尋並恢復 CCTV 瀏覽模式
-
-搜尋修正：
-
-fix: 移除重複的 Google 地點搜尋初始化函式
-
-fix: 修正 Google 地點建議清單被地圖遮擋
-
-fix: 搜尋模式切換 CCTV 類型後重新計算結果
+十五、建議 Commit 訊息
 
 基隆市：
 
 feat: 新增基隆市道路 CCTV
+feat: 新增基隆市 CCTV 資料更新流程
+fix: 修正基隆市行政區判定與縮放
 
-國道 CCTV：
+搜尋修正：
 
-feat: 新增 TDX 國道 CCTV 資料與地圖顯示
+fix: 搜尋模式切換 CCTV 類型後重新計算結果
+fix: 清除地點搜尋時同步重設搜尋框與地圖狀態
+feat: 新增搜尋範圍內無 CCTV 的提示
 
-feat: 新增國道 CCTV 自動更新流程
+網站與網域：
 
-chore: 使用 GitHub Secrets 管理 TDX API 憑證
+chore: 設定自有網域並綁定 GitHub Pages
+feat: 新增關於本站與使用說明頁面
+feat: 新增資料來源與隱私權政策頁面
+chore: 新增 Search Console 與 Analytics 設定
 
-十三、明天開工建議順序
+廣告準備：
 
-測試「清除搜尋」是否真的清空 Google 搜尋框。
+chore: 完成 AdSense 申請前網站內容與版面調整
+feat: 新增低干擾式廣告版位
 
-建立 viewMode，明確區分搜尋與瀏覽模式。
+十六、下一次開工建議順序
 
-修正搜尋模式下切換 CCTV 類型的行為。
+確認基隆市官方道路 CCTV 資料來源
 
-補上「附近沒有 CCTV」提示。
+下載來源資料並檢查欄位
 
-更新前端快取版本號並部署測試。
+建立 update-keelung-road-cctv.py
 
-開始整理基隆市 CCTV 資料來源。
+產生 keelung-road-cctv.json
 
-建立 update-freeway-cctv.py 空白骨架。
+將基隆資料加入 loadData()
 
-註冊或確認 TDX 應用程式憑證。
+將基隆市加入行政區邊界過濾
 
-先抓少量國道 CCTV 測試資料。
+測試基隆縣市與行政區縮放
 
-確認國道串流在 GitHub Pages 的播放與 CORS 狀況。
+測試基隆地點搜尋與附近 CCTV
 
-十四、下班前狀態摘要
+測試基隆 CCTV 播放
+
+基隆完成後再開始討論網站名稱與網域
+
+十七、目前狀態摘要
 
 目前 v2.3 核心功能已完成，可正常：
 
@@ -679,4 +753,6 @@ chore: 使用 GitHub Secrets 管理 TDX API 憑證
 
 清除搜尋並恢復瀏覽模式
 
-下一次工作先完善搜尋狀態管理，再進入基隆市與國道 CCTV 整合
+下一次工作以「完成基隆市道路 CCTV」為第一優先。
+
+基隆完成後，再依序進行網站名稱、自有網域、內容頁面、Search Console、Analytics、流量累積與 AdSense。
