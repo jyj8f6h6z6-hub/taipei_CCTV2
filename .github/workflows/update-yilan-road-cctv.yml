@@ -34,6 +34,25 @@ jobs:
             "https://www.twipcam.com/api/v1/cam-list.json" \
             -o twipcam-cam-list.json
 
+      - name: 下載宜蘭警察局 CCTV 公開清單
+        run: |
+            curl -L \
+            --fail \
+            --retry 3 \
+            --retry-delay 5 \
+            --connect-timeout 20 \
+            --max-time 180 \
+            "https://ilcpb.ivs.hinet.net/public/ilcpb_live_cam" \
+            -o yilan-official-cams.html
+
+      - name: 查看宜蘭官方播放器連結
+        run: |
+          grep -oE \
+            'hls_player[^"'"'"' ]*did=[0-9]+[^"'"'"' ]*' \
+            yilan-official-cams.html \
+            | head -n 10
+
+    
       - name: 驗證原始 JSON
         run: |
           jq empty twipcam-cam-list.json
@@ -163,6 +182,7 @@ jobs:
       - name: 刪除暫存檔案
         run: |
           rm -f twipcam-cam-list.json
+          rm -f yilan-official-cams.html
 
       - name: 提交更新
         run: |
