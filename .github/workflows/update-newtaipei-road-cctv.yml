@@ -1,0 +1,292 @@
+name: 更新新北市道路 CCTV 資料
+
+on:
+  workflow_dispatch:
+
+  schedule:
+    # 臺灣時間每週一凌晨 04:20
+    # GitHub Actions cron 使用 UTC，因此為前一天 20:20
+    - cron: "20 20 * * 0"
+
+permissions:
+  contents: write
+
+jobs:
+  update-newtaipei-road-cctv:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 取得網站程式
+        uses: actions/checkout@v4
+
+      - name: 下載並整理新北市道路 CCTV 資料
+        env:
+          NEWTAIPEI_CCTV_API: "https://data.ntpc.gov.tw/api/datasets/157501bf-f1cd-4838-92a7-612770351e43/json"
+        run: |
+          python - <<'PY'
+          import json
+          import os
+          import urllib.request
+
+
+          api_url = os.environ["NEWTAIPEI_CCTV_API"].strip()
+
+          request = urllib.request.Request(
+              api_url,
+              headers={
+                  "User-Agent": (
+                      "Mozilla/5.0 "
+                      "taipei-cctv-map-github-action/1.0"
+                  ),
+                  "Accept": "application/json",
+              },
+          )
+
+          print("下載新北市道路 CCTV 資料……")
+
+          with urllib.request.urlopen(
+              request,
+              timeout=60,
+          ) as response:
+              raw = response.read()
+
+          text = None
+
+          for encoding in (
+              "utf-8-sig",
+              "utf-8",
+              "cp950",
+              "big5",
+          ):
+              try:
+                  text = raw.decode(encoding)
+                  break
+              except UnicodeDecodeError:
+                  continue
+
+          if text is None:
+              raise SystemExit("無法判斷 API 回傳內容的文字編碼。")
+
+          data = json.loads(text)
+
+          if isinstance(data, list):
+              rows = data
+          elif isinstance(data, dict):
+              rows = (
+                  data.get("results")
+                  or data.get("result")
+                  or data.get("data")
+                  or data.get("items")
+              )
+
+              if isinstance(rows, dict):
+                  rows = (
+                      rows.get("results")
+                      or rows.get("data")
+                      or rows.get("items")
+                  )
+          else:
+              rows = None
+
+          if not isinstance(rows, list):
+              print(
+                  json.dumps(
+                      data,
+                      ensure_ascii=False,
+                      indent=2,
+                  )[:3000]
+              )
+              raise SystemExit(
+                  "無法辨識新北市 CCTV API 格式。"
+              )
+
+          output = []
+          skipped = []
+
+          for index, row in enumerate(rows, start=1):
+              if not isinstance(row, dict):
+                  skipped.append({
+                      "index": index,
+                      "reason": "不是物件",
+                  })
+                  continue
+
+              cctv_id = str(
+                  row.get("cctv_id")
+                  or row.get("CCTVID")
+                  or row.get("項次")
+                  or ""
+              ).strip()
+
+              areacode = str(
+                  row.get("areacode")
+                  or row.get("AreaCode")
+                  or row.get("設備編號")
+                  or ""
+              ).strip()
+
+              district = str(
+                  row.get("district")
+                  or row.get("District")
+                  or row.get("區域")
+                  or ""
+              ).strip()
+
+              address = str(
+                  row.get("address")
+                  or row.get("Address")
+                  or row.get("設備位置")
+                  or ""
+              ).strip()
+
+              latitude_raw = (
+                  row.get("latitude")
+                  or row.get("Latitude")
+                  or row.get("緯度")
+              )
+
+              longitude_raw = (
+                  row.get("longitude")
+                  or row.get("Longitude")
+                  or row.get("經度")
+              )
+
+              try:
+                  latitude = float(latitude_raw)
+                  longitude = float(longitude_raw)
+              except (TypeError, ValueError):
+                  skipped.append({
+                      "index": index,
+                      "id": cctv_id,
+                      "reason": "座標無效",
+                  })
+                  continue
+
+              if (
+                  not cctv_id
+                  or not areacode
+                  or not address
+              ):
+                  skipped.append({
+                      "index": index,
+                      "id": cctv_id,
+                      "reason": "缺少必要欄位",
+                  })
+                  continue
+
+              output.append({
+                  "cctv_id": cctv_id,
+                  "areacode": areacode,
+                  "district": district or "未判定",
+                  "address": address,
+                  "latitude": latitude,
+                  "longitude": longitude,
+              })
+
+          if not output:
+              raise SystemExit(
+                  "整理後沒有任何可用的新北市 CCTV。"
+              )
+
+          with open(
+              "newtaipei-road-cctv.json",
+              "w",
+              encoding="utf-8",
+          ) as file:
+              json.dump(
+                  output,
+                  file,
+                  ensure_ascii=False,
+                  indent=2,
+              )
+
+          print(
+              f"成功產生 {len(output)} 筆新北市道路 CCTV。"
+          )
+          print(f"略過 {len(skipped)} 筆資料。")
+
+          if skipped:
+              print("略過項目前 20 筆：")
+
+              for item in skipped[:20]:
+                  print(item)
+          PY
+
+      - name: 檢查輸出檔案
+        run: |
+          python - <<'PY'
+          import json
+
+
+          with open(
+              "newtaipei-road-cctv.json",
+              "r",
+              encoding="utf-8",
+          ) as file:
+              rows = json.load(file)
+
+          if not isinstance(rows, list) or not rows:
+              raise SystemExit(
+                  "newtaipei-road-cctv.json 沒有可用資料。"
+              )
+
+          required = {
+              "cctv_id",
+              "areacode",
+              "district",
+              "address",
+              "latitude",
+              "longitude",
+          }
+
+          ids = set()
+
+          for index, row in enumerate(rows, start=1):
+              missing = required - row.keys()
+
+              if missing:
+                  raise SystemExit(
+                      f"第 {index} 筆缺少欄位："
+                      f"{sorted(missing)}"
+                  )
+
+              if row["cctv_id"] in ids:
+                  raise SystemExit(
+                      f"發現重複 cctv_id："
+                      f"{row['cctv_id']}"
+                  )
+
+              longitude = float(row["longitude"])
+              latitude = float(row["latitude"])
+
+              if not (
+                  121.25 <= longitude <= 122.10
+                  and
+                  24.60 <= latitude <= 25.35
+              ):
+                  raise SystemExit(
+                      f"第 {index} 筆座標超出新北市合理範圍"
+                  )
+
+              ids.add(row["cctv_id"])
+
+          print(
+              f"檢查完成，共 {len(rows)} 筆"
+              "新北市道路 CCTV。"
+          )
+          PY
+
+      - name: 儲存更新後的資料
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email \
+            "41898282+github-actions[bot]@users.noreply.github.com"
+
+          git add newtaipei-road-cctv.json
+
+          if git diff --cached --quiet; then
+            echo "新北市道路 CCTV 資料沒有變更。"
+          else
+            git commit -m "自動更新新北市道路 CCTV 資料"
+            git push
+          fi
