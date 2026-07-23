@@ -51,11 +51,14 @@ jobs:
 
       - name: 產生宜蘭官方攝影機對照資料
         run: |
-          perl -0777 -CSDA -Mutf8 -MJSON::PP -e '
+          perl -0777 -MJSON::PP -MEncode=decode -e '
             use strict;
             use warnings;
 
-            my $html = <>;
+            my $html = decode(
+               "UTF-8",
+               <>
+            );
             my $category = "";
             my @results;
 
