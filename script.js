@@ -20,12 +20,12 @@ const CAMERA_TYPES = {
     icon: "🔵"
   },
   water: {
-    label: "水情 CCTV",
+    label: "台北水情 CCTV",
     color: "#22c55e",
     icon: "🟢"
   },
   "water-rental": {
-    label: "水情租賃 CCTV",
+    label: "台北水情租賃 CCTV",
     color: "#f59e0b",
     icon: "🟠"
   }
