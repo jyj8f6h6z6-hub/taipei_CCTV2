@@ -1636,9 +1636,9 @@ function exitPlaceSearchMode() {
   map.closePopup();
 }
 
-/* 找出搜尋位置 1 公里內的 CCTV */
+/* 找出搜尋位置 3 公里內的 CCTV */
 function findNearbyCams(searchPosition) {
-  const radiusMeters = 1000;
+  const radiusMeters = 3000;
 
   return allCams
     .map(cam => {
@@ -1672,6 +1672,9 @@ function locateUser() {
 
   const status =
     document.getElementById("status");
+
+  exitPlaceSearchMode();
+  render();
 
   if (!navigator.geolocation) {
     status.textContent =
@@ -1852,7 +1855,7 @@ async function initPlaceAutocomplete() {
           }
 
           console.log(
-            "1 公里內 CCTV：",
+            "3 公里內 CCTV：",
             nearbyCams
           );
 
