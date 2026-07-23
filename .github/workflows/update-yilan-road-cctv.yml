@@ -309,8 +309,16 @@ jobs:
             def normalize_name:
               tostring
               | gsub("^宜蘭縣道路\\s*"; "")
+              | gsub("^\\([^)]*\\)"; "")
               | gsub("[[:space:]]+"; "")
-              | gsub("臺"; "台");
+              | gsub("[、，,。．・／/]"; "")
+              | gsub("臺"; "台")
+              | gsub("國五"; "國5")
+              | gsub("台七"; "台7")
+              | gsub("台九"; "台9")
+              | gsub("線路口"; "線口")
+              | gsub("交岔路口"; "路口")
+              | gsub("交叉路口"; "路口");
 
             {
               results: [
@@ -328,14 +336,47 @@ jobs:
 
                 | . as $camera
 
+                
                 | (
                     $official[0]
                     | map(
-                        select(
-                          (.cleanName | normalize_name) ==
-                          ($camera.name | normalize_name)
-                        )
+                        . as $officialCam
+
+                        | (
+                            $officialCam.description
+                            | normalize_name
+                          ) as $officialDescription
+
+                        | (
+                            $camera.name
+                            | normalize_name
+                          ) as $cameraName
+
+                        | select(
+                            ($cameraName == (
+                              $officialCam.cleanName
+                              | normalize_name
+                            ))
+                            or
+                            ($cameraName | contains(
+                              $officialDescription
+                            ))
+                          )
+
+                        | $officialCam
                       )
+
+                    # 同一鏡頭可能在官方表格出現不同分類，
+                    # 先依 did 去除重複資料
+                    | unique_by(.did)
+
+                    # 描述較長的通常辨識度較高
+                    | sort_by(
+                        .description
+                        | normalize_name
+                        | length
+                      )
+                    | reverse
                     | first
                   ) as $match
 
