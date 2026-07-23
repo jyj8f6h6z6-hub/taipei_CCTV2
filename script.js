@@ -579,7 +579,8 @@ function normalizeDistrict(
     return defaultValue;
   }
 
-  return name.endsWith("區")
+  return /[區市鎮鄉]$/.test(name)
+
     ? name
     : `${name}區`;
 }

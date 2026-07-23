@@ -1,0 +1,172 @@
+name: 更新宜蘭道路 CCTV
+
+on:
+  schedule:
+    # UTC 19:10，臺灣時間每日凌晨 03:10
+    - cron: "10 19 * * *"
+
+  # 允許從 GitHub Actions 頁面手動執行
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: update-yilan-road-cctv
+  cancel-in-progress: false
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 下載專案
+        uses: actions/checkout@v4
+
+      - name: 下載 twipcam CCTV 公開資料
+        run: |
+          curl -L \
+            --fail \
+            --retry 3 \
+            --retry-delay 5 \
+            --connect-timeout 20 \
+            --max-time 180 \
+            "https://www.twipcam.com/api/v1/cam-list.json" \
+            -o twipcam-cam-list.json
+
+      - name: 驗證原始 JSON
+        run: |
+          jq empty twipcam-cam-list.json
+
+          echo "全部攝影機數量："
+          jq 'length' twipcam-cam-list.json
+
+      - name: 產生宜蘭道路 CCTV JSON
+        run: |
+          jq '
+            def district_from_name:
+              if test("宜蘭市") then "宜蘭市"
+              elif test("羅東鎮") then "羅東鎮"
+              elif test("蘇澳鎮") then "蘇澳鎮"
+              elif test("頭城鎮") then "頭城鎮"
+              elif test("礁溪鄉") then "礁溪鄉"
+              elif test("壯圍鄉") then "壯圍鄉"
+              elif test("員山鄉") then "員山鄉"
+              elif test("冬山鄉") then "冬山鄉"
+              elif test("五結鄉") then "五結鄉"
+              elif test("三星鄉") then "三星鄉"
+              elif test("大同鄉") then "大同鄉"
+              elif test("南澳鄉") then "南澳鄉"
+              else "未判定"
+              end;
+
+            {
+              results: [
+                .[]
+                | select(
+                    (.name // "") | startswith("宜蘭縣道路 ")
+                  )
+                | select(
+                    .id != null and
+                    .lat != null and
+                    .lon != null and
+                    .cam_url != null
+                  )
+                | {
+                    key: (
+                      "yilan-road-" +
+                      (.id | tostring)
+                    ),
+
+                    id: (
+                      .id | tostring
+                    ),
+
+                    name: (
+                      (.name | tostring)
+                      | sub("^宜蘭縣道路 "; "")
+                    ),
+
+                    x: (
+                      .lon | tonumber
+                    ),
+
+                    y: (
+                      .lat | tonumber
+                    ),
+
+                    city: "宜蘭縣",
+
+                    district: (
+                      (.name | tostring)
+                      | district_from_name
+                    ),
+
+                    url: (
+                      .cam_url | tostring
+                    ),
+
+                    streamUrl: (
+                      .cam_url | tostring
+                    ),
+
+                    type: "road",
+
+                    source:
+                      "twipcam 台灣即時影像監視器（原始影像：宜蘭縣政府）"
+                  }
+              ]
+            }
+          ' twipcam-cam-list.json \
+            > yilan-road-cctv.json.tmp
+
+          mv \
+            yilan-road-cctv.json.tmp \
+            yilan-road-cctv.json
+
+      - name: 驗證宜蘭 JSON
+        run: |
+          jq empty yilan-road-cctv.json
+
+          count="$(
+            jq '.results | length' \
+              yilan-road-cctv.json
+          )"
+
+          echo "宜蘭道路 CCTV 數量：${count}"
+
+          if [ "$count" -eq 0 ]; then
+            echo "錯誤：沒有取得宜蘭道路 CCTV"
+            exit 1
+          fi
+
+          echo "前 3 筆資料："
+
+          jq '.results[0:3]' \
+            yilan-road-cctv.json
+
+      - name: 刪除暫存檔案
+        run: |
+          rm -f twipcam-cam-list.json
+
+      - name: 提交更新
+        run: |
+          git config \
+            user.name \
+            "github-actions[bot]"
+
+          git config \
+            user.email \
+            "41898282+github-actions[bot]@users.noreply.github.com"
+
+          git add yilan-road-cctv.json
+
+          if git diff --cached --quiet; then
+            echo "宜蘭道路 CCTV 資料沒有變更"
+            exit 0
+          fi
+
+          git commit \
+            -m "chore: 自動更新宜蘭道路 CCTV 資料"
+
+          git push
