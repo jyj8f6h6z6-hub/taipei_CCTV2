@@ -34,7 +34,7 @@ jobs:
             "https://www.twipcam.com/api/v1/cam-list.json" \
             -o twipcam-cam-list.json
 
-            - name: 驗證原始 JSON
+      - name: 驗證原始 JSON
         run: |
           jq empty twipcam-cam-list.json
 
@@ -73,12 +73,13 @@ jobs:
               elif test("南澳鄉") then "南澳鄉"
               else "未判定"
               end;
-              
+
             {
               results: [
                 .[]
                 | select(
-                    (.name // "") | startswith("宜蘭縣道路 ")
+                    (.name // "") |
+                    startswith("宜蘭縣道路 ")
                   )
                 | select(
                     .id != null and
