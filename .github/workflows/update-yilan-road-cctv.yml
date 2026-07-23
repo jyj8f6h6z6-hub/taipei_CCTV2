@@ -36,18 +36,21 @@ jobs:
 
       - name: 下載宜蘭警察局 CCTV 公開清單
         run: |
-          curl -v -L \
+          curl -L \
             --fail \
-            --retry 5 \
+            --retry 2 \
             --retry-all-errors \
-            --retry-delay 10 \
-            --connect-timeout 30 \
-            --max-time 180 \
+            --retry-delay 5 \
+            --connect-timeout 15 \
+            --max-time 45 \
             --http1.1 \
             --tlsv1.2 \
-            -A "Mozilla/5.0" \
+            --tls-max 1.2 \
+            -A "Mozilla/5.0 (Windows NT 10.0; Win64; x64)" \
             "https://ilcpb.ivs.hinet.net/public/ilcpb_live_cam" \
             -o yilan-official-cams.html
+
+          test -s yilan-official-cams.html
 
       - name: 產生宜蘭官方攝影機對照資料
         run: |
