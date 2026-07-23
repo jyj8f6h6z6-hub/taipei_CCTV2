@@ -40,7 +40,19 @@ jobs:
 
           echo "全部攝影機數量："
           jq 'length' twipcam-cam-list.json
-
+      
+          - name: 查看第一筆宜蘭原始資料
+        run: |
+          jq '
+            [
+              .[]
+              | select(
+                  (.name // "") |
+                  startswith("宜蘭縣道路 ")
+                )
+            ][0]
+          ' twipcam-cam-list.json
+          
       - name: 產生宜蘭道路 CCTV JSON
         run: |
           jq '

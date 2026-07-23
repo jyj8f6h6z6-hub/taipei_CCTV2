@@ -10,6 +10,9 @@ const TAOYUAN_ROAD_API_URL =
 const KEELUNG_ROAD_API_URL =
   "./keelung-road-cctv.json";
 
+const YILAN_ROAD_API_URL =
+  "./yilan-road-cctv.json";
+
 const TAIWAN_TOWNS_TOPOJSON_URL =
   "https://cdn.jsdelivr.net/npm/taiwan-atlas/towns-10t.json";
 
@@ -55,9 +58,11 @@ let districtGeoJSON = null;
 /* 縣市顯示順序 */
 const CITY_ORDER = [
   "臺北市",
+  "台北市",
   "新北市",
   "基隆市",
-  "桃園市"
+  "桃園市",
+  "宜蘭縣"
 ];
 
 
@@ -164,7 +169,8 @@ async function loadDistrictBoundaries() {
           "台北市",
           "新北市",
           "基隆市",
-          "桃園市"
+          "桃園市",
+          "宜蘭縣"
       ].includes(county);
     });
 
@@ -174,8 +180,14 @@ async function loadDistrictBoundaries() {
     };
 
     console.log(
-      "已載入臺北市、新北市、基隆市及桃園市行政區：",
-      features.length
+      "已載入的縣市：",
+      [
+        ...new Set(
+          features.map(feature =>
+            feature.properties?.COUNTYNAME
+          )
+        )
+      ]
     );
 }
 
@@ -563,7 +575,8 @@ function normalizeCity(value, fallback = "") {
     臺北市: "臺北市",
     新北市: "新北市",
     基隆市: "基隆市",
-    桃園市: "桃園市"
+    桃園市: "桃園市",
+    宜蘭縣: "宜蘭縣"
   };
 
   return cityAliases[text] || text;
@@ -765,6 +778,75 @@ function normalizeKeelungRoad(json) {
     );
 }
 
+function normalizeYilanRoad(json) {
+  const rows =
+    json.results ||
+    json.result?.results ||
+    json.data;
+
+  if (!Array.isArray(rows)) {
+    throw new Error(
+      "宜蘭道路 CCTV 資料格式不正確"
+    );
+  }
+
+  return rows
+    .map(cam => {
+      const id = String(
+        cam.id || ""
+      ).trim();
+
+      const x = Number(cam.x);
+      const y = Number(cam.y);
+
+      return {
+        key:
+          cam.key ||
+          `yilan-road-${id}`,
+
+        id,
+
+        name: String(
+          cam.name || id
+        ).trim(),
+
+        x,
+        y,
+
+        city: "宜蘭縣",
+
+        district: normalizeDistrict(
+          cam.district,
+          "未判定"
+        ),
+
+        url: String(
+          cam.url ||
+          cam.streamUrl ||
+          ""
+        ).trim(),
+
+        streamUrl: String(
+          cam.streamUrl ||
+          cam.url ||
+          ""
+        ).trim(),
+
+        type: "road",
+
+        source:
+          cam.source ||
+          "宜蘭縣政府警察局公開即時路況"
+      };
+    })
+    .filter(cam =>
+      cam.id &&
+      cam.url &&
+      Number.isFinite(cam.x) &&
+      Number.isFinite(cam.y)
+    );
+}
+
 /* 整理水情 CCTV 資料 */
 function normalizeWaterCams(json) {
   const rows =
@@ -934,7 +1016,8 @@ async function loadData() {
     fetchJson(ROAD_API_URL),
     fetchJson(NEWTAIPEI_ROAD_API_URL),   
     fetchJson(TAOYUAN_ROAD_API_URL),
-    fetchJson(KEELUNG_ROAD_API_URL),// ← 新增
+    fetchJson(KEELUNG_ROAD_API_URL),
+    fetchJson(YILAN_ROAD_API_URL),
     fetchJson(WATER_API_URL),
     fetchJson(WATER_RENTAL_API_URL)
   ]);
@@ -943,6 +1026,7 @@ async function loadData() {
   let newTaipeiRoadCams = [];
   let taoyuanRoadCams = [];
   let keelungRoadCams = [];
+  let yilanRoadCams = [];
   let waterCams = [];
   let waterRentalCams = [];
   const errors = [];
@@ -1083,24 +1167,47 @@ async function loadData() {
   }
 
   if (results[4].status === "fulfilled") {
+  try {
+    yilanRoadCams =
+      normalizeYilanRoad(
+        results[4].value
+      );
+
+    console.log(
+      "宜蘭道路：",
+      yilanRoadCams.length
+    );
+  } catch (error) {
+    errors.push(
+      `宜蘭道路 CCTV：${error.message}`
+    );
+  }
+} else {
+  errors.push(
+    `宜蘭道路 CCTV：` +
+    results[4].reason.message
+  );
+}
+
+  if (results[5].status === "fulfilled") {
     try {
       waterCams = normalizeWaterCams(
-        results[4].value
+        results[5].value
       );
     } catch (error) {
       errors.push(error.message);
     }
   } else {
     errors.push(
-      `水情 CCTV：${results[4].reason.message}`
+      `水情 CCTV：${results[5].reason.message}`
     );
   }
 
-  if (results[5].status === "fulfilled") {
+  if (results[6].status === "fulfilled") {
     try {
       waterRentalCams =
         normalizeWaterRentalCams(
-          results[5].value
+          results[6].value
         );
     } catch (error) {
       errors.push(error.message);
@@ -1108,7 +1215,7 @@ async function loadData() {
   } else {
     errors.push(
       `水情租賃 CCTV：` +
-      results[5].reason.message
+      results[6].reason.message
     );
   }
 
@@ -1117,12 +1224,13 @@ async function loadData() {
     ...newTaipeiRoadCams,
     ...taoyuanRoadCams,
     ...keelungRoadCams,
+    ...yilanRoadCams,
     ...waterCams,
     ...waterRentalCams
   ];
 
   cameraCounts = {
-    road: roadCams.length + newTaipeiRoadCams.length + taoyuanRoadCams.length + keelungRoadCams.length,
+    road: roadCams.length + newTaipeiRoadCams.length + taoyuanRoadCams.length + keelungRoadCams.length + yilanRoadCams.length,
     water: waterCams.length,
     "water-rental": waterRentalCams.length
   };
@@ -1595,8 +1703,13 @@ function openInfo(marker) {
         ? cam.streamUrl
         : cam.url;
 
+  const isSnapshot =
+    /\.(jpg|jpeg|png|webp)(\?|$)/i.test(
+      mediaUrl || ""
+    );
+
   const buttonText =
-    cam.type === "water"
+    cam.type === "water" || isSnapshot
       ? "🖼 查看目前影像"
       : "▶ 開啟即時影像";
 
