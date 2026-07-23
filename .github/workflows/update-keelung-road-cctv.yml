@@ -1,0 +1,66 @@
+name: 更新基隆道路 CCTV 資料
+
+on:
+  workflow_dispatch:
+
+  schedule:
+    # 臺灣時間每天凌晨 04:05
+    # GitHub Actions cron 使用 UTC，因此為前一天 20:05
+    - cron: "5 20 * * *"
+
+permissions:
+  contents: write
+
+jobs:
+  update-keelung-road-cctv:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 取得網站程式
+        uses: actions/checkout@v4
+
+      - name: 設定 Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: 更新基隆道路 CCTV JSON
+        run: |
+          python update-keelung-road-cctv.py
+
+      - name: 檢查 JSON 是否有效
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+
+          path = Path("keelung-road-cctv.json")
+
+          if not path.exists():
+              raise SystemExit("找不到 keelung-road-cctv.json")
+
+          data = json.loads(path.read_text(encoding="utf-8"))
+          rows = data.get("results", [])
+
+          if not isinstance(rows, list):
+              raise SystemExit("results 不是陣列")
+
+          if len(rows) == 0:
+              raise SystemExit("基隆 CCTV 資料為空，停止提交")
+
+          print(f"基隆 CCTV 共 {len(rows)} 支")
+          PY
+
+      - name: 提交更新結果
+        run: |
+          if git diff --quiet -- keelung-road-cctv.json; then
+            echo "基隆 CCTV 資料沒有變更"
+            exit 0
+          fi
+
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+          git add keelung-road-cctv.json
+          git commit -m "chore: 自動更新基隆道路 CCTV 資料"
+          git push
