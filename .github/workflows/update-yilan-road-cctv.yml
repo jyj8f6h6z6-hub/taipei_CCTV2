@@ -187,7 +187,9 @@ jobs:
 
       - name: 產生宜蘭道路 CCTV JSON
         run: |
-          jq '
+          jq \
+            --slurpfile official yilan-official-cams.json \
+            '
             def district_from_name:
               if test("宜蘭市") then "宜蘭市"
               elif test("羅東鎮") then "羅東鎮"
@@ -204,6 +206,12 @@ jobs:
               else "未判定"
               end;
 
+            def normalize_name:
+              tostring
+              | gsub("^宜蘭縣道路\\s*"; "")
+              | gsub("[[:space:]]+"; "")
+              | gsub("臺"; "台");
+
             {
               results: [
                 .[]
@@ -217,48 +225,82 @@ jobs:
                     .lon != null and
                     .cam_url != null
                   )
+
+                | . as $camera
+
+                | (
+                    $official[0]
+                    | map(
+                        select(
+                          (.cleanName | normalize_name) ==
+                          ($camera.name | normalize_name)
+                        )
+                      )
+                    | first
+                  ) as $match
+
                 | {
                     key: (
                       "yilan-road-" +
-                      (.id | tostring)
+                      ($camera.id | tostring)
                     ),
 
                     id: (
-                      .id | tostring
+                      $camera.id | tostring
+                    ),
+
+                    officialId: (
+                      if $match then
+                        ($match.did | tostring)
+                      else
+                        ""
+                      end
                     ),
 
                     name: (
-                      (.name | tostring)
+                      ($camera.name | tostring)
                       | sub("^宜蘭縣道路 "; "")
                     ),
 
                     x: (
-                      .lon | tonumber
+                      $camera.lon | tonumber
                     ),
 
                     y: (
-                      .lat | tonumber
+                      $camera.lat | tonumber
                     ),
 
                     city: "宜蘭縣",
 
                     district: (
-                      (.name | tostring)
+                      ($camera.name | tostring)
                       | district_from_name
                     ),
 
+                    imageUrl: (
+                      $camera.cam_url | tostring
+                    ),
+
                     url: (
-                      .cam_url | tostring
+                      if $match then
+                        ($match.playerUrl | tostring)
+                      else
+                        ($camera.cam_url | tostring)
+                      end
                     ),
 
                     streamUrl: (
-                      .cam_url | tostring
+                      if $match then
+                        ($match.playerUrl | tostring)
+                      else
+                        ""
+                      end
                     ),
 
                     type: "road",
 
                     source:
-                      "twipcam 台灣即時影像監視器（原始影像：宜蘭縣政府）"
+                      "宜蘭縣政府警察局公開即時路況；座標與預覽圖由 twipcam 提供"
                   }
               ]
             }
@@ -284,7 +326,49 @@ jobs:
             echo "錯誤：沒有取得宜蘭道路 CCTV"
             exit 1
           fi
+          matched="$(
+            jq '
+              [
+                .results[]
+                | select(
+                    (.officialId // "") != ""
+                  )
+              ]
+              | length
+            ' yilan-road-cctv.json
+          )"
 
+          unmatched="$(
+            jq '
+              [
+                .results[]
+                | select(
+                    (.officialId // "") == ""
+                  )
+              ]
+              | length
+            ' yilan-road-cctv.json
+          )"
+
+          echo "成功配對官方播放器：${matched}"
+          echo "尚未配對官方播放器：${unmatched}"
+
+          echo "尚未配對的前 10 筆："
+
+          jq '
+            [
+              .results[]
+              | select(
+                  (.officialId // "") == ""
+                )
+              | {
+                  id,
+                  name,
+                  district
+                }
+            ][0:10]
+          ' yilan-road-cctv.json
+          
           echo "前 3 筆資料："
 
           jq '.results[0:3]' \
