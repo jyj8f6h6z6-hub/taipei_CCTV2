@@ -34,15 +34,17 @@ jobs:
             "https://www.twipcam.com/api/v1/cam-list.json" \
             -o twipcam-cam-list.json
 
-      - name: 驗證原始 JSON
+            - name: 驗證原始 JSON
         run: |
           jq empty twipcam-cam-list.json
 
           echo "全部攝影機數量："
           jq 'length' twipcam-cam-list.json
-      
-          - name: 查看第一筆宜蘭原始資料
+
+      - name: 查看第一筆宜蘭原始資料
         run: |
+          echo "第一筆宜蘭道路 CCTV 原始資料："
+
           jq '
             [
               .[]
@@ -52,7 +54,7 @@ jobs:
                 )
             ][0]
           ' twipcam-cam-list.json
-          
+
       - name: 產生宜蘭道路 CCTV JSON
         run: |
           jq '
@@ -71,7 +73,7 @@ jobs:
               elif test("南澳鄉") then "南澳鄉"
               else "未判定"
               end;
-
+              
             {
               results: [
                 .[]
