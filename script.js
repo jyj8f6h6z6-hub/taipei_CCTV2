@@ -806,6 +806,10 @@ function normalizeYilanRoad(json) {
 
         id,
 
+        officialId: String(
+          cam.officialId || ""
+        ).trim(),
+
         name: String(
           cam.name || id
         ).trim(),
@@ -820,16 +824,18 @@ function normalizeYilanRoad(json) {
           "未判定"
         ),
 
+        imageUrl: String(
+          cam.imageUrl || ""
+        ).trim(),
+
         url: String(
           cam.url ||
-          cam.streamUrl ||
+          cam.imageUrl ||
           ""
         ).trim(),
 
         streamUrl: String(
-          cam.streamUrl ||
-          cam.url ||
-          ""
+          cam.streamUrl || ""
         ).trim(),
 
         type: "road",
