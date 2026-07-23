@@ -49,20 +49,114 @@ jobs:
             "https://ilcpb.ivs.hinet.net/public/ilcpb_live_cam" \
             -o yilan-official-cams.html
 
-      - name: 查看宜蘭官方攝影機名稱與播放器
+      - name: 產生宜蘭官方攝影機對照資料
         run: |
-          sed 's/></>\n</g' \
-            yilan-official-cams.html \
-            > yilan-official-lines.html
+          perl -0777 -CSDA -Mutf8 -MJSON::PP -e '
+            use strict;
+            use warnings;
 
-          grep -n \
-            -B 12 \
-            -A 3 \
-            'hls_player?page=ilcpb&did=' \
-            yilan-official-lines.html \
-            | head -n 180 \
-            || true
+            my $html = <>;
+            my $category = "";
+            my @results;
 
+            while (
+              $html =~
+              m{<tr\b[^>]*>(.*?)</tr>}gsi
+            ) {
+              my $row = $1;
+              my @cells;
+
+              while (
+                $row =~
+                m{<td\b([^>]*)>(.*?)</td>}gsi
+              ) {
+                my $attrs = $1;
+                my $text = $2;
+
+                $text =~ s/<[^>]+>//g;
+                $text =~ s/&nbsp;/ /g;
+                $text =~ s/&amp;/&/g;
+                $text =~ s/^\s+|\s+$//g;
+
+                push @cells, {
+                  attrs => $attrs,
+                  text => $text
+                };
+              }
+
+              next unless
+                $row =~
+                m{hls_player\?page=ilcpb&did=(\d+)};
+
+              my $did = $1;
+
+              if (
+                @cells &&
+                $cells[0]{attrs} =~ /rowspan/i
+              ) {
+                $category =
+                  $cells[0]{text};
+
+                shift @cells;
+              }
+
+              next unless @cells >= 2;
+
+              my $location =
+                $cells[0]{text};
+
+              my $description =
+                $cells[1]{text};
+
+              my $clean_description =
+                $description;
+
+              $clean_description =~
+                s/^\([^)]*\)//;
+
+              $clean_description =~
+                s/^\s+|\s+$//g;
+
+              push @results, {
+                category =>
+                  $category,
+
+                location =>
+                  $location,
+
+                description =>
+                  $description,
+
+                cleanName =>
+                  $category .
+                  " " .
+                  $clean_description,
+
+                did =>
+                  $did,
+
+                playerUrl =>
+                  "https://ilcpb.ivs.hinet.net/public/hls_player?page=ilcpb&did=" .
+                  $did
+              };
+            }
+
+            print JSON::PP
+              ->new
+              ->utf8
+              ->pretty
+              ->canonical
+              ->encode(\@results);
+          ' yilan-official-cams.html \
+            > yilan-official-cams.json
+
+          echo "官方攝影機數量："
+          jq 'length' \
+            yilan-official-cams.json
+
+          echo "前 3 筆官方對照資料："
+          jq '.[0:3]' \
+            yilan-official-cams.json
     
       - name: 驗證原始 JSON
         run: |
@@ -194,6 +288,7 @@ jobs:
         run: |
           rm -f twipcam-cam-list.json
           rm -f yilan-official-cams.html
+          rm -f yilan-official-cams.json
           rm -f yilan-official-lines.html
 
       - name: 提交更新
