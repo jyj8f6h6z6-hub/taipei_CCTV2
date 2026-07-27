@@ -98,12 +98,10 @@ function restoreTaoyuanMapView() {
       !Number.isFinite(view.lng) ||
       !Number.isFinite(view.zoom)
     ) {
-      sessionStorage.removeItem(
-        TAOYUAN_MAP_VIEW_KEY
-      );
-
       return false;
     }
+
+    map.stop();
 
     map.setView(
       [view.lat, view.lng],
@@ -113,24 +111,12 @@ function restoreTaoyuanMapView() {
       }
     );
 
-    /*
-     * 恢復一次後立即刪除，
-     * 避免之後一直回到舊的桃園位置。
-     */
-    sessionStorage.removeItem(
-      TAOYUAN_MAP_VIEW_KEY
-    );
-
     return true;
 
   } catch (error) {
     console.warn(
       "桃園地圖位置恢復失敗：",
       error
-    );
-
-    sessionStorage.removeItem(
-      TAOYUAN_MAP_VIEW_KEY
     );
 
     return false;
@@ -2487,5 +2473,40 @@ window.addEventListener(
       restoreTaoyuanMapView();
       map.invalidateSize();
     }, 100);
+  }
+);
+
+document.addEventListener(
+  "visibilitychange",
+  () => {
+    if (
+      document.visibilityState !== "visible" ||
+      !map ||
+      allCams.length === 0
+    ) {
+      return;
+    }
+
+    setTimeout(() => {
+      restoreTaoyuanMapView();
+      map.invalidateSize();
+    }, 200);
+  }
+);
+
+window.addEventListener(
+  "focus",
+  () => {
+    if (
+      !map ||
+      allCams.length === 0
+    ) {
+      return;
+    }
+
+    setTimeout(() => {
+      restoreTaoyuanMapView();
+      map.invalidateSize();
+    }, 200);
   }
 );
