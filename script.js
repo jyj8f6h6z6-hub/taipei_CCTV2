@@ -16,6 +16,12 @@ const YILAN_ROAD_API_URL =
 const TAICHUNG_ROAD_API_URL =
   "./taichung-road-cctv.json";
 
+const NANTOU_ROAD_API_URL =
+  "./nantou-road-cctv.json";
+
+const TAINAN_ROAD_API_URL =
+  "./tainan-road-cctv.json";
+
 const TAIWAN_TOWNS_TOPOJSON_URL =
   "https://cdn.jsdelivr.net/npm/taiwan-atlas/towns-10t.json";
 
@@ -135,6 +141,8 @@ const CITY_ORDER = [
   "基隆市",
   "桃園市",
   "臺中市",
+  "南投縣",
+  "臺南市",
   "宜蘭縣"
 ];
 
@@ -244,6 +252,8 @@ async function loadDistrictBoundaries() {
           "基隆市",
           "桃園市",
           "臺中市",
+          "南投縣",
+          "臺南市",
           "宜蘭縣"
       ].includes(county);
     });
@@ -652,7 +662,10 @@ function normalizeCity(value, fallback = "") {
     桃園市: "桃園市",
     台中市: "臺中市",
     臺中市: "臺中市",
-    宜蘭縣: "宜蘭縣"
+    南投縣: "南投縣",
+    宜蘭縣: "宜蘭縣",
+    台南市: "臺南市",
+    臺南市: "臺南市"
   };
 
   return cityAliases[text] || text;
@@ -1009,6 +1022,167 @@ function normalizeTaichungRoad(data) {
     );
 }
 
+function normalizeNantouRoad(json) {
+  const rows =
+    json.results ||
+    json.data ||
+    json;
+
+  if (!Array.isArray(rows)) {
+    throw new Error(
+      "南投道路 CCTV 資料格式不正確"
+    );
+  }
+
+  return rows
+    .map(cam => {
+      const id = String(
+        cam.id || ""
+      ).trim();
+
+      const x = Number(cam.x);
+      const y = Number(cam.y);
+
+      const suppliedDistrict =
+        cam.district &&
+        cam.district !== "未判定"
+          ? normalizeDistrict(
+              cam.district
+            )
+          : "";
+
+      return {
+        key:
+          `nantou-road-${id}`,
+
+        id,
+
+        name: String(
+          cam.name ||
+          cam.roadName ||
+          id
+        ).trim(),
+
+        x,
+        y,
+
+        city: "南投縣",
+
+        district:
+          suppliedDistrict ||
+          districtByCoord(x, y),
+
+        url: String(
+          cam.url || ""
+        ).trim(),
+
+        streamUrl: String(
+          cam.streamUrl || ""
+        ).trim(),
+
+        type: "road",
+
+        source:
+          cam.source ||
+          "南投縣政府建設處／南投縣即時交通監控系統",
+
+        linkId: String(
+          cam.linkId || ""
+        ).trim(),
+
+        roadId: String(
+          cam.roadId || ""
+        ).trim(),
+
+        roadName: String(
+          cam.roadName || ""
+        ).trim(),
+
+        roadClass: String(
+          cam.roadClass || ""
+        ).trim(),
+
+        locationType: String(
+          cam.locationType || ""
+        ).trim()
+      };
+    })
+    .filter(cam =>
+      cam.id &&
+      cam.url &&
+      Number.isFinite(cam.x) &&
+      Number.isFinite(cam.y)
+    );
+}
+
+function normalizeTainanRoad(json) {
+  const rows =
+    json.results ||
+    json.data ||
+    json;
+
+  if (!Array.isArray(rows)) {
+    throw new Error(
+      "臺南道路 CCTV 資料格式不正確"
+    );
+  }
+
+  return rows
+    .map(cam => {
+      const id = String(
+        cam.id || ""
+      ).trim();
+
+      const x = Number(cam.x);
+      const y = Number(cam.y);
+
+      const suppliedDistrict =
+        cam.district &&
+        cam.district !== "未判定"
+          ? normalizeDistrict(cam.district)
+          : "";
+
+      return {
+        key: `tainan-road-${id}`,
+
+        id,
+
+        name: String(
+          cam.name || id
+        ).trim(),
+
+        x,
+        y,
+
+        city: "臺南市",
+
+        district:
+          suppliedDistrict ||
+          districtByCoord(x, y),
+
+        url: String(
+          cam.url || ""
+        ).trim(),
+
+        streamUrl: String(
+          cam.streamUrl || ""
+        ).trim(),
+
+        type: "road",
+
+        source:
+          cam.source ||
+          "臺南市政府交通局"
+      };
+    })
+    .filter(cam =>
+      cam.id &&
+      cam.url &&
+      Number.isFinite(cam.x) &&
+      Number.isFinite(cam.y)
+    );
+}
+
 /* 整理水情 CCTV 資料 */
 function normalizeWaterCams(json) {
   const rows =
@@ -1181,6 +1355,8 @@ async function loadData() {
     fetchJson(KEELUNG_ROAD_API_URL),
     fetchJson(YILAN_ROAD_API_URL),
     fetchJson(TAICHUNG_ROAD_API_URL),
+    fetchJson(NANTOU_ROAD_API_URL),
+    fetchJson(TAINAN_ROAD_API_URL),
     fetchJson(WATER_API_URL),
     fetchJson(WATER_RENTAL_API_URL)
   ]);
@@ -1191,6 +1367,8 @@ async function loadData() {
   let keelungRoadCams = [];
   let yilanRoadCams = [];
   let taichungRoadCams = [];
+  let nantouRoadCams = [];
+  let tainanRoadCams = [];
   let waterCams = [];
   let waterRentalCams = [];
   const errors = [];
@@ -1377,25 +1555,73 @@ if (results[5].status === "fulfilled") {
   );
 }
 
-  if (results[6].status === "fulfilled") {
+if (results[6].status === "fulfilled") {
+  try {
+    nantouRoadCams =
+      normalizeNantouRoad(
+        results[6].value
+      );
+
+    console.log(
+      "南投道路：",
+      nantouRoadCams.length
+    );
+
+  } catch (error) {
+    errors.push(
+      `南投道路 CCTV：${error.message}`
+    );
+  }
+} else {
+  errors.push(
+    `南投道路 CCTV：` +
+    results[6].reason.message
+  );
+}
+
+if (results[7].status === "fulfilled") {
+  try {
+    tainanRoadCams =
+      normalizeTainanRoad(
+        results[7].value
+      );
+
+    console.log(
+      "臺南道路：",
+      tainanRoadCams.length
+    );
+
+  } catch (error) {
+    errors.push(
+      `臺南道路 CCTV：${error.message}`
+    );
+  }
+} else {
+  errors.push(
+    `臺南道路 CCTV：` +
+    results[7].reason.message
+  );
+}
+
+  if (results[8].status === "fulfilled") {
     try {
       waterCams = normalizeWaterCams(
-        results[6].value
+        results[8].value
       );
     } catch (error) {
       errors.push(error.message);
     }
   } else {
     errors.push(
-      `水情 CCTV：${results[6].reason.message}`
+      `水情 CCTV：${results[8].reason.message}`
     );
   }
 
-  if (results[7].status === "fulfilled") {
+  if (results[9].status === "fulfilled") {
     try {
       waterRentalCams =
         normalizeWaterRentalCams(
-          results[7].value
+          results[9].value
         );
     } catch (error) {
       errors.push(error.message);
@@ -1403,7 +1629,7 @@ if (results[5].status === "fulfilled") {
   } else {
     errors.push(
       `水情租賃 CCTV：` +
-      results[7].reason.message
+      results[9].reason.message
     );
   }
 
@@ -1414,12 +1640,14 @@ if (results[5].status === "fulfilled") {
     ...keelungRoadCams,
     ...yilanRoadCams,
     ...taichungRoadCams,
+    ...tainanRoadCams,
+    ...nantouRoadCams,
     ...waterCams,
     ...waterRentalCams
   ];
 
   cameraCounts = {
-    road: roadCams.length + newTaipeiRoadCams.length + taoyuanRoadCams.length + keelungRoadCams.length + yilanRoadCams.length + taichungRoadCams.length,
+    road: roadCams.length + newTaipeiRoadCams.length + taoyuanRoadCams.length + keelungRoadCams.length + yilanRoadCams.length + taichungRoadCams.length + nantouRoadCams.length + tainanRoadCams.length,
     water: waterCams.length,
     "water-rental": waterRentalCams.length
   };
