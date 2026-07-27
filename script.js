@@ -2381,7 +2381,6 @@ async function initMap() {
     await loadDistrictBoundaries(); 
     await loadData();
 
-    restoreTaoyuanMapView();
 
   } catch (error) {
     console.error(error);
@@ -2461,8 +2460,9 @@ initMap();
 
 window.addEventListener(
   "pageshow",
-  () => {
+  event => {
     if (
+      !event.persisted ||
       !map ||
       allCams.length === 0
     ) {
@@ -2473,40 +2473,5 @@ window.addEventListener(
       restoreTaoyuanMapView();
       map.invalidateSize();
     }, 100);
-  }
-);
-
-document.addEventListener(
-  "visibilitychange",
-  () => {
-    if (
-      document.visibilityState !== "visible" ||
-      !map ||
-      allCams.length === 0
-    ) {
-      return;
-    }
-
-    setTimeout(() => {
-      restoreTaoyuanMapView();
-      map.invalidateSize();
-    }, 200);
-  }
-);
-
-window.addEventListener(
-  "focus",
-  () => {
-    if (
-      !map ||
-      allCams.length === 0
-    ) {
-      return;
-    }
-
-    setTimeout(() => {
-      restoreTaoyuanMapView();
-      map.invalidateSize();
-    }, 200);
   }
 );
