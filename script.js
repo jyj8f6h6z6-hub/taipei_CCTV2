@@ -53,6 +53,89 @@ let searchLocationMarker = null;
 let currentUserPosition = null;
 let districtGeoJSON = null;
 
+const TAOYUAN_MAP_VIEW_KEY =
+  "taoyuan-map-view";
+
+function saveTaoyuanMapView(cam) {
+  if (
+    !map ||
+    normalizeCity(cam?.city) !== "桃園市"
+  ) {
+    return;
+  }
+
+  const center = map.getCenter();
+
+  sessionStorage.setItem(
+    TAOYUAN_MAP_VIEW_KEY,
+    JSON.stringify({
+      lat: center.lat,
+      lng: center.lng,
+      zoom: map.getZoom()
+    })
+  );
+}
+
+function restoreTaoyuanMapView() {
+  if (!map) {
+    return false;
+  }
+
+  const saved =
+    sessionStorage.getItem(
+      TAOYUAN_MAP_VIEW_KEY
+    );
+
+  if (!saved) {
+    return false;
+  }
+
+  try {
+    const view = JSON.parse(saved);
+
+    if (
+      !Number.isFinite(view.lat) ||
+      !Number.isFinite(view.lng) ||
+      !Number.isFinite(view.zoom)
+    ) {
+      sessionStorage.removeItem(
+        TAOYUAN_MAP_VIEW_KEY
+      );
+
+      return false;
+    }
+
+    map.setView(
+      [view.lat, view.lng],
+      view.zoom,
+      {
+        animate: false
+      }
+    );
+
+    /*
+     * 恢復一次後立即刪除，
+     * 避免之後一直回到舊的桃園位置。
+     */
+    sessionStorage.removeItem(
+      TAOYUAN_MAP_VIEW_KEY
+    );
+
+    return true;
+
+  } catch (error) {
+    console.warn(
+      "桃園地圖位置恢復失敗：",
+      error
+    );
+
+    sessionStorage.removeItem(
+      TAOYUAN_MAP_VIEW_KEY
+    );
+
+    return false;
+  }
+}
 
 
 /* 縣市顯示順序 */
@@ -1719,17 +1802,27 @@ function openInfo(marker) {
       ? "🖼 查看目前影像"
       : "▶ 開啟即時影像";
 
+  const saveViewAttribute =
+  normalizeCity(cam.city) === "桃園市"
+    ? `onclick="saveTaoyuanMapView(
+        window.debugCameras.find(
+          item => item.key === '${esc(cam.key)}'
+        )
+      )"`
+    : "";
+  
   const actionHtml = mediaUrl
-    ? `
-      <a
-        class="iw-btn"
-        href="${esc(mediaUrl)}"
-        target="_blank"
-        rel="noopener noreferrer"
-      >
-        ${buttonText}
-      </a>
-    `
+  ? `
+    <a
+      class="iw-btn"
+      href="${esc(mediaUrl)}"
+      target="_blank"
+      rel="noopener noreferrer"
+      ${saveViewAttribute}
+    >
+      ${buttonText}
+    </a>
+  `
     : `
       <div class="iw-no-media">
         目前僅提供 CCTV 點位資料，
@@ -2301,6 +2394,9 @@ async function initMap() {
 
     await loadDistrictBoundaries(); 
     await loadData();
+
+    restoreTaoyuanMapView();
+
   } catch (error) {
     console.error(error);
 
@@ -2376,3 +2472,20 @@ document
 /* 正式啟動 */
 initPlaceAutocomplete();
 initMap();
+
+window.addEventListener(
+  "pageshow",
+  () => {
+    if (
+      !map ||
+      allCams.length === 0
+    ) {
+      return;
+    }
+
+    setTimeout(() => {
+      restoreTaoyuanMapView();
+      map.invalidateSize();
+    }, 100);
+  }
+);
