@@ -32,6 +32,10 @@ const PROVINCIAL_ROAD_API_URL =
 const FREEWAY_CCTV_API_URL =
   "./freeway-cctv.json";
 
+
+const WRA_STATION_API_URL =
+  "./wra-stations.json";
+
 const TAIWAN_TOWNS_TOPOJSON_URL =
   "https://cdn.jsdelivr.net/npm/taiwan-atlas/towns-10t.json";
 
@@ -57,6 +61,12 @@ const CAMERA_TYPES = {
     icon: "🔴"
   },
 
+  wra: {
+    label: "水利署 CCTV",
+    color: "#0891b2",
+    icon: "🔷"
+  },
+
   water: {
     label: "台北水情 CCTV",
     color: "#22c55e",
@@ -76,6 +86,7 @@ let cameraCounts = {
   road: 0,
   provincial: 0,
   highway: 0,
+  wra: 0,
   water: 0,
   "water-rental": 0
 };
@@ -1554,6 +1565,105 @@ function normalizeFreewayCams(json) {
     );
 }
 
+function normalizeWraStations(data) {
+  if (!Array.isArray(data)) {
+    throw new Error(
+      "水利署 CCTV 站點資料格式不正確"
+    );
+  }
+
+  const excludedKeywords = [
+    "公路局",
+    "公路總局",
+    "旁收",
+    "台電",
+    "台水",
+    "有線電視",
+    "南科管理局"
+  ];
+
+  return data
+    // 先只保留主要水利署來源
+    .filter(item => {
+      return Number(item.SourceId) === 1;
+    })
+
+    // 再排除名稱中明確標示為外部提供的站點
+    .filter(item => {
+      const stationName =
+        String(item.Name || "").trim();
+
+      return !excludedKeywords.some(
+        keyword =>
+          stationName.includes(keyword)
+      );
+    })
+
+    .map(item => {
+      const lat = Number(item.lat);
+      const lng = Number(item.lng);
+
+      if (
+        !Number.isFinite(lat) ||
+        !Number.isFinite(lng)
+      ) {
+        return null;
+      }
+
+      const sourceId =
+        String(item.SourceId || "").trim();
+
+      const stationId =
+        String(item.ID || "").trim();
+
+      return {
+        key:
+          `wra-${sourceId}-${stationId}`,
+
+        id: stationId,
+        stationId,
+        sourceId,
+
+        name:
+          String(
+            item.Name ||
+            `水利署 CCTV ${stationId}`
+          ).trim(),
+
+        city:
+          String(
+            item.Counname || ""
+          ).trim(),
+
+        district:
+          String(
+            item.Town_name || ""
+          ).trim(),
+
+        basin:
+          String(
+            item.Basin_name || ""
+          ).trim(),
+
+        lat,
+        lng,
+
+        // 依照你原本欄位名稱，
+        // 若原本使用 x、y 就保留這兩個
+        x: lng,
+        y: lat,
+
+        type: "wra",
+        source:
+          "水利署防災資訊服務網",
+
+        mediaUrl: ""
+      };
+    })
+
+    .filter(Boolean);
+}
+
 /* 整理水情 CCTV 資料 */
 function normalizeWaterCams(json) {
   const rows =
@@ -1731,8 +1841,10 @@ async function loadData() {
     fetchJson(CHIAYI_COUNTY_ROAD_API_URL),
     fetchJson(PROVINCIAL_ROAD_API_URL),
     fetchJson(FREEWAY_CCTV_API_URL),
+    fetchJson(WRA_STATION_API_URL),
     fetchJson(WATER_API_URL),
     fetchJson(WATER_RENTAL_API_URL)
+    
   ]);
 
   let roadCams = [];
@@ -1747,7 +1859,9 @@ async function loadData() {
   let provincialRoadCams = [];
   let freewayCams = [];
   let waterCams = [];
+  let wraCams = [];
   let waterRentalCams = [];
+
   const errors = [];
 
   if (results[0].status === "fulfilled") {
@@ -2052,35 +2166,64 @@ if (results[10].status === "fulfilled") {
   );
 }
 
-  if (results[11].status === "fulfilled") {
-    try {
-      waterCams = normalizeWaterCams(
-        results[11].value
-      );
-    } catch (error) {
-      errors.push(error.message);
-    }
-  } else {
-    errors.push(
-      `水情 CCTV：${results[11].reason.message}`
+// 水利署 CCTV
+if (results[11].status === "fulfilled") {
+  try {
+    wraCams = normalizeWraStations(
+      results[11].value
     );
-  }
 
-  if (results[12].status === "fulfilled") {
-    try {
-      waterRentalCams =
-        normalizeWaterRentalCams(
-          results[12].value
-        );
-    } catch (error) {
-      errors.push(error.message);
-    }
-  } else {
+    console.log(
+      "水利署 CCTV：",
+      wraCams.length
+    );
+  } catch (error) {
     errors.push(
-      `水情租賃 CCTV：` +
-      results[12].reason.message
+      `水利署 CCTV：${error.message}`
     );
   }
+} else {
+  errors.push(
+    `水利署 CCTV：${results[11].reason.message}`
+  );
+}
+
+
+// 台北水情 CCTV
+if (results[12].status === "fulfilled") {
+  try {
+    waterCams = normalizeWaterCams(
+      results[12].value
+    );
+  } catch (error) {
+    errors.push(
+      `水情 CCTV：${error.message}`
+    );
+  }
+} else {
+  errors.push(
+    `水情 CCTV：${results[12].reason.message}`
+  );
+}
+
+
+// 台北水情租賃 CCTV
+if (results[13].status === "fulfilled") {
+  try {
+    waterRentalCams =
+      normalizeWaterRentalCams(
+        results[13].value
+      );
+  } catch (error) {
+    errors.push(
+      `水情租賃 CCTV：${error.message}`
+    );
+  }
+} else {
+  errors.push(
+    `水情租賃 CCTV：${results[13].reason.message}`
+  );
+}
 
   allCams = [
     ...roadCams,
@@ -2094,8 +2237,10 @@ if (results[10].status === "fulfilled") {
     ...chiayiCountyRoadCams,
     ...provincialRoadCams,
     ...freewayCams,
+  
     ...waterCams,
-    ...waterRentalCams
+    ...waterRentalCams,
+    
   ];
 
   cameraCounts = {
@@ -2112,6 +2257,7 @@ if (results[10].status === "fulfilled") {
       provincial: provincialRoadCams.length,
       highway: freewayCams.length,
       water: waterCams.length,
+      wra: wraCams.length,
 
       "water-rental": waterRentalCams.length
   };
@@ -2228,6 +2374,10 @@ function buildSourceOptions() {
     {
       value: "highway",
       label: CAMERA_TYPES.highway.label
+    },
+    {
+      value: "wra",
+      label: CAMERA_TYPES.wra.label
     }
   ];
 
@@ -2329,12 +2479,12 @@ function filteredCams() {
   const query = "";
 
   const city =
-  document.getElementById("cityFilter")
-    ?.value || "全部";
+    document.getElementById("cityFilter")
+      ?.value || "全部";
 
-  const district = document
-    .getElementById("districtFilter")
-    .value;
+  const district =
+    document.getElementById("districtFilter")
+      ?.value || "全部";
 
   const sourceFilter =
     document.getElementById("sourceFilter");
@@ -2343,8 +2493,21 @@ function filteredCams() {
     ? sourceFilter.value
     : "all";
 
-  return allCams.filter(cam => {
-    const typeInfo = getCameraType(cam.type);
+  /*
+   * 選擇水利署時，改用 wraCams。
+   * 其他來源則使用 allCams。
+   *
+   * 因為 allCams 已經拿掉 ...wraCams，
+   * 所以預設「全部 CCTV」不會建立 2,521 個水利署 Marker。
+   */
+  const sourceCams =
+    source === "wra"
+      ? wraCams
+      : allCams;
+
+  return sourceCams.filter(cam => {
+    const typeInfo =
+      getCameraType(cam.type);
 
     const searchableText = [
       cam.name,
@@ -2354,6 +2517,7 @@ function filteredCams() {
       cam.source,
       typeInfo.label
     ]
+      .filter(Boolean)
       .join(" ")
       .toLowerCase();
 
@@ -2408,7 +2572,7 @@ function render(options = {}) {
     `國道 ${highwayCount} 支；` +
     `水情 ${waterCount} 支；` +
     `水情租賃 ${waterRentalCount} 支；` +
-    `目前顯示 ${cams.length} 支。`;
+    `水利署 ${cameraCounts.wra} 支。`;
 
   renderSidebar(cams);
   renderMarkers(cams);
@@ -2617,27 +2781,37 @@ function openInfo(marker) {
       )"`
     : "";
   
-  const actionHtml = mediaUrl
-  ? `
-    <a
-      class="iw-btn"
-      href="${esc(mediaUrl)}"
-      target="_blank"
-      rel="noopener noreferrer"
-      ${saveViewAttribute}
-    >
-      ${buttonText}
-    </a>
-  `
-  : `
-    <div class="iw-no-media">
-      ${
-        cam.isUnavailable
-          ? "官方影像主機目前無法連線。"
-          : "目前僅提供 CCTV 點位資料，尚無可開啟的即時影像網址。"
-      }
-    </div>
-  `;
+  const actionHtml =
+    cam.type === "wra"
+      ? `
+        <button
+          type="button"
+          class="iw-btn wra-image-btn"
+        >
+          ▶ 開啟動態影像
+        </button>
+      `
+      : mediaUrl
+        ? `
+          <a
+            class="iw-btn"
+            href="${esc(mediaUrl)}"
+            target="_blank"
+            rel="noopener noreferrer"
+            ${saveViewAttribute}
+          >
+            ${buttonText}
+          </a>
+        `
+        : `
+          <div class="iw-no-media">
+            ${
+              cam.isUnavailable
+                ? "官方影像主機目前無法連線。"
+                : "目前僅提供 CCTV 點位資料，尚無可開啟的即時影像網址。"
+            }
+          </div>
+        `;
 
   const content = `
     <div class="iw-wrap">
@@ -2659,13 +2833,402 @@ function openInfo(marker) {
     </div>
   `;
 
-  marker
-    .bindPopup(content, {
-      maxWidth: 300
-    })
-    .openPopup();
+  marker.bindPopup(content, {
+    maxWidth: 300
+  });
+
+  if (cam.type === "wra") {
+    marker.once("popupopen", event => {
+      const popupElement =
+        event.popup.getElement();
+
+      const button =
+        popupElement?.querySelector(
+          ".wra-image-btn"
+        );
+
+      if (!button) {
+        return;
+      }
+
+      button.addEventListener(
+        "click",
+        () => {
+          openWraLiveViewer(
+            cam,
+            button
+          );
+        }
+      );
+    });
+  }
+
+  marker.openPopup();
+  
+  if (cam.type === "wra") {
+    marker.once("popupopen", event => {
+      const popupElement =
+        event.popup.getElement();
+
+      const button =
+        popupElement?.querySelector(
+          ".wra-image-btn"
+        );
+
+      if (!button) {
+        return;
+      }
+
+      button.addEventListener(
+        "click",
+        () => {
+          openWraLatestImage(
+            cam,
+            button
+          );
+        }
+      );
+    });
+  }
 
   highlightSidebar(cam.key);
+}
+
+async function openWraLatestImage(cam, button) {
+  const sourceId = String(
+    cam.sourceId || ""
+  ).trim();
+
+  const stationId = String(
+    cam.stationId || cam.id || ""
+  ).trim();
+
+  if (!sourceId || !stationId) {
+    alert("缺少水利署攝影機編號。");
+    return;
+  }
+
+  const originalText =
+    button?.textContent ||
+    "開啟即時影像";
+
+  if (button) {
+    button.disabled = true;
+    button.textContent = "影像載入中…";
+  }
+
+  try {
+    const apiUrl =
+      `https://fhyv.wra.gov.tw/FhyWeb/v1/Api/CCTV/WRA/Cameras/` +
+      `${encodeURIComponent(sourceId)}/` +
+      `${encodeURIComponent(stationId)}`;
+
+    const response = await fetch(apiUrl);
+
+    if (!response.ok) {
+      throw new Error(
+        `HTTP ${response.status}`
+      );
+    }
+
+    const data = await response.json();
+
+    console.log(
+      "水利署 Cameras API 回傳：",
+      data
+    );
+
+    const imageUrls = [];
+
+    function collectImageUrls(value) {
+      if (typeof value === "string") {
+        const url = value.trim();
+
+        if (
+          url.startsWith("http://") ||
+          url.startsWith("https://")
+        ) {
+          imageUrls.push(url);
+        }
+
+        return;
+      }
+
+      if (Array.isArray(value)) {
+        value.forEach(item => {
+          collectImageUrls(item);
+        });
+
+        return;
+      }
+
+      if (
+        value &&
+        typeof value === "object"
+      ) {
+        Object.values(value).forEach(item => {
+          collectImageUrls(item);
+        });
+      }
+    }
+
+    collectImageUrls(data);
+
+    const uniqueImageUrls = [
+      ...new Set(imageUrls)
+    ];
+
+    console.log(
+      "找到的影像網址：",
+      uniqueImageUrls
+    );
+
+    if (uniqueImageUrls.length === 0) {
+      throw new Error(
+        "這個站點目前沒有提供即時影像"
+      );
+    }
+
+    const latestImage =
+      uniqueImageUrls[
+        uniqueImageUrls.length - 1
+      ];
+
+    window.open(
+      latestImage,
+      "_blank",
+      "noopener,noreferrer"
+    );
+
+  } catch (error) {
+    console.error(
+      "水利署影像載入失敗：",
+      error
+    );
+
+    alert(
+      `水利署影像載入失敗：${error.message}`
+    );
+
+  } finally {
+    if (button) {
+      button.disabled = false;
+      button.textContent = originalText;
+    }
+  }
+}
+
+let wraLiveTimer = null;
+
+function closeWraLiveViewer() {
+  if (wraLiveTimer) {
+    clearInterval(wraLiveTimer);
+    wraLiveTimer = null;
+  }
+
+  document
+    .querySelector(".wra-live-overlay")
+    ?.remove();
+}
+
+async function getWraLatestImageUrl(cam) {
+  const sourceId = String(
+    cam.sourceId || ""
+  ).trim();
+
+  const stationId = String(
+    cam.stationId || cam.id || ""
+  ).trim();
+
+  if (!sourceId || !stationId) {
+    throw new Error("缺少水利署攝影機編號");
+  }
+
+  const apiUrl =
+    "https://fhyv.wra.gov.tw/FhyWeb/v1/Api/CCTV/WRA/Cameras/" +
+    `${encodeURIComponent(sourceId)}/` +
+    `${encodeURIComponent(stationId)}`;
+
+  const response = await fetch(apiUrl, {
+    cache: "no-store"
+  });
+
+  if (!response.ok) {
+    throw new Error(
+      `HTTP ${response.status}`
+    );
+  }
+
+  const data = await response.json();
+  const imageUrls = [];
+
+  function collectImageUrls(value) {
+    if (typeof value === "string") {
+      const url = value.trim();
+
+      if (
+        url.startsWith("http://") ||
+        url.startsWith("https://")
+      ) {
+        imageUrls.push(url);
+      }
+
+      return;
+    }
+
+    if (Array.isArray(value)) {
+      value.forEach(collectImageUrls);
+      return;
+    }
+
+    if (
+      value &&
+      typeof value === "object"
+    ) {
+      Object.values(value).forEach(
+        collectImageUrls
+      );
+    }
+  }
+
+  collectImageUrls(data);
+
+  const uniqueUrls = [
+    ...new Set(imageUrls)
+  ];
+
+  if (uniqueUrls.length === 0) {
+    throw new Error(
+      "找不到可開啟的影像網址"
+    );
+  }
+
+  return uniqueUrls[
+    uniqueUrls.length - 1
+  ];
+}
+
+async function openWraLiveViewer(cam, button) {
+  closeWraLiveViewer();
+
+  const overlay =
+    document.createElement("div");
+
+  overlay.className =
+    "wra-live-overlay";
+
+  overlay.innerHTML = `
+    <div class="wra-live-box">
+      <div class="wra-live-header">
+        <div>
+          <strong>
+            ${esc(cam.name)}
+          </strong>
+
+          <div class="wra-live-status">
+            正在取得影像…
+          </div>
+        </div>
+
+        <button
+          type="button"
+          class="wra-live-close"
+          aria-label="關閉"
+        >
+          ×
+        </button>
+      </div>
+
+      <div class="wra-live-image-wrap">
+        <img
+          class="wra-live-image"
+          alt="${esc(cam.name)}最新影像"
+        >
+      </div>
+
+      <div class="wra-live-footer">
+        定時更新的監視器快照，並非影片串流
+      </div>
+    </div>
+  `;
+
+  document.body.appendChild(overlay);
+
+  const image =
+    overlay.querySelector(
+      ".wra-live-image"
+    );
+
+  const status =
+    overlay.querySelector(
+      ".wra-live-status"
+    );
+
+  const closeButton =
+    overlay.querySelector(
+      ".wra-live-close"
+    );
+
+  closeButton.addEventListener(
+    "click",
+    closeWraLiveViewer
+  );
+
+  overlay.addEventListener(
+    "click",
+    event => {
+      if (event.target === overlay) {
+        closeWraLiveViewer();
+      }
+    }
+  );
+
+  async function refreshImage() {
+    try {
+      status.textContent =
+        "影像更新中…";
+
+      const imageUrl =
+        await getWraLatestImageUrl(cam);
+
+      const separator =
+        imageUrl.includes("?")
+          ? "&"
+          : "?";
+
+      // 加上時間參數，避免瀏覽器顯示快取圖片
+      image.src =
+        `${imageUrl}${separator}` +
+        `_t=${Date.now()}`;
+
+      image.onload = () => {
+        status.textContent =
+          `更新時間：${new Date()
+            .toLocaleTimeString("zh-TW")}`;
+      };
+
+      image.onerror = () => {
+        status.textContent =
+          "影像載入失敗，稍後重試";
+      };
+    } catch (error) {
+      console.error(
+        "水利署動態影像更新失敗：",
+        error
+      );
+
+      status.textContent =
+        `更新失敗：${error.message}`;
+    }
+  }
+
+  await refreshImage();
+
+  // 每 5 秒重新取得一次最新圖片
+  wraLiveTimer = setInterval(
+    refreshImage,
+    2000
+  );
 }
 
 /* 點選側欄後移動到該攝影機 */
