@@ -1,0 +1,404 @@
+name: 更新水利署 CCTV 資料
+
+on:
+  # 每天臺灣時間 04:10 執行（UTC 20:10）
+  schedule:
+    - cron: "10 20 * * *"
+
+  # 允許手動執行
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: update-wra-cctv
+  cancel-in-progress: false
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 下載專案
+        uses: actions/checkout@v4
+
+      - name: 下載水利署 CCTV 站點清單
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          STATION_URLS=(
+            'https://fhy.wra.gov.tw/FhyWeb/v1/Api/CCTV/WRA/Station?$format=JSON'
+            'https://fhyv.wra.gov.tw/FhyWeb/v1/Api/CCTV/WRA/Station?$format=JSON'
+          )
+
+          DOWNLOAD_OK="false"
+
+          for STATION_URL in "${STATION_URLS[@]}"; do
+            echo "嘗試下載：$STATION_URL"
+
+            rm -f wra-stations.json.tmp
+
+            if curl \
+              --fail \
+              --show-error \
+              --location \
+              --http1.1 \
+              --connect-timeout 20 \
+              --max-time 90 \
+              --retry 1 \
+              --retry-delay 5 \
+              --user-agent "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/150 Safari/537.36" \
+              --header "Accept: application/json, text/plain, */*" \
+              --header "Accept-Language: zh-TW,zh;q=0.9" \
+              --header "Origin: https://fhy.wra.gov.tw" \
+              --header "Referer: https://fhy.wra.gov.tw/fhyv2/monitor/cctvTable" \
+              --output wra-stations.json.tmp \
+              "$STATION_URL"; then
+
+              if jq -e '
+                type == "array" and length > 0
+              ' wra-stations.json.tmp >/dev/null 2>&1; then
+                DOWNLOAD_OK="true"
+                echo "站點清單下載成功。"
+                break
+              fi
+
+              echo "下載內容不是有效的站點陣列。"
+            fi
+
+            echo "此來源失敗，改試下一個網址。"
+          done
+
+          if [ "$DOWNLOAD_OK" != "true" ]; then
+            echo "錯誤：所有水利署 CCTV 站點來源均下載失敗。"
+            exit 1
+          fi
+
+          STATION_TOTAL="$(jq 'length' wra-stations.json.tmp)"
+
+          echo "站點總數：$STATION_TOTAL"
+
+      - name: 逐站下載攝影機影像資料
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          mkdir -p /tmp/wra-cameras
+          : > /tmp/wra-errors.txt
+
+          jq -c '.[]' wra-stations.json.tmp |
+          while IFS= read -r station; do
+            SOURCE_ID="$(jq -r '.SourceId // empty' <<< "$station")"
+            STATION_ID="$(jq -r '.ID // empty' <<< "$station")"
+            STATION_NAME="$(jq -r '.Name // "未命名站點"' <<< "$station")"
+
+            if [ -z "$SOURCE_ID" ] || [ -z "$STATION_ID" ]; then
+              echo "略過缺少 SourceId 或 ID 的站點：$STATION_NAME" |
+                tee -a /tmp/wra-errors.txt
+              continue
+            fi
+
+            CAMERA_URL="https://fhyv.wra.gov.tw/FhyWeb/v1/Api/CCTV/WRA/Cameras/${SOURCE_ID}/${STATION_ID}"
+            OUTPUT_FILE="/tmp/wra-cameras/${SOURCE_ID}-${STATION_ID}.json"
+
+            echo "下載：$STATION_NAME (${SOURCE_ID}/${STATION_ID})"
+
+            if ! curl \
+              --fail \
+              --show-error \
+              --location \
+              --http1.1 \
+              --connect-timeout 15 \
+              --max-time 60 \
+              --retry 1 \
+              --retry-delay 3 \
+              --user-agent "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/150 Safari/537.36" \
+              --header "Accept: application/json, text/plain, */*" \
+              --header "Accept-Language: zh-TW,zh;q=0.9" \
+              --header "Origin: https://fhy.wra.gov.tw" \
+              --header "Referer: https://fhy.wra.gov.tw/fhyv2/monitor/cctvTable" \
+              --output "$OUTPUT_FILE" \
+              "$CAMERA_URL"; then
+
+              echo "下載失敗：$STATION_NAME (${SOURCE_ID}/${STATION_ID})" |
+                tee -a /tmp/wra-errors.txt
+
+              rm -f "$OUTPUT_FILE"
+              continue
+            fi
+
+            if ! jq -e '
+              type == "array"
+            ' "$OUTPUT_FILE" >/dev/null 2>&1; then
+              echo "JSON 格式錯誤：$STATION_NAME (${SOURCE_ID}/${STATION_ID})" |
+                tee -a /tmp/wra-errors.txt
+
+              rm -f "$OUTPUT_FILE"
+              continue
+            fi
+
+            sleep 0.2
+          done
+
+          CAMERA_FILE_COUNT="$(
+            find /tmp/wra-cameras \
+              -maxdepth 1 \
+              -type f \
+              -name '*.json' \
+              | wc -l
+          )"
+
+          if [ "$CAMERA_FILE_COUNT" -le 0 ]; then
+            echo "錯誤：沒有成功下載任何攝影機資料。"
+            exit 1
+          fi
+
+          echo "成功下載攝影機資料檔：$CAMERA_FILE_COUNT"
+
+      - name: 合併並整理水利署 CCTV JSON
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          jq -n \
+            --slurpfile stations wra-stations.json.tmp \
+            --slurpfile cameraFiles /tmp/wra-cameras/*.json \
+            '
+            def trim:
+              if type == "string"
+              then gsub("^\\s+|\\s+$"; "")
+              else .
+              end;
+
+            def district_from_town($town; $city):
+              ($town // "" | trim) as $full
+              | ($city // "" | trim) as $county
+              | if $full == "" then "未判定"
+                elif $county != "" and ($full | startswith($county))
+                then ($full | ltrimstr($county))
+                else $full
+                end
+              | if . == "" then "未判定" else . end;
+
+            def latest_image($images):
+              if ($images | type) == "array" and ($images | length) > 0
+              then $images[-1]
+              else ""
+              end;
+
+            ($stations[0]) as $station_rows
+
+            | [
+                $cameraFiles[]
+                | if type == "array" then .[] else empty end
+                | . as $group
+                | (
+                    $station_rows
+                    | map(
+                        select(
+                          (.SourceId | tostring) == ($group.SourceId | tostring)
+                          and (.Name // "") == ($group.Name // "")
+                        )
+                      )
+                    | first
+                  ) as $station
+                | select($station != null)
+                | ($group.cameras // []) as $camera_list
+                | $camera_list[]
+                | . as $camera
+                | latest_image($camera.images // []) as $latest
+                | select($latest != "")
+                | {
+                    key:
+                      (
+                        "wra-"
+                        + ($station.SourceId | tostring)
+                        + "-"
+                        + ($station.ID | tostring)
+                        + "-"
+                        + ($camera.id | tostring)
+                      ),
+
+                    id:
+                      (
+                        ($station.ID | tostring)
+                        + "-"
+                        + ($camera.id | tostring)
+                      ),
+
+                    stationId:
+                      ($station.ID | tostring),
+
+                    cameraId:
+                      ($camera.id | tostring),
+
+                    sourceId:
+                      ($station.SourceId | tostring),
+
+                    name:
+                      (
+                        ($station.Name // "未命名水利署攝影機" | trim)
+                        + (
+                            if ($camera_list | length) > 1
+                            then "－鏡頭" + ($camera.id | tostring)
+                            else ""
+                            end
+                          )
+                      ),
+
+                    x:
+                      ($station.lng | tonumber),
+
+                    y:
+                      ($station.lat | tonumber),
+
+                    city:
+                      ($station.Counname // "未判定" | trim),
+
+                    district:
+                      district_from_town(
+                        $station.Town_name;
+                        $station.Counname
+                      ),
+
+                    basinName:
+                      ($station.Basin_name // "" | trim),
+
+                    imageUrl:
+                      $latest,
+
+                    url:
+                      $latest,
+
+                    streamUrl:
+                      "",
+
+                    type:
+                      "wra",
+
+                    source:
+                      "經濟部水利署"
+                  }
+              ]
+            | sort_by(.key)
+            | {
+                metadata: {
+                  source: "經濟部水利署",
+                  stationUrl:
+                    "https://fhy.wra.gov.tw/FhyWeb/v1/Api/CCTV/WRA/Station?$format=JSON",
+                  cameraUrlPattern:
+                    "https://fhyv.wra.gov.tw/FhyWeb/v1/Api/CCTV/WRA/Cameras/{SourceId}/{ID}",
+                  total: length
+                },
+                results: .
+              }
+            ' \
+            > wra-cctv.json.tmp
+
+      - name: 驗證水利署 CCTV JSON
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          FILE="wra-cctv.json.tmp"
+
+          jq empty "$FILE"
+
+          TOTAL="$(jq '.results | length' "$FILE")"
+          META_TOTAL="$(jq '.metadata.total' "$FILE")"
+
+          if [ "$TOTAL" -le 0 ]; then
+            echo "錯誤：沒有產生任何有效水利署 CCTV。"
+            exit 1
+          fi
+
+          if [ "$TOTAL" -ne "$META_TOTAL" ]; then
+            echo "錯誤：metadata.total 與實際資料數量不同。"
+            exit 1
+          fi
+
+          INVALID_COUNT="$(
+            jq '
+              [
+                .results[]
+                | select(
+                    (.key | type != "string" or length == 0) or
+                    (.id | type != "string" or length == 0) or
+                    (.stationId | type != "string" or length == 0) or
+                    (.cameraId | type != "string" or length == 0) or
+                    (.name | type != "string" or length == 0) or
+                    (.x | type != "number") or
+                    (.y | type != "number") or
+                    (.city | type != "string" or length == 0) or
+                    (.district | type != "string" or length == 0) or
+                    (.imageUrl | type != "string" or length == 0) or
+                    (.url | type != "string" or length == 0) or
+                    (.type != "wra") or
+                    (.source != "經濟部水利署")
+                  )
+              ]
+              | length
+            ' "$FILE"
+          )"
+
+          if [ "$INVALID_COUNT" -ne 0 ]; then
+            echo "錯誤：發現 $INVALID_COUNT 筆欄位不完整資料。"
+            exit 1
+          fi
+
+          DUPLICATE_COUNT="$(
+            jq '
+              .results
+              | group_by(.key)
+              | map(select(length > 1))
+              | length
+            ' "$FILE"
+          )"
+
+          if [ "$DUPLICATE_COUNT" -ne 0 ]; then
+            echo "錯誤：發現重複的 CCTV key。"
+            exit 1
+          fi
+
+          echo "JSON 驗證通過，共 $TOTAL 支水利署 CCTV。"
+
+          if [ -s /tmp/wra-errors.txt ]; then
+            echo "以下站點下載或處理失敗："
+            cat /tmp/wra-errors.txt
+          fi
+
+      - name: 更新正式 JSON
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          mv wra-cctv.json.tmp wra-cctv.json
+          rm -f wra-stations.json.tmp
+
+      - name: 顯示更新摘要
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          echo "水利署 CCTV：$(jq -r '.metadata.total' wra-cctv.json)"
+          echo "資料來源：$(jq -r '.metadata.source' wra-cctv.json)"
+
+      - name: 提交更新
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          git add wra-cctv.json
+
+          if git diff --cached --quiet; then
+            echo "水利署 CCTV 資料沒有變更，不需要提交。"
+            exit 0
+          fi
+
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+          git commit -m "chore: 更新水利署 CCTV 資料"
+          git push
