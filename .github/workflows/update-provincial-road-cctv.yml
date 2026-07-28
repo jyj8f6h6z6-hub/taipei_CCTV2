@@ -369,7 +369,9 @@ jobs:
         run: |
           set -euo pipefail
 
-          if git diff --quiet -- provincial-road-cctv.json; then
+          git add provincial-road-cctv.json
+
+          if git diff --cached --quiet; then
             echo "省道 CCTV 資料沒有變更，不需要提交。"
             exit 0
           fi
@@ -377,6 +379,5 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
 
-          git add provincial-road-cctv.json
           git commit -m "chore: 更新省道 CCTV 資料"
           git push
