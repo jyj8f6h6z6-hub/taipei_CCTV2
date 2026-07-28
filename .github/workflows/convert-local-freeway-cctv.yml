@@ -1,22 +1,13 @@
-name: 更新國道 CCTV 資料
+name: 由專案內 XML 產生國道 CCTV JSON
 
 on:
-  # 每天臺灣時間 03:40 執行（UTC 19:40）
-  schedule:
-    - cron: "40 19 * * *"
-
-  # 允許在 GitHub Actions 頁面手動執行
   workflow_dispatch:
 
 permissions:
   contents: write
 
-concurrency:
-  group: update-freeway-cctv
-  cancel-in-progress: false
-
 jobs:
-  update:
+  convert:
     runs-on: ubuntu-latest
 
     steps:
@@ -28,67 +19,27 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y libxml-libxml-perl
 
-      - name: 下載高速公路局國道 CCTV XML
+      - name: 檢查 CCTV.xml
         shell: bash
         run: |
           set -euo pipefail
 
-                  SOURCE_URLS=(
-            "https://tisvcloud.freeway.gov.tw/history/motc20/CCTV.xml"
-            "http://tisvcloud.freeway.gov.tw/history/motc20/CCTV.xml"
-          )
-
-          TEMP_XML="$(mktemp)"
-          DOWNLOAD_OK="false"
-
-          cleanup() {
-            rm -f "$TEMP_XML"
-          }
-          trap cleanup EXIT
-
-          for SOURCE_URL in "${SOURCE_URLS[@]}"; do
-            echo "嘗試下載：$SOURCE_URL"
-
-            rm -f "$TEMP_XML"
-
-            if curl \
-              --fail \
-              --show-error \
-              --location \
-              --http1.1 \
-              --connect-timeout 15 \
-              --max-time 60 \
-              --retry 1 \
-              --retry-delay 5 \
-              --user-agent "Mozilla/5.0 GitHub-Actions Freeway-CCTV-Updater" \
-              --output "$TEMP_XML" \
-              "$SOURCE_URL"; then
-
-              if [ -s "$TEMP_XML" ]; then
-                DOWNLOAD_OK="true"
-                echo "下載成功：$SOURCE_URL"
-                break
-              fi
-            fi
-
-            echo "此網址下載失敗，嘗試下一個來源。"
-          done
-
-          if [ "$DOWNLOAD_OK" != "true" ]; then
-            echo "錯誤：所有國道 CCTV 下載來源都失敗。"
+          if [ ! -f CCTV.xml ]; then
+            echo "錯誤：專案根目錄找不到 CCTV.xml。"
             exit 1
           fi
 
-          if ! grep -qE '<([[:alnum:]_-]+:)?CCTV([[:space:]>])' "$TEMP_XML"; then
-            echo "錯誤：下載內容不像國道 CCTV XML。"
-            head -c 500 "$TEMP_XML" || true
+          if [ ! -s CCTV.xml ]; then
+            echo "錯誤：CCTV.xml 是空檔案。"
             exit 1
           fi
 
-          mv "$TEMP_XML" freeway-cctv.xml
-          trap - EXIT
+          if ! grep -qE '<([[:alnum:]_-]+:)?CCTVList([[:space:]>])' CCTV.xml; then
+            echo "錯誤：CCTV.xml 格式不正確。"
+            exit 1
+          fi
 
-      - name: 將 XML 轉成網站使用的 JSON
+      - name: 轉換國道 CCTV JSON
         shell: bash
         run: |
           set -euo pipefail
@@ -104,7 +55,7 @@ jobs:
           binmode STDOUT, ':encoding(UTF-8)';
           binmode STDERR, ':encoding(UTF-8)';
 
-          my $input_file  = 'freeway-cctv.xml';
+          my $input_file  = 'CCTV.xml';
           my $output_file = 'freeway-cctv.json.tmp';
 
           my $parser = XML::LibXML->new(
@@ -134,71 +85,120 @@ jobs:
               './*[local-name()="' . $field_name . '"]'
             );
 
-            return '' if !$field;
-            return trim($field->textContent);
+            return $field
+              ? trim($field->textContent)
+              : '';
           }
 
-          sub first_document_text {
+          sub nested_text {
+            my ($node, $parent_name, $field_name) = @_;
+
+            my ($field) = $node->findnodes(
+              './*[local-name()="' . $parent_name . '"]' .
+              '/*[local-name()="' . $field_name . '"]'
+            );
+
+            return $field
+              ? trim($field->textContent)
+              : '';
+          }
+
+          sub root_text {
             my ($doc, $field_name) = @_;
 
             my ($field) = $doc->findnodes(
               '/*/*[local-name()="' . $field_name . '"]'
             );
 
-            return $field ? trim($field->textContent) : '';
+            return $field
+              ? trim($field->textContent)
+              : '';
+          }
+
+          sub direction_label {
+            my ($direction) = @_;
+
+            return '南向' if $direction eq 'S';
+            return '北向' if $direction eq 'N';
+            return '東向' if $direction eq 'E';
+            return '西向' if $direction eq 'W';
+
+            return $direction;
           }
 
           sub build_name {
-            my ($road_name, $direction, $mile, $start, $end, $id) = @_;
+            my (
+              $road_name,
+              $direction,
+              $location_mile,
+              $start,
+              $end,
+              $id
+            ) = @_;
 
             my @parts;
 
-            push @parts, $road_name if $road_name ne '';
-            push @parts, $direction if $direction ne '';
-            push @parts, $mile if $mile ne '';
+            push @parts, $road_name
+              if $road_name ne '';
 
-            if (!@parts || @parts == 1) {
-              my $section = '';
+            my $direction_text =
+              direction_label($direction);
 
-              if ($start ne '' && $end ne '') {
-                $section = "$start－$end";
-              } elsif ($start ne '') {
-                $section = $start;
-              } elsif ($end ne '') {
-                $section = $end;
-              }
+            push @parts, $direction_text
+              if $direction_text ne '';
 
-              push @parts, $section if $section ne '';
+            push @parts, $location_mile
+              if $location_mile ne '';
+
+            my $section = '';
+
+            if ($start ne '' && $end ne '') {
+              $section = "$start－$end";
+            } elsif ($start ne '') {
+              $section = $start;
+            } elsif ($end ne '') {
+              $section = $end;
             }
 
+            push @parts, $section
+              if $section ne '';
+
             my $name = join(' ', @parts);
-            return $name ne '' ? $name : "國道 CCTV $id";
+
+            return $name ne ''
+              ? $name
+              : "國道 CCTV $id";
           }
 
           my $source_update_time =
-            first_document_text($doc, 'UpdateTime');
+            root_text($doc, 'UpdateTime');
 
           my $update_interval =
-            first_document_text($doc, 'UpdateInterval');
+            root_text($doc, 'UpdateInterval');
 
           my $authority_code =
-            first_document_text($doc, 'AuthorityCode');
+            root_text($doc, 'AuthorityCode');
 
-          my @cctv_nodes =
-            $doc->findnodes('//*[local-name()="CCTV"]');
+          my $link_version =
+            root_text($doc, 'LinkVersion');
 
-          if (!@cctv_nodes) {
-            die "XML 中找不到 CCTV 資料，停止更新。\n";
+          my @nodes =
+            $doc->findnodes(
+              '//*[local-name()="CCTV"]'
+            );
+
+          if (!@nodes) {
+            die "XML 中找不到 CCTV 資料。\n";
           }
 
           my @cameras;
           my %seen;
           my $skipped = 0;
 
-          for my $node (@cctv_nodes) {
-            my $id = child_text($node, 'CCTVID');
+          for my $node (@nodes) {
+            my $id =
+              child_text($node, 'CCTVID');
 
-            # 避免把外層包裝節點誤認為攝影機。
             next if $id eq '';
 
             my $sub_authority =
@@ -213,6 +213,12 @@ jobs:
             my $location_type =
               child_text($node, 'LocationType');
 
+            my $lon_text =
+              child_text($node, 'PositionLon');
+
+            my $lat_text =
+              child_text($node, 'PositionLat');
+
             my $road_id =
               child_text($node, 'RoadID');
 
@@ -222,23 +228,25 @@ jobs:
             my $road_class =
               child_text($node, 'RoadClass');
 
-            my $road_direction =
+            my $direction =
               child_text($node, 'RoadDirection');
 
             my $start =
-              child_text($node, 'Start');
+              nested_text(
+                $node,
+                'RoadSection',
+                'Start'
+              );
 
             my $end =
-              child_text($node, 'End');
+              nested_text(
+                $node,
+                'RoadSection',
+                'End'
+              );
 
             my $location_mile =
               child_text($node, 'LocationMile');
-
-            my $lon_text =
-              child_text($node, 'PositionLon');
-
-            my $lat_text =
-              child_text($node, 'PositionLat');
 
             my $valid_lon =
               $lon_text =~ /^-?(?:\d+(?:\.\d+)?|\.\d+)$/;
@@ -259,27 +267,26 @@ jobs:
             my $lon = 0 + $lon_text;
             my $lat = 0 + $lat_text;
 
-            # 使用臺灣本島與離島周邊的寬鬆範圍。
             if (
               $lon < 118 ||
               $lon > 123.5 ||
               $lat < 21 ||
               $lat > 26.5
             ) {
-              warn "略過座標超出臺灣範圍的 CCTV：$id ($lon, $lat)\n";
+              warn "略過座標超出臺灣範圍的 CCTV：$id\n";
               $skipped++;
               next;
             }
 
             if ($seen{$id}++) {
-              warn "略過重複的 CCTV 編號：$id\n";
+              warn "略過重複 CCTV：$id\n";
               $skipped++;
               next;
             }
 
             my $name = build_name(
               $road_name,
-              $road_direction,
+              $direction,
               $location_mile,
               $start,
               $end,
@@ -304,7 +311,7 @@ jobs:
               roadId           => $road_id,
               roadName         => $road_name,
               roadClass        => $road_class,
-              direction        => $road_direction,
+              direction        => $direction,
               start            => $start,
               end              => $end,
               locationMile     => $location_mile
@@ -316,16 +323,17 @@ jobs:
           } @cameras;
 
           if (!@cameras) {
-            die "轉換後沒有任何有效國道 CCTV，保留舊資料並停止更新。\n";
+            die "轉換後沒有任何有效國道 CCTV。\n";
           }
 
           my $result = {
             metadata => {
               source               => '交通部高速公路局',
-              sourceUrl            => 'https://tisvcloud.freeway.gov.tw/history/motc20/CCTV.xml',
+              sourceFile           => 'CCTV.xml',
               sourceUpdateTime     => $source_update_time,
               sourceUpdateInterval => $update_interval,
               authorityCode        => $authority_code,
+              linkVersion          => $link_version,
               total                => scalar(@cameras),
               skipped              => $skipped
             },
@@ -343,16 +351,20 @@ jobs:
             or die "無法建立 $output_file：$!\n";
 
           print {$output} $json;
+
           close $output
             or die "無法完成寫入 $output_file：$!\n";
 
-          print "成功轉換 " . scalar(@cameras) . " 支國道 CCTV。\n";
-          print "略過 $skipped 筆無效或重複資料。\n";
+          print "成功轉換 "
+            . scalar(@cameras)
+            . " 支國道 CCTV。\n";
+
+          print "略過 $skipped 筆資料。\n";
           PERL
 
           perl /tmp/convert-freeway-cctv.pl
 
-      - name: 驗證 JSON
+      - name: 驗證 freeway-cctv.json
         shell: bash
         run: |
           set -euo pipefail
@@ -365,12 +377,12 @@ jobs:
           META_TOTAL="$(jq '.metadata.total' "$FILE")"
 
           if [ "$TOTAL" -le 0 ]; then
-            echo "錯誤：JSON 沒有任何國道 CCTV。"
+            echo "錯誤：沒有任何國道 CCTV。"
             exit 1
           fi
 
           if [ "$TOTAL" -ne "$META_TOTAL" ]; then
-            echo "錯誤：metadata.total 與實際資料筆數不同。"
+            echo "錯誤：metadata.total 與實際數量不同。"
             exit 1
           fi
 
@@ -385,9 +397,7 @@ jobs:
                     (.x | type != "number") or
                     (.y | type != "number") or
                     (.url | type != "string" or length == 0) or
-                    (.streamUrl | type != "string" or length == 0) or
-                    (.type != "highway") or
-                    (.source != "交通部高速公路局")
+                    (.type != "highway")
                   )
               ]
               | length
@@ -395,7 +405,7 @@ jobs:
           )"
 
           if [ "$INVALID_COUNT" -ne 0 ]; then
-            echo "錯誤：發現 $INVALID_COUNT 筆欄位不完整的國道 CCTV。"
+            echo "錯誤：發現 $INVALID_COUNT 筆無效資料。"
             exit 1
           fi
 
@@ -409,47 +419,44 @@ jobs:
           )"
 
           if [ "$DUPLICATE_COUNT" -ne 0 ]; then
-            echo "錯誤：發現重複的國道 CCTV key。"
+            echo "錯誤：發現重複的 CCTV key。"
             exit 1
           fi
 
-          echo "JSON 驗證通過，共 $TOTAL 支國道 CCTV。"
+          echo "JSON 驗證成功，共 $TOTAL 支國道 CCTV。"
 
       - name: 更新正式 JSON
         shell: bash
         run: |
           set -euo pipefail
 
-          mv freeway-cctv.json.tmp freeway-cctv.json
+          mv \
+            freeway-cctv.json.tmp \
+            freeway-cctv.json
 
-          # XML 只作為轉換用暫存資料，不提交到專案。
-          rm -f freeway-cctv.xml
-
-      - name: 顯示更新摘要
+      - name: 顯示摘要
         shell: bash
         run: |
           set -euo pipefail
 
-          echo "資料來源：$(jq -r '.metadata.source' freeway-cctv.json)"
-          echo "來源更新時間：$(jq -r '.metadata.sourceUpdateTime // "未提供"' freeway-cctv.json)"
-          echo "有效 CCTV：$(jq -r '.metadata.total' freeway-cctv.json)"
+          echo "來源更新時間：$(jq -r '.metadata.sourceUpdateTime' freeway-cctv.json)"
+          echo "國道 CCTV：$(jq -r '.metadata.total' freeway-cctv.json)"
           echo "略過資料：$(jq -r '.metadata.skipped' freeway-cctv.json)"
 
-      - name: 提交更新
+      - name: 提交 freeway-cctv.json
         shell: bash
         run: |
           set -euo pipefail
 
-          # 必須先 git add，才能偵測第一次建立的新檔案。
           git add freeway-cctv.json
 
           if git diff --cached --quiet; then
-            echo "國道 CCTV 資料沒有變更，不需要提交。"
+            echo "國道 CCTV JSON 沒有變更。"
             exit 0
           fi
 
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
 
-          git commit -m "chore: 更新國道 CCTV 資料"
+          git commit -m "chore: 由本機 XML 更新國道 CCTV 資料"
           git push
