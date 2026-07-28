@@ -1,58 +1,58 @@
 - name: 下載水利署 CCTV 站點清單
-shell: bash
-run: |
-  set -euo pipefail
+        shell: bash
+        run: |
+          set -euo pipefail
 
-  STATION_URLS=(
-    'https://fhy.wra.gov.tw/FhyWeb/v1/Api/CCTV/WRA/Station?$format=JSON'
-    'https://fhyv.wra.gov.tw/FhyWeb/v1/Api/CCTV/WRA/Station?$format=JSON'
-  )
+          STATION_URLS=(
+            'https://fhy.wra.gov.tw/FhyWeb/v1/Api/CCTV/WRA/Station?$format=JSON'
+            'https://fhyv.wra.gov.tw/FhyWeb/v1/Api/CCTV/WRA/Station?$format=JSON'
+          )
 
-  DOWNLOAD_OK="false"
+          DOWNLOAD_OK="false"
 
-  for STATION_URL in "${STATION_URLS[@]}"; do
-    echo "嘗試下載：$STATION_URL"
+          for STATION_URL in "${STATION_URLS[@]}"; do
+            echo "嘗試下載：$STATION_URL"
 
-    rm -f wra-stations.json.tmp
+            rm -f wra-stations.json.tmp
 
-    if curl \
-      --fail \
-      --show-error \
-      --location \
-      --http1.1 \
-      --connect-timeout 20 \
-      --max-time 90 \
-      --retry 1 \
-      --retry-delay 5 \
-      --user-agent "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/150 Safari/537.36" \
-      --header "Accept: application/json, text/plain, */*" \
-      --header "Accept-Language: zh-TW,zh;q=0.9" \
-      --header "Origin: https://fhy.wra.gov.tw" \
-      --header "Referer: https://fhy.wra.gov.tw/fhyv2/monitor/cctvTable" \
-      --output wra-stations.json.tmp \
-      "$STATION_URL"; then
+            if curl \
+              --fail \
+              --show-error \
+              --location \
+              --http1.1 \
+              --connect-timeout 20 \
+              --max-time 90 \
+              --retry 1 \
+              --retry-delay 5 \
+              --user-agent "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/150 Safari/537.36" \
+              --header "Accept: application/json, text/plain, */*" \
+              --header "Accept-Language: zh-TW,zh;q=0.9" \
+              --header "Origin: https://fhy.wra.gov.tw" \
+              --header "Referer: https://fhy.wra.gov.tw/fhyv2/monitor/cctvTable" \
+              --output wra-stations.json.tmp \
+              "$STATION_URL"; then
 
-      if jq -e '
-        type == "array" and length > 0
-      ' wra-stations.json.tmp >/dev/null 2>&1; then
-        DOWNLOAD_OK="true"
-        echo "站點清單下載成功。"
-        break
-      fi
+              if jq -e '
+                type == "array" and length > 0
+              ' wra-stations.json.tmp >/dev/null 2>&1; then
+                DOWNLOAD_OK="true"
+                echo "站點清單下載成功。"
+                break
+              fi
 
-      echo "下載內容不是有效的站點陣列。"
-    fi
+              echo "下載內容不是有效的站點陣列。"
+            fi
 
-    echo "此來源失敗，改試下一個網址。"
-  done
+            echo "此來源失敗，改試下一個網址。"
+          done
 
-  if [ "$DOWNLOAD_OK" != "true" ]; then
-    echo "錯誤：所有水利署 CCTV 站點來源均下載失敗。"
-    exit 1
-  fi
+          if [ "$DOWNLOAD_OK" != "true" ]; then
+            echo "錯誤：所有水利署 CCTV 站點來源均下載失敗。"
+            exit 1
+          fi
 
-  STATION_TOTAL="$(
-    jq 'length' wra-stations.json.tmp
-  )"
+          STATION_TOTAL="$(
+            jq 'length' wra-stations.json.tmp
+          )"
 
-  echo "站點總數：$STATION_TOTAL"
+          echo "站點總數：$STATION_TOTAL"
