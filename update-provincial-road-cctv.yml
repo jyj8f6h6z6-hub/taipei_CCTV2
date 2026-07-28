@@ -1,0 +1,382 @@
+name: 更新省道 CCTV 資料
+
+on:
+  # 每天臺灣時間 03:20 執行（UTC 19:20）
+  schedule:
+    - cron: "20 19 * * *"
+
+  # 允許在 GitHub Actions 頁面手動執行
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: update-provincial-road-cctv
+  cancel-in-progress: false
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 下載專案
+        uses: actions/checkout@v4
+
+      - name: 安裝 XML 解析工具
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libxml-libxml-perl
+
+      - name: 下載公路局省道 CCTV XML
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          SOURCE_URL="https://cctv-maintain.thb.gov.tw/opendataCCTVs.xml"
+          TEMP_XML="$(mktemp)"
+
+          cleanup() {
+            rm -f "$TEMP_XML"
+          }
+          trap cleanup EXIT
+
+          curl \
+            --fail \
+            --show-error \
+            --location \
+            --http1.1 \
+            --tlsv1.2 \
+            --connect-timeout 20 \
+            --max-time 120 \
+            --retry 3 \
+            --retry-delay 10 \
+            --retry-all-errors \
+            --user-agent "Mozilla/5.0 GitHub-Actions Provincial-CCTV-Updater" \
+            --output "$TEMP_XML" \
+            "$SOURCE_URL"
+
+          if [ ! -s "$TEMP_XML" ]; then
+            echo "錯誤：下載到的 XML 是空檔案。"
+            exit 1
+          fi
+
+          if ! grep -qE '<([[:alnum:]_-]+:)?CCTV(List|s|)[: >]' "$TEMP_XML"; then
+            echo "錯誤：下載內容不像 CCTV XML，停止更新。"
+            head -c 500 "$TEMP_XML" || true
+            exit 1
+          fi
+
+          mv "$TEMP_XML" provincial-road-cctv.xml
+          trap - EXIT
+
+      - name: 將 XML 轉成網站使用的 JSON
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          cat > /tmp/convert-provincial-cctv.pl <<'PERL'
+          use strict;
+          use warnings;
+          use utf8;
+
+          use XML::LibXML;
+          use JSON::PP;
+          use POSIX qw(strftime);
+
+          binmode STDOUT, ':encoding(UTF-8)';
+          binmode STDERR, ':encoding(UTF-8)';
+
+          my $input_file  = 'provincial-road-cctv.xml';
+          my $output_file = 'provincial-road-cctv.json.tmp';
+
+          my $parser = XML::LibXML->new(
+            recover    => 0,
+            no_network => 1
+          );
+
+          my $doc = eval {
+            $parser->load_xml(location => $input_file);
+          };
+
+          if (!$doc) {
+            die "XML 解析失敗：$@\n";
+          }
+
+          sub child_text {
+            my ($node, $field_name) = @_;
+
+            my ($field) = $node->findnodes(
+              './*[local-name()="' . $field_name . '"]'
+            );
+
+            return '' if !$field;
+
+            my $value = $field->textContent // '';
+            $value =~ s/^\s+|\s+$//g;
+
+            return $value;
+          }
+
+          my ($update_node) =
+            $doc->findnodes('/*/*[local-name()="UpdateTime"]');
+
+          my ($interval_node) =
+            $doc->findnodes('/*/*[local-name()="UpdateInterval"]');
+
+          my ($authority_node) =
+            $doc->findnodes('/*/*[local-name()="AuthorityCode"]');
+
+          my $source_update_time =
+            $update_node ? $update_node->textContent : '';
+
+          my $update_interval =
+            $interval_node ? $interval_node->textContent : '';
+
+          my $authority_code =
+            $authority_node ? $authority_node->textContent : '';
+
+          for (
+            $source_update_time,
+            $update_interval,
+            $authority_code
+          ) {
+            $_ //= '';
+            s/^\s+|\s+$//g;
+          }
+
+          my @cctv_nodes =
+            $doc->findnodes('//*[local-name()="CCTV"]');
+
+          if (!@cctv_nodes) {
+            die "XML 中找不到 CCTV 資料，停止更新。\n";
+          }
+
+          my @cameras;
+          my %seen;
+          my $skipped = 0;
+
+          for my $node (@cctv_nodes) {
+            my $id = child_text($node, 'CCTVID');
+
+            # 避免把沒有設備編號的包裝節點當成攝影機。
+            if ($id eq '') {
+              next;
+            }
+
+            my $link_id =
+              child_text($node, 'LinkID');
+
+            my $video_url =
+              child_text($node, 'VideoStreamURL');
+
+            my $location_type =
+              child_text($node, 'LocationType');
+
+            my $lon_text =
+              child_text($node, 'PositionLon');
+
+            my $lat_text =
+              child_text($node, 'PositionLat');
+
+            my $valid_lon =
+              $lon_text =~ /^-?(?:\d+(?:\.\d+)?|\.\d+)$/;
+
+            my $valid_lat =
+              $lat_text =~ /^-?(?:\d+(?:\.\d+)?|\.\d+)$/;
+
+            if (
+              !$valid_lon ||
+              !$valid_lat ||
+              $video_url eq ''
+            ) {
+              warn "略過資料不完整的 CCTV：$id\n";
+              $skipped++;
+              next;
+            }
+
+            my $lon = 0 + $lon_text;
+            my $lat = 0 + $lat_text;
+
+            # 使用較寬鬆的臺灣周邊範圍，避免錯誤座標跑到世界其他地方。
+            if (
+              $lon < 118 ||
+              $lon > 123.5 ||
+              $lat < 21 ||
+              $lat > 26.5
+            ) {
+              warn "略過座標超出臺灣範圍的 CCTV：$id ($lon, $lat)\n";
+              $skipped++;
+              next;
+            }
+
+            if ($seen{$id}++) {
+              warn "略過重複的 CCTV 編號：$id\n";
+              $skipped++;
+              next;
+            }
+
+            push @cameras, {
+              key          => "provincial-$id",
+              id           => $id,
+              name         => "省道 CCTV $id",
+              x            => $lon,
+              y            => $lat,
+              city         => '',
+              district     => '',
+              url          => $video_url,
+              streamUrl    => $video_url,
+              type         => 'provincial',
+              source       => '交通部公路局',
+              linkId       => $link_id,
+              locationType => $location_type
+            };
+          }
+
+          @cameras = sort {
+            $a->{id} cmp $b->{id}
+          } @cameras;
+
+          if (!@cameras) {
+            die "轉換後沒有任何有效 CCTV，保留舊資料並停止更新。\n";
+          }
+
+          my $generated_at =
+            strftime('%Y-%m-%dT%H:%M:%SZ', gmtime());
+
+          my $result = {
+            metadata => {
+              source              => '交通部公路局',
+              sourceUrl           => 'https://cctv-maintain.thb.gov.tw/opendataCCTVs.xml',
+              sourceUpdateTime    => $source_update_time,
+              sourceUpdateInterval => $update_interval,
+              authorityCode       => $authority_code,
+              generatedAt         => $generated_at,
+              total               => scalar(@cameras),
+              skipped             => $skipped
+            },
+            results => \@cameras
+          };
+
+          my $json = JSON::PP
+            ->new
+            ->utf8
+            ->canonical
+            ->pretty
+            ->encode($result);
+
+          open my $output, '>:raw', $output_file
+            or die "無法建立 $output_file：$!\n";
+
+          print {$output} $json;
+          close $output
+            or die "無法完成寫入 $output_file：$!\n";
+
+          print "成功轉換 " . scalar(@cameras) . " 支省道 CCTV。\n";
+          print "略過 $skipped 筆無效或重複資料。\n";
+          PERL
+
+          perl /tmp/convert-provincial-cctv.pl
+
+      - name: 驗證 JSON
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          FILE="provincial-road-cctv.json.tmp"
+
+          jq empty "$FILE"
+
+          TOTAL="$(jq '.results | length' "$FILE")"
+          META_TOTAL="$(jq '.metadata.total' "$FILE")"
+
+          if [ "$TOTAL" -le 0 ]; then
+            echo "錯誤：JSON 沒有任何 CCTV。"
+            exit 1
+          fi
+
+          if [ "$TOTAL" -ne "$META_TOTAL" ]; then
+            echo "錯誤：metadata.total 與實際資料筆數不同。"
+            exit 1
+          fi
+
+          INVALID_COUNT="$(
+            jq '
+              [
+                .results[]
+                | select(
+                    (.key | type != "string" or length == 0) or
+                    (.id | type != "string" or length == 0) or
+                    (.name | type != "string" or length == 0) or
+                    (.x | type != "number") or
+                    (.y | type != "number") or
+                    (.url | type != "string" or length == 0) or
+                    (.streamUrl | type != "string" or length == 0) or
+                    (.type != "provincial") or
+                    (.source != "交通部公路局")
+                  )
+              ]
+              | length
+            ' "$FILE"
+          )"
+
+          if [ "$INVALID_COUNT" -ne 0 ]; then
+            echo "錯誤：發現 $INVALID_COUNT 筆欄位不完整的 CCTV。"
+            exit 1
+          fi
+
+          DUPLICATE_COUNT="$(
+            jq '
+              .results
+              | group_by(.key)
+              | map(select(length > 1))
+              | length
+            ' "$FILE"
+          )"
+
+          if [ "$DUPLICATE_COUNT" -ne 0 ]; then
+            echo "錯誤：發現重複的 CCTV key。"
+            exit 1
+          fi
+
+          echo "JSON 驗證通過，共 $TOTAL 支省道 CCTV。"
+
+      - name: 更新正式 JSON
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          mv \
+            provincial-road-cctv.json.tmp \
+            provincial-road-cctv.json
+
+          # XML 只作為轉換用暫存資料，不提交到專案。
+          rm -f provincial-road-cctv.xml
+
+      - name: 顯示更新摘要
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          echo "資料來源：$(jq -r '.metadata.source' provincial-road-cctv.json)"
+          echo "來源更新時間：$(jq -r '.metadata.sourceUpdateTime // "未提供"' provincial-road-cctv.json)"
+          echo "產生時間：$(jq -r '.metadata.generatedAt' provincial-road-cctv.json)"
+          echo "有效 CCTV：$(jq -r '.metadata.total' provincial-road-cctv.json)"
+          echo "略過資料：$(jq -r '.metadata.skipped' provincial-road-cctv.json)"
+
+      - name: 提交更新
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          if git diff --quiet -- provincial-road-cctv.json; then
+            echo "省道 CCTV 資料沒有變更，不需要提交。"
+            exit 0
+          fi
+
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+          git add provincial-road-cctv.json
+          git commit -m "chore: 更新省道 CCTV 資料"
+          git push
