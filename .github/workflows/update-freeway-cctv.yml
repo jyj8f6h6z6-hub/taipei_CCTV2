@@ -33,36 +33,54 @@ jobs:
         run: |
           set -euo pipefail
 
-          SOURCE_URL="https://tisvcloud.freeway.gov.tw/history/motc20/CCTV.xml"
+                  SOURCE_URLS=(
+            "https://tisvcloud.freeway.gov.tw/history/motc20/CCTV.xml"
+            "http://tisvcloud.freeway.gov.tw/history/motc20/CCTV.xml"
+          )
+
           TEMP_XML="$(mktemp)"
+          DOWNLOAD_OK="false"
 
           cleanup() {
             rm -f "$TEMP_XML"
           }
           trap cleanup EXIT
 
-          curl \
-            --fail \
-            --show-error \
-            --location \
-            --http1.1 \
-            --tlsv1.2 \
-            --connect-timeout 20 \
-            --max-time 180 \
-            --retry 3 \
-            --retry-delay 10 \
-            --retry-all-errors \
-            --user-agent "Mozilla/5.0 GitHub-Actions Freeway-CCTV-Updater" \
-            --output "$TEMP_XML" \
-            "$SOURCE_URL"
+          for SOURCE_URL in "${SOURCE_URLS[@]}"; do
+            echo "嘗試下載：$SOURCE_URL"
 
-          if [ ! -s "$TEMP_XML" ]; then
-            echo "錯誤：下載到的 XML 是空檔案。"
+            rm -f "$TEMP_XML"
+
+            if curl \
+              --fail \
+              --show-error \
+              --location \
+              --http1.1 \
+              --connect-timeout 15 \
+              --max-time 60 \
+              --retry 1 \
+              --retry-delay 5 \
+              --user-agent "Mozilla/5.0 GitHub-Actions Freeway-CCTV-Updater" \
+              --output "$TEMP_XML" \
+              "$SOURCE_URL"; then
+
+              if [ -s "$TEMP_XML" ]; then
+                DOWNLOAD_OK="true"
+                echo "下載成功：$SOURCE_URL"
+                break
+              fi
+            fi
+
+            echo "此網址下載失敗，嘗試下一個來源。"
+          done
+
+          if [ "$DOWNLOAD_OK" != "true" ]; then
+            echo "錯誤：所有國道 CCTV 下載來源都失敗。"
             exit 1
           fi
 
           if ! grep -qE '<([[:alnum:]_-]+:)?CCTV([[:space:]>])' "$TEMP_XML"; then
-            echo "錯誤：下載內容不像國道 CCTV XML，停止更新。"
+            echo "錯誤：下載內容不像國道 CCTV XML。"
             head -c 500 "$TEMP_XML" || true
             exit 1
           fi
