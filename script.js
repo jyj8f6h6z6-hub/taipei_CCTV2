@@ -19,6 +19,7 @@ const TAICHUNG_ROAD_API_URL =
 const NANTOU_ROAD_API_URL =
   "./nantou-road-cctv.json";
 
+  
 const TAINAN_ROAD_API_URL =
   "./tainan-road-cctv.json";
 
@@ -27,6 +28,9 @@ const CHIAYI_COUNTY_ROAD_API_URL =
 
 const PROVINCIAL_ROAD_API_URL =
   "./provincial-road-cctv.json";
+
+const FREEWAY_CCTV_API_URL =
+  "./freeway-cctv.json";
 
 const TAIWAN_TOWNS_TOPOJSON_URL =
   "https://cdn.jsdelivr.net/npm/taiwan-atlas/towns-10t.json";
@@ -47,6 +51,12 @@ const CAMERA_TYPES = {
     icon: "🟣"
   },
 
+  highway: {
+    label: "國道 CCTV",
+    color: "#dc2626",
+    icon: "🔴"
+  },
+
   water: {
     label: "台北水情 CCTV",
     color: "#22c55e",
@@ -64,6 +74,8 @@ let allCams = [];
 
 let cameraCounts = {
   road: 0,
+  provincial: 0,
+  highway: 0,
   water: 0,
   "water-rental": 0
 };
@@ -1407,6 +1419,141 @@ function normalizeProvincialRoad(json) {
     );
 }
 
+function normalizeFreewayCams(json) {
+  const rows =
+    json.results ||
+    json.data ||
+    json;
+
+  if (!Array.isArray(rows)) {
+    throw new Error(
+      "國道 CCTV 資料格式不正確"
+    );
+  }
+
+  return rows
+    .map(cam => {
+      const id = String(
+        cam.id ||
+        cam.CCTVID ||
+        ""
+      ).trim();
+
+      const x = Number(
+        cam.x ??
+        cam.PositionLon
+      );
+
+      const y = Number(
+        cam.y ??
+        cam.PositionLat
+      );
+
+      const url = String(
+        cam.streamUrl ||
+        cam.url ||
+        cam.VideoStreamURL ||
+        ""
+      ).trim();
+
+      const feature =
+        districtGeoJSON
+          ?.features
+          ?.find(item =>
+            pointInFeature(
+              [x, y],
+              item
+            )
+          );
+
+      const detectedCity =
+        feature
+          ? getCountyName(feature)
+          : "";
+
+      return {
+        key:
+          cam.key ||
+          `highway-${id}`,
+
+        id,
+
+        name: String(
+          cam.name ||
+          cam.roadName ||
+          `國道 CCTV ${id}`
+        ).trim(),
+
+        x,
+        y,
+
+        city:
+          normalizeCity(
+            cam.city ||
+            detectedCity
+          ) || "未判定",
+
+        district:
+          normalizeDistrict(
+            cam.district ||
+            districtByCoord(x, y),
+            "未判定"
+          ),
+
+        url,
+
+        streamUrl: String(
+          cam.streamUrl ||
+          url
+        ).trim(),
+
+        type: "highway",
+
+        source:
+          cam.source ||
+          "交通部高速公路局",
+
+        roadId: String(
+          cam.roadId || ""
+        ).trim(),
+
+        roadName: String(
+          cam.roadName || ""
+        ).trim(),
+
+        direction: String(
+          cam.direction || ""
+        ).trim(),
+
+        locationMile: String(
+          cam.locationMile || ""
+        ).trim(),
+
+        start: String(
+          cam.start || ""
+        ).trim(),
+
+        end: String(
+          cam.end || ""
+        ).trim(),
+
+        linkId: String(
+          cam.linkId || ""
+        ).trim(),
+
+        locationType: String(
+          cam.locationType || ""
+        ).trim()
+      };
+    })
+    .filter(cam =>
+      cam.id &&
+      cam.url &&
+      Number.isFinite(cam.x) &&
+      Number.isFinite(cam.y)
+    );
+}
+
 /* 整理水情 CCTV 資料 */
 function normalizeWaterCams(json) {
   const rows =
@@ -1583,6 +1730,7 @@ async function loadData() {
     fetchJson(TAINAN_ROAD_API_URL),
     fetchJson(CHIAYI_COUNTY_ROAD_API_URL),
     fetchJson(PROVINCIAL_ROAD_API_URL),
+    fetchJson(FREEWAY_CCTV_API_URL),
     fetchJson(WATER_API_URL),
     fetchJson(WATER_RENTAL_API_URL)
   ]);
@@ -1597,6 +1745,7 @@ async function loadData() {
   let tainanRoadCams = [];
   let chiayiCountyRoadCams = [];
   let provincialRoadCams = [];
+  let freewayCams = [];
   let waterCams = [];
   let waterRentalCams = [];
   const errors = [];
@@ -1879,25 +2028,49 @@ if (results[9].status === "fulfilled") {
   );
 }
 
-  if (results[10].status === "fulfilled") {
+if (results[10].status === "fulfilled") {
+  try {
+    freewayCams =
+      normalizeFreewayCams(
+        results[10].value
+      );
+
+    console.log(
+      "國道 CCTV：",
+      freewayCams.length
+    );
+
+  } catch (error) {
+    errors.push(
+      `國道 CCTV：${error.message}`
+    );
+  }
+} else {
+  errors.push(
+    `國道 CCTV：` +
+    results[10].reason.message
+  );
+}
+
+  if (results[11].status === "fulfilled") {
     try {
       waterCams = normalizeWaterCams(
-        results[10].value
+        results[11].value
       );
     } catch (error) {
       errors.push(error.message);
     }
   } else {
     errors.push(
-      `水情 CCTV：${results[10].reason.message}`
+      `水情 CCTV：${results[11].reason.message}`
     );
   }
 
-  if (results[11].status === "fulfilled") {
+  if (results[12].status === "fulfilled") {
     try {
       waterRentalCams =
         normalizeWaterRentalCams(
-          results[11].value
+          results[12].value
         );
     } catch (error) {
       errors.push(error.message);
@@ -1905,7 +2078,7 @@ if (results[9].status === "fulfilled") {
   } else {
     errors.push(
       `水情租賃 CCTV：` +
-      results[11].reason.message
+      results[12].reason.message
     );
   }
 
@@ -1920,14 +2093,27 @@ if (results[9].status === "fulfilled") {
     ...nantouRoadCams,
     ...chiayiCountyRoadCams,
     ...provincialRoadCams,
+    ...freewayCams,
     ...waterCams,
     ...waterRentalCams
   ];
 
   cameraCounts = {
-    road: roadCams.length + newTaipeiRoadCams.length + taoyuanRoadCams.length + keelungRoadCams.length + yilanRoadCams.length + taichungRoadCams.length + nantouRoadCams.length + tainanRoadCams.length + chiayiCountyRoadCams.length,
-    water: waterCams.length,
-    "water-rental": waterRentalCams.length
+    road:
+      roadCams.length +
+      newTaipeiRoadCams.length +
+      taoyuanRoadCams.length +
+      keelungRoadCams.length +
+      yilanRoadCams.length +
+      taichungRoadCams.length +
+      nantouRoadCams.length +
+      tainanRoadCams.length +
+      chiayiCountyRoadCams.length,
+      provincial: provincialRoadCams.length,
+      highway: freewayCams.length,
+      water: waterCams.length,
+
+      "water-rental": waterRentalCams.length
   };
 
   console.log("全部 CCTV：", allCams.length);
@@ -2038,6 +2224,10 @@ function buildSourceOptions() {
     {
       value: "provincial",
       label: CAMERA_TYPES.provincial.label
+    },
+    {
+      value: "highway",
+      label: CAMERA_TYPES.highway.label
     }
   ];
 
@@ -2204,12 +2394,18 @@ function render(options = {}) {
   const cams = filteredCams();
 
   const roadCount = cameraCounts.road;
+  const provincialCount =
+    cameraCounts.provincial;
+  const highwayCount =
+    cameraCounts.highway;
   const waterCount = cameraCounts.water;
   const waterRentalCount =
     cameraCounts["water-rental"];
 
   document.getElementById("status").textContent =
     `道路 ${roadCount} 支；` +
+    `省道 ${provincialCount} 支；` +
+    `國道 ${highwayCount} 支；` +
     `水情 ${waterCount} 支；` +
     `水情租賃 ${waterRentalCount} 支；` +
     `目前顯示 ${cams.length} 支。`;
