@@ -2,10 +2,7 @@ name: 更新宜蘭道路 CCTV
 
 on:
   schedule:
-    # UTC 19:10，臺灣時間每日凌晨 03:10
     - cron: "10 19 * * *"
-
-  # 允許從 GitHub Actions 頁面手動執行
   workflow_dispatch:
 
 permissions:
@@ -24,58 +21,91 @@ jobs:
         uses: actions/checkout@v4
 
       - name: 下載 twipcam CCTV 公開資料
+        shell: bash
         run: |
-          curl -L \
+          set -euo pipefail
+
+          curl \
             --fail \
-            --retry 3 \
-            --retry-delay 5 \
+            --show-error \
+            --location \
+            --compressed \
+            --retry 4 \
+            --retry-all-errors \
+            --retry-delay 8 \
             --connect-timeout 20 \
             --max-time 180 \
+            --user-agent "Mozilla/5.0 (Windows NT 10.0; Win64; x64)" \
             "https://www.twipcam.com/api/v1/cam-list.json" \
-            -o twipcam-cam-list.json
+            --output twipcam-cam-list.json
 
-      - name: 下載宜蘭警察局 CCTV 公開清單
+          jq -e 'type == "array" and length > 0' \
+            twipcam-cam-list.json >/dev/null
+
+      - name: 下載宜蘭警察局官方清單（失敗時使用既有配對）
+        shell: bash
         run: |
-          curl -L \
+          set -u
+
+          OFFICIAL_OK="false"
+          rm -f yilan-official-cams.html
+
+          if curl \
             --fail \
-            --retry 2 \
+            --show-error \
+            --location \
+            --compressed \
+            --retry 4 \
             --retry-all-errors \
-            --retry-delay 5 \
-            --connect-timeout 15 \
-            --max-time 45 \
+            --retry-delay 10 \
+            --connect-timeout 20 \
+            --max-time 120 \
             --http1.1 \
             --tlsv1.2 \
-            --tls-max 1.2 \
-            -A "Mozilla/5.0 (Windows NT 10.0; Win64; x64)" \
+            --user-agent "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/150 Safari/537.36" \
+            --header "Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8" \
+            --header "Accept-Language: zh-TW,zh;q=0.9" \
             "https://ilcpb.ivs.hinet.net/public/ilcpb_live_cam" \
-            -o yilan-official-cams.html
+            --output yilan-official-cams.html; then
 
-          test -s yilan-official-cams.html
+            if [ -s yilan-official-cams.html ] &&
+               grep -q 'hls_player?page=ilcpb&did=' \
+                 yilan-official-cams.html; then
+              OFFICIAL_OK="true"
+            fi
+          fi
 
-      - name: 產生宜蘭官方攝影機對照資料
+          if [ "$OFFICIAL_OK" = "true" ]; then
+            echo "官方清單下載成功。"
+          else
+            echo "::warning::宜蘭官方網站中斷 GitHub Actions 連線，本次沿用既有 officialId 與播放器網址。"
+            rm -f yilan-official-cams.html
+            : > yilan-official-cams.html
+          fi
+
+      - name: 產生官方攝影機對照資料
+        shell: bash
         run: |
+          set -euo pipefail
+
+          if [ ! -s yilan-official-cams.html ]; then
+            echo '[]' > yilan-official-cams.json
+            exit 0
+          fi
+
           perl -0777 -MJSON::PP -MEncode=decode -e '
             use strict;
             use warnings;
 
-            my $html = decode(
-               "UTF-8",
-               <>
-            );
+            my $html = decode("UTF-8", <>);
             my $category = "";
             my @results;
 
-            while (
-              $html =~
-              m{<tr\b[^>]*>(.*?)</tr>}gsi
-            ) {
+            while ($html =~ m{<tr\b[^>]*>(.*?)</tr>}gsi) {
               my $row = $1;
               my @cells;
 
-              while (
-                $row =~
-                m{<td\b([^>]*)>(.*?)</td>}gsi
-              ) {
+              while ($row =~ m{<td\b([^>]*)>(.*?)</td>}gsi) {
                 my $attrs = $1;
                 my $text = $2;
 
@@ -90,57 +120,29 @@ jobs:
                 };
               }
 
-              next unless
-                $row =~
-                m{hls_player\?page=ilcpb&did=(\d+)};
-
+              next unless $row =~ m{hls_player\?page=ilcpb&did=(\d+)};
               my $did = $1;
 
-              if (
-                @cells &&
-                $cells[0]{attrs} =~ /rowspan/i
-              ) {
-                $category =
-                  $cells[0]{text};
-
+              if (@cells && $cells[0]{attrs} =~ /rowspan/i) {
+                $category = $cells[0]{text};
                 shift @cells;
               }
 
               next unless @cells >= 2;
 
-              my $location =
-                $cells[0]{text};
+              my $location = $cells[0]{text};
+              my $description = $cells[1]{text};
+              my $clean_description = $description;
 
-              my $description =
-                $cells[1]{text};
-
-              my $clean_description =
-                $description;
-
-              $clean_description =~
-                s/^\([^)]*\)//;
-
-              $clean_description =~
-                s/^\s+|\s+$//g;
+              $clean_description =~ s/^\([^)]*\)//;
+              $clean_description =~ s/^\s+|\s+$//g;
 
               push @results, {
-                category =>
-                  $category,
-
-                location =>
-                  $location,
-
-                description =>
-                  $description,
-
-                cleanName =>
-                  $category .
-                  " " .
-                  $clean_description,
-
-                did =>
-                  $did,
-
+                category => $category,
+                location => $location,
+                description => $description,
+                cleanName => $category . " " . $clean_description,
+                did => $did,
                 playerUrl =>
                   "https://ilcpb.ivs.hinet.net/public/hls_player?page=ilcpb&did=" .
                   $did
@@ -153,143 +155,47 @@ jobs:
               ->pretty
               ->canonical
               ->encode(\@results);
-          ' yilan-official-cams.html \
-            > yilan-official-cams.json
+          ' yilan-official-cams.html > yilan-official-cams.json
 
-          echo "官方攝影機數量："
-          jq 'length' \
-            yilan-official-cams.json
+          jq -e 'type == "array"' yilan-official-cams.json >/dev/null
+          echo "官方攝影機數量：$(jq 'length' yilan-official-cams.json)"
 
-          echo "前 3 筆官方對照資料："
-          jq '.[0:3]' \
-            yilan-official-cams.json
-
-      - name: 比較宜蘭攝影機名稱差異
+      - name: 準備既有宜蘭資料
+        shell: bash
         run: |
-          jq -n \
-            --slurpfile twipcam twipcam-cam-list.json \
+          set -euo pipefail
+
+          if [ -f yilan-road-cctv.json ] &&
+             jq -e '.results | type == "array"' \
+               yilan-road-cctv.json >/dev/null 2>&1; then
+            cp yilan-road-cctv.json /tmp/yilan-existing.json
+          else
+            echo '{"results":[]}' > /tmp/yilan-existing.json
+          fi
+
+      - name: 產生宜蘭道路 CCTV JSON
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          jq \
             --slurpfile official yilan-official-cams.json \
+            --slurpfile existing /tmp/yilan-existing.json \
             '
-            def normalize:
+            def normalize_name:
               tostring
               | gsub("^宜蘭縣道路\\s*"; "")
               | gsub("^\\([^)]*\\)"; "")
               | gsub("[[:space:]]+"; "")
               | gsub("[、，,。．・／/]"; "")
               | gsub("臺"; "台")
+              | gsub("國五"; "國5")
+              | gsub("台七"; "台7")
+              | gsub("台九"; "台9")
               | gsub("線路口"; "線口")
               | gsub("交岔路口"; "路口")
               | gsub("交叉路口"; "路口");
 
-            [
-              $twipcam[0][]
-              | select(
-                  (.name // "") |
-                  startswith("宜蘭縣道路 ")
-                )
-              | . as $cam
-
-              | (
-                  $official[0]
-                  | map(
-                      . as $officialCam
-                      | select(
-                          ($officialCam.cleanName | normalize) ==
-                          ($cam.name | normalize)
-                        )
-                    )
-                  | first
-                ) as $exact
-
-              | select($exact == null)
-
-              | {
-                  twipcamId: $cam.id,
-
-                  twipcamName: (
-                    $cam.name |
-                    sub("^宜蘭縣道路 "; "")
-                  ),
-
-                  possibleOfficialMatches: (
-                    $official[0]
-                    | map(
-                        . as $officialCam
-
-                        | select(
-                            (
-                              ($officialCam.description | normalize)
-                              | contains(
-                                  (
-                                    $cam.name
-                                    | normalize
-                                    | .[0:12]
-                                  )
-                                )
-                            )
-                            or
-                            (
-                              ($cam.name | normalize)
-                              | contains(
-                                  (
-                                    $officialCam.description
-                                    | normalize
-                                    | .[0:12]
-                                  )
-                                )
-                            )
-                          )
-
-                        | {
-                            did:
-                              $officialCam.did,
-
-                            cleanName:
-                              $officialCam.cleanName,
-
-                            location:
-                              $officialCam.location
-                          }
-                      )
-                    | .[0:5]
-                  )
-                }
-            ]
-          ' > yilan-name-differences.json
-
-          echo "未精確配對數量："
-          jq 'length' yilan-name-differences.json
-
-          echo "前 10 筆名稱差異："
-          jq '.[0:10]' yilan-name-differences.json
-
-
-      - name: 驗證原始 JSON
-        run: |
-          jq empty twipcam-cam-list.json
-
-          echo "全部攝影機數量："
-          jq 'length' twipcam-cam-list.json
-
-      - name: 查看第一筆宜蘭原始資料
-        run: |
-          echo "第一筆宜蘭道路 CCTV 原始資料："
-
-          jq '
-            [
-              .[]
-              | select(
-                  (.name // "") |
-                  startswith("宜蘭縣道路 ")
-                )
-            ][0]
-          ' twipcam-cam-list.json
-
-      - name: 產生宜蘭道路 CCTV JSON
-        run: |
-          jq \
-            --slurpfile official yilan-official-cams.json \
-            '
             def district_from_name:
               if test("宜蘭市") then "宜蘭市"
               elif test("羅東鎮") then "羅東鎮"
@@ -306,241 +212,173 @@ jobs:
               else "未判定"
               end;
 
-            def normalize_name:
-              tostring
-              | gsub("^宜蘭縣道路\\s*"; "")
-              | gsub("^\\([^)]*\\)"; "")
-              | gsub("[[:space:]]+"; "")
-              | gsub("[、，,。．・／/]"; "")
-              | gsub("臺"; "台")
-              | gsub("國五"; "國5")
-              | gsub("台七"; "台7")
-              | gsub("台九"; "台9")
-              | gsub("線路口"; "線口")
-              | gsub("交岔路口"; "路口")
-              | gsub("交叉路口"; "路口");
-
             {
               results: [
                 .[]
-                | select(
-                    (.name // "") |
-                    startswith("宜蘭縣道路 ")
-                  )
+                | select((.name // "") | startswith("宜蘭縣道路 "))
                 | select(
                     .id != null and
                     .lat != null and
                     .lon != null and
                     .cam_url != null
                   )
-
                 | . as $camera
 
-                
                 | (
                     $official[0]
                     | map(
                         . as $officialCam
-
-                        | (
-                            $officialCam.description
-                            | normalize_name
-                          ) as $officialDescription
-
-                        | (
-                            $camera.name
-                            | normalize_name
-                          ) as $cameraName
-
+                        | ($officialCam.description | normalize_name) as $officialDescription
+                        | ($camera.name | normalize_name) as $cameraName
                         | select(
-                            ($cameraName == (
-                              $officialCam.cleanName
-                              | normalize_name
-                            ))
+                            ($cameraName == ($officialCam.cleanName | normalize_name))
                             or
-                            ($cameraName | contains(
-                              $officialDescription
-                            ))
+                            ($cameraName | contains($officialDescription))
                           )
-
                         | $officialCam
                       )
-
-                    # 同一鏡頭可能在官方表格出現不同分類，
-                    # 先依 did 去除重複資料
                     | unique_by(.did)
-
-                    # 描述較長的通常辨識度較高
-                    | sort_by(
-                        .description
-                        | normalize_name
-                        | length
-                      )
+                    | sort_by(.description | normalize_name | length)
                     | reverse
                     | first
                   ) as $match
 
+                | (
+                    $existing[0].results
+                    | map(
+                        select(
+                          (.id | tostring) ==
+                          ($camera.id | tostring)
+                        )
+                      )
+                    | first
+                  ) as $old
+
                 | {
-                    key: (
-                      "yilan-road-" +
-                      ($camera.id | tostring)
-                    ),
+                    key: ("yilan-road-" + ($camera.id | tostring)),
+                    id: ($camera.id | tostring),
 
-                    id: (
-                      $camera.id | tostring
-                    ),
+                    officialId:
+                      (
+                        if $match then
+                          ($match.did | tostring)
+                        elif $old then
+                          ($old.officialId // "" | tostring)
+                        else
+                          ""
+                        end
+                      ),
 
-                    officialId: (
-                      if $match then
-                        ($match.did | tostring)
-                      else
-                        ""
-                      end
-                    ),
+                    name:
+                      (
+                        ($camera.name | tostring)
+                        | sub("^宜蘭縣道路 "; "")
+                      ),
 
-                    name: (
-                      ($camera.name | tostring)
-                      | sub("^宜蘭縣道路 "; "")
-                    ),
-
-                    x: (
-                      $camera.lon | tonumber
-                    ),
-
-                    y: (
-                      $camera.lat | tonumber
-                    ),
-
+                    x: ($camera.lon | tonumber),
+                    y: ($camera.lat | tonumber),
                     city: "宜蘭縣",
 
-                    district: (
-                      ($camera.name | tostring)
-                      | district_from_name
-                    ),
+                    district:
+                      (
+                        ($camera.name | tostring)
+                        | district_from_name
+                      ),
 
-                    imageUrl: (
-                      $camera.cam_url | tostring
-                    ),
+                    imageUrl: ($camera.cam_url | tostring),
 
-                    url: (
-                      if $match then
-                        ($match.playerUrl | tostring)
-                      else
-                        ($camera.cam_url | tostring)
-                      end
-                    ),
+                    url:
+                      (
+                        if $match then
+                          ($match.playerUrl | tostring)
+                        elif (
+                          $old and
+                          (($old.officialId // "") | tostring) != "" and
+                          (($old.url // "") | tostring) != ""
+                        ) then
+                          ($old.url | tostring)
+                        else
+                          ($camera.cam_url | tostring)
+                        end
+                      ),
 
-                    streamUrl: (
-                      if $match then
-                        ($match.playerUrl | tostring)
-                      else
-                        ""
-                      end
-                    ),
+                    streamUrl:
+                      (
+                        if $match then
+                          ($match.playerUrl | tostring)
+                        elif (
+                          $old and
+                          (($old.officialId // "") | tostring) != ""
+                        ) then
+                          ($old.streamUrl // $old.url // "" | tostring)
+                        else
+                          ""
+                        end
+                      ),
 
                     type: "road",
-
                     source:
                       "宜蘭縣政府警察局公開即時路況；座標與預覽圖由 twipcam 提供"
                   }
               ]
             }
-          ' twipcam-cam-list.json \
+            ' twipcam-cam-list.json \
             > yilan-road-cctv.json.tmp
 
-          mv \
-            yilan-road-cctv.json.tmp \
-            yilan-road-cctv.json
+          jq -e '
+            .results | type == "array" and length > 0
+          ' yilan-road-cctv.json.tmp >/dev/null
+
+          mv yilan-road-cctv.json.tmp yilan-road-cctv.json
 
       - name: 驗證宜蘭 JSON
+        shell: bash
         run: |
+          set -euo pipefail
+
           jq empty yilan-road-cctv.json
 
-          count="$(
-            jq '.results | length' \
-              yilan-road-cctv.json
+          COUNT="$(jq '.results | length' yilan-road-cctv.json)"
+          MATCHED="$(
+            jq '
+              [
+                .results[]
+                | select((.officialId // "") != "")
+              ]
+              | length
+            ' yilan-road-cctv.json
           )"
 
-          echo "宜蘭道路 CCTV 數量：${count}"
+          echo "宜蘭道路 CCTV 數量：$COUNT"
+          echo "具有官方播放器資料：$MATCHED"
 
-          if [ "$count" -eq 0 ]; then
-            echo "錯誤：沒有取得宜蘭道路 CCTV"
+          if [ "$COUNT" -le 0 ]; then
+            echo "::error::沒有取得宜蘭道路 CCTV。"
             exit 1
           fi
-          matched="$(
-            jq '
-              [
-                .results[]
-                | select(
-                    (.officialId // "") != ""
-                  )
-              ]
-              | length
-            ' yilan-road-cctv.json
-          )"
-
-          unmatched="$(
-            jq '
-              [
-                .results[]
-                | select(
-                    (.officialId // "") == ""
-                  )
-              ]
-              | length
-            ' yilan-road-cctv.json
-          )"
-
-          echo "成功配對官方播放器：${matched}"
-          echo "尚未配對官方播放器：${unmatched}"
-
-          echo "尚未配對的前 10 筆："
-
-          jq '
-            [
-              .results[]
-              | select(
-                  (.officialId // "") == ""
-                )
-              | {
-                  id,
-                  name,
-                  district
-                }
-            ]
-          ' yilan-road-cctv.json
-          
-          echo "前 3 筆資料："
-
-          jq '.results[0:3]' \
-            yilan-road-cctv.json
 
       - name: 刪除暫存檔案
+        shell: bash
         run: |
           rm -f twipcam-cam-list.json
           rm -f yilan-official-cams.html
           rm -f yilan-official-cams.json
-          rm -f yilan-official-lines.html
-          rm -f yilan-name-differences.json
+          rm -f /tmp/yilan-existing.json
 
       - name: 提交更新
+        shell: bash
         run: |
-          git config \
-            user.name \
-            "github-actions[bot]"
-
-          git config \
-            user.email \
-            "41898282+github-actions[bot]@users.noreply.github.com"
+          set -euo pipefail
 
           git add yilan-road-cctv.json
 
           if git diff --cached --quiet; then
-            echo "宜蘭道路 CCTV 資料沒有變更"
+            echo "宜蘭道路 CCTV 資料沒有變更。"
             exit 0
           fi
 
-          git commit \
-            -m "chore: 自動更新宜蘭道路 CCTV 資料"
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
 
+          git commit -m "chore: 自動更新宜蘭道路 CCTV 資料"
           git push

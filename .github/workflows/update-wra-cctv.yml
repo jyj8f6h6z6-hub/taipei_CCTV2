@@ -1,0 +1,121 @@
+name: 更新水利署 CCTV 資料
+
+on:
+  schedule:
+    - cron: "10 20 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: update-wra-cctv
+  cancel-in-progress: false
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 下載專案
+        uses: actions/checkout@v4
+
+      - name: 更新水利署站點 JSON
+        shell: bash
+        run: |
+          set -u
+
+          URLS=(
+            'https://fhyv.wra.gov.tw/FhyWeb/v1/Api/CCTV/WRA/Station?format=JSON'
+            'https://fhyv.wra.gov.tw/FhyWeb/v1/Api/CCTV/WRA/Station?$format=JSON'
+            'https://fhy.wra.gov.tw/FhyWeb/v1/Api/CCTV/WRA/Station?format=JSON'
+            'https://fhy.wra.gov.tw/FhyWeb/v1/Api/CCTV/WRA/Station?$format=JSON'
+          )
+
+          DOWNLOAD_OK="false"
+          rm -f wra-stations.json.tmp
+
+          for URL in "${URLS[@]}"; do
+            echo "嘗試下載：$URL"
+            rm -f wra-stations.json.tmp
+
+            if curl \
+              --fail \
+              --show-error \
+              --location \
+              --compressed \
+              --http1.1 \
+              --connect-timeout 20 \
+              --max-time 120 \
+              --retry 4 \
+              --retry-all-errors \
+              --retry-delay 8 \
+              --user-agent "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/150 Safari/537.36" \
+              --header "Accept: application/json, text/plain, */*" \
+              --header "Accept-Language: zh-TW,zh;q=0.9" \
+              --header "Referer: https://fhy.wra.gov.tw/fhyv2/monitor/cctvTable" \
+              --output wra-stations.json.tmp \
+              "$URL"; then
+
+              if jq -e '
+                type == "array" and
+                length > 0 and
+                all(.[]; (.SourceId != null) and (.ID != null))
+              ' wra-stations.json.tmp >/dev/null 2>&1; then
+                DOWNLOAD_OK="true"
+                echo "下載及驗證成功。"
+                break
+              fi
+
+              echo "下載內容不是有效的水利署站點陣列。"
+            fi
+
+            echo "此網址失敗，繼續測試下一個網址。"
+          done
+
+          if [ "$DOWNLOAD_OK" = "true" ]; then
+            mv wra-stations.json.tmp wra-stations.json
+            echo "已更新 wra-stations.json"
+          else
+            rm -f wra-stations.json.tmp
+
+            if [ -f wra-stations.json ] &&
+               jq -e 'type == "array" and length > 0' \
+                 wra-stations.json >/dev/null 2>&1; then
+              echo "::warning::水利署網站目前無法從 GitHub Actions 下載，保留既有 wra-stations.json。"
+            else
+              echo "::error::下載失敗，而且專案中沒有可用的既有 wra-stations.json。"
+              exit 1
+            fi
+          fi
+
+      - name: 驗證正式 JSON
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          jq -e '
+            type == "array" and
+            length > 0 and
+            all(.[]; (.SourceId != null) and (.ID != null))
+          ' wra-stations.json >/dev/null
+
+          echo "水利署站點數量：$(jq 'length' wra-stations.json)"
+
+      - name: 提交更新
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          git add wra-stations.json
+
+          if git diff --cached --quiet; then
+            echo "水利署站點資料沒有變更，不需要提交。"
+            exit 0
+          fi
+
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+          git commit -m "chore: 更新水利署 CCTV 站點資料"
+          git push
