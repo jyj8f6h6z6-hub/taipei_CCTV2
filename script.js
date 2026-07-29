@@ -26,6 +26,9 @@ const TAINAN_ROAD_API_URL =
 const CHIAYI_COUNTY_ROAD_API_URL =
   "./chiayi-county-road-cctv.json";
 
+const KAOHSIUNG_ROAD_API_URL =
+  "./kaohsiung-road-cctv.json";
+
 const PROVINCIAL_ROAD_API_URL =
   "./provincial-road-cctv.json";
 
@@ -188,6 +191,7 @@ const CITY_ORDER = [
   "臺中市",
   "南投縣",
   "臺南市",
+  "高雄市",
   "嘉義縣",
   "宜蘭縣"
 ];
@@ -300,6 +304,7 @@ async function loadDistrictBoundaries() {
           "臺中市",
           "南投縣",
           "臺南市",
+          "高雄市",
           "嘉義縣",
           "宜蘭縣"
       ].includes(county);
@@ -712,6 +717,7 @@ function normalizeCity(value, fallback = "") {
     南投縣: "南投縣",
     宜蘭縣: "宜蘭縣",
     台南市: "臺南市",
+    高雄市: "高雄市",
     嘉義縣: "嘉義縣",
     臺南市: "臺南市"
   };
@@ -1333,6 +1339,86 @@ function normalizeChiayiCountyRoad(json) {
     );
 }
 
+function normalizeKaohsiungRoad(json) {
+  const rows =
+    json.results ||
+    json.data ||
+    json;
+
+  if (!Array.isArray(rows)) {
+    throw new Error(
+      "高雄道路 CCTV 資料格式不正確"
+    );
+  }
+
+  return rows
+    .map(cam => {
+      const id = String(
+        cam.id || ""
+      ).trim();
+
+      const x = Number(cam.x);
+      const y = Number(cam.y);
+
+      return {
+        key:
+          cam.key ||
+          `kaohsiung-road-${id}`,
+
+        id,
+
+        name: String(
+          cam.name || id
+        ).trim(),
+
+        x,
+        y,
+
+        city: "高雄市",
+
+        district:
+          normalizeDistrict(
+            cam.district,
+            "未判定"
+          ),
+
+        imageUrl: String(
+          cam.imageUrl || ""
+        ).trim(),
+
+        url: String(
+          cam.url ||
+          cam.videoUrl ||
+          cam.imageUrl ||
+          ""
+        ).trim(),
+
+        streamUrl: String(
+          cam.streamUrl ||
+          cam.videoUrl ||
+          cam.url ||
+          ""
+        ).trim(),
+
+        locationImage: String(
+          cam.locationImage || ""
+        ).trim(),
+
+        type: "road",
+
+        source:
+          cam.source ||
+          "高雄市政府交通局"
+      };
+    })
+    .filter(cam =>
+      cam.id &&
+      cam.url &&
+      Number.isFinite(cam.x) &&
+      Number.isFinite(cam.y)
+    );
+}
+
 function normalizeProvincialRoad(json) {
   const rows =
     json.results ||
@@ -1847,6 +1933,7 @@ async function loadData() {
     fetchJson(NANTOU_ROAD_API_URL),
     fetchJson(TAINAN_ROAD_API_URL),
     fetchJson(CHIAYI_COUNTY_ROAD_API_URL),
+    fetchJson(KAOHSIUNG_ROAD_API_URL),
     fetchJson(PROVINCIAL_ROAD_API_URL),
     fetchJson(FREEWAY_CCTV_API_URL),
     fetchJson(WRA_STATION_API_URL),
@@ -1864,6 +1951,7 @@ async function loadData() {
   let nantouRoadCams = [];
   let tainanRoadCams = [];
   let chiayiCountyRoadCams = [];
+  let kaohsiungRoadCams = [];
   let provincialRoadCams = [];
   let freewayCams = [];
   let waterCams = [];
@@ -2128,9 +2216,34 @@ if (results[8].status === "fulfilled") {
 
 if (results[9].status === "fulfilled") {
   try {
+    kaohsiungRoadCams =
+      normalizeKaohsiungRoad(
+        results[9].value
+      );
+
+    console.log(
+      "高雄道路：",
+      kaohsiungRoadCams.length
+    );
+
+  } catch (error) {
+    errors.push(
+      `高雄道路 CCTV：${error.message}`
+    );
+  }
+
+} else {
+  errors.push(
+    `高雄道路 CCTV：` +
+    results[9].reason.message
+  );
+}
+
+if (results[10].status === "fulfilled") {
+  try {
     provincialRoadCams =
       normalizeProvincialRoad(
-        results[9].value
+        results[10].value
       );
 
     console.log(
@@ -2146,15 +2259,15 @@ if (results[9].status === "fulfilled") {
 } else {
   errors.push(
     `省道 CCTV：` +
-    results[9].reason.message
+    results[10].reason.message
   );
 }
 
-if (results[10].status === "fulfilled") {
+if (results[11].status === "fulfilled") {
   try {
     freewayCams =
       normalizeFreewayCams(
-        results[10].value
+        results[11].value
       );
 
     console.log(
@@ -2170,15 +2283,15 @@ if (results[10].status === "fulfilled") {
 } else {
   errors.push(
     `國道 CCTV：` +
-    results[10].reason.message
+    results[11].reason.message
   );
 }
 
 // 水利署 CCTV
-if (results[11].status === "fulfilled") {
+if (results[12].status === "fulfilled") {
   try {
     wraCams = normalizeWraStations(
-      results[11].value
+      results[12].value
     );
 
     console.log(
@@ -2192,16 +2305,16 @@ if (results[11].status === "fulfilled") {
   }
 } else {
   errors.push(
-    `水利署 CCTV：${results[11].reason.message}`
+    `水利署 CCTV：${results[12].reason.message}`
   );
 }
 
 
 // 台北水情 CCTV
-if (results[12].status === "fulfilled") {
+if (results[13].status === "fulfilled") {
   try {
     waterCams = normalizeWaterCams(
-      results[12].value
+      results[13].value
     );
   } catch (error) {
     errors.push(
@@ -2210,17 +2323,17 @@ if (results[12].status === "fulfilled") {
   }
 } else {
   errors.push(
-    `水情 CCTV：${results[12].reason.message}`
+    `水情 CCTV：${results[13].reason.message}`
   );
 }
 
 
 // 台北水情租賃 CCTV
-if (results[13].status === "fulfilled") {
+if (results[14].status === "fulfilled") {
   try {
     waterRentalCams =
       normalizeWaterRentalCams(
-        results[13].value
+        results[14].value
       );
   } catch (error) {
     errors.push(
@@ -2229,7 +2342,7 @@ if (results[13].status === "fulfilled") {
   }
 } else {
   errors.push(
-    `水情租賃 CCTV：${results[13].reason.message}`
+    `水情租賃 CCTV：${results[14].reason.message}`
   );
 }
 
@@ -2243,6 +2356,7 @@ if (results[13].status === "fulfilled") {
     ...tainanRoadCams,
     ...nantouRoadCams,
     ...chiayiCountyRoadCams,
+    ...kaohsiungRoadCams,
     ...provincialRoadCams,
     ...freewayCams,
   
@@ -2261,7 +2375,8 @@ if (results[13].status === "fulfilled") {
       taichungRoadCams.length +
       nantouRoadCams.length +
       tainanRoadCams.length +
-      chiayiCountyRoadCams.length,
+      chiayiCountyRoadCams.length +
+      kaohsiungRoadCams.length,
       provincial: provincialRoadCams.length,
       highway: freewayCams.length,
       water: waterCams.length,
@@ -3948,3 +4063,5 @@ window.addEventListener(
     }, 100);
   }
 );
+
+//
