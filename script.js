@@ -99,6 +99,14 @@ let searchLocationMarker = null;
 let currentUserPosition = null;
 let districtGeoJSON = null;
 
+/*
+ * 地圖可視範圍更新控制：
+ * 拖曳或縮放結束後稍等一下再重畫，
+ * 避免短時間重複建立 Marker。
+ */
+let visibleRenderTimer = null;
+const VISIBLE_RENDER_DELAY = 250;
+
 const TAOYUAN_MAP_VIEW_KEY =
   "taoyuan-map-view";
 
@@ -2549,13 +2557,65 @@ function filteredCams() {
   });
 }
 
+/*
+ * 只保留目前地圖畫面範圍內的 CCTV。
+ * 地圖尚未建立時，維持原本資料，避免初始化期間出錯。
+ */
+function camsInCurrentMapBounds(cams) {
+  if (!map || !map.getBounds) {
+    return cams;
+  }
+
+  const bounds = map.getBounds();
+
+  if (!bounds || !bounds.isValid()) {
+    return cams;
+  }
+
+  return cams.filter(cam => {
+    const lat = Number(cam.y);
+    const lng = Number(cam.x);
+
+    return (
+      Number.isFinite(lat) &&
+      Number.isFinite(lng) &&
+      bounds.contains([lat, lng])
+    );
+  });
+}
+
+/*
+ * 地圖移動完成後延遲更新。
+ * autoZoom 必須關閉，否則每次更新又會重新縮放地圖。
+ */
+function scheduleVisibleCamerasRender() {
+  if (
+    !map ||
+    allCams.length === 0
+  ) {
+    return;
+  }
+
+  clearTimeout(visibleRenderTimer);
+
+  visibleRenderTimer = setTimeout(() => {
+    render({
+      autoZoom: false
+    });
+  }, VISIBLE_RENDER_DELAY);
+}
+
 /* 重新顯示側欄與地圖標記 */
 function render(options = {}) {
   const {
     autoZoom = true
   } = options;
 
-  const cams = filteredCams();
+  const matchedCams = filteredCams();
+
+  const cams = camsInCurrentMapBounds(
+    matchedCams
+  );
 
   const roadCount = cameraCounts.road;
   const provincialCount =
@@ -2567,6 +2627,7 @@ function render(options = {}) {
     cameraCounts["water-rental"];
 
   document.getElementById("status").textContent =
+    `目前畫面 ${cams.length} 支（篩選後 ${matchedCams.length} 支）；` +
     `道路 ${roadCount} 支；` +
     `省道 ${provincialCount} 支；` +
     `國道 ${highwayCount} 支；` +
@@ -3759,6 +3820,15 @@ async function initMap() {
         "OpenStreetMap</a> contributors"
     }
   ).addTo(map);
+
+  /*
+  * 使用者完成拖曳或縮放後，
+  * 重新顯示目前地圖範圍內的 CCTV。
+  */
+  map.on(
+    "moveend zoomend",
+    scheduleVisibleCamerasRender
+  );
 
   try {
     document.getElementById("status").textContent =
