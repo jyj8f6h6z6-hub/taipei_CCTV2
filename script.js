@@ -2662,9 +2662,16 @@ function render(options = {}) {
 
 /* 顯示左側 CCTV 清單 */
 function renderSidebar(cams) {
+  const SIDEBAR_LIMIT = 200;
+
+  const limitedCams = cams.slice(
+    0,
+    SIDEBAR_LIMIT
+  );
+
   const grouped = {};
 
-  cams.forEach(cam => {
+  limitedCams.forEach(cam => {
     const city = cam.city || "其他";
     const district =
       cam.district || "未判定";
@@ -2700,6 +2707,16 @@ function renderSidebar(cams) {
   ];
 
   let html = "";
+
+  if (cams.length > SIDEBAR_LIMIT) {
+    html += `
+      <div class="empty-msg">
+        目前畫面共有 ${cams.length} 支 CCTV，
+        左側清單先顯示前 ${SIDEBAR_LIMIT} 支。
+        請放大地圖或縮小篩選範圍。
+      </div>
+    `;
+  }
 
   cityOrder.forEach(city => {
     const districts = Object.keys(
