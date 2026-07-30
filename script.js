@@ -1710,6 +1710,13 @@ function normalizeWraStations(data) {
       const stationId =
         String(item.ID || "").trim();
 
+      const mediaUrl = String(
+        item.mediaUrl ||
+        item.imageUrl ||
+        item.ImageURL ||
+        ""
+      ).trim();
+
       return {
         key:
           `wra-${sourceId}-${stationId}`,
@@ -1748,10 +1755,13 @@ function normalizeWraStations(data) {
         y: lat,
 
         type: "wra",
-        source:
-          "水利署防災資訊服務網",
 
-        mediaUrl: ""
+        source:
+          "經濟部水利署政府開放資料",
+
+        url: mediaUrl,
+        imageUrl: mediaUrl,
+        mediaUrl
       };
     })
 
@@ -3058,31 +3068,7 @@ function openInfo(marker) {
 
   marker.openPopup();
   
-  if (cam.type === "wra") {
-    marker.once("popupopen", event => {
-      const popupElement =
-        event.popup.getElement();
-
-      const button =
-        popupElement?.querySelector(
-          ".wra-image-btn"
-        );
-
-      if (!button) {
-        return;
-      }
-
-      button.addEventListener(
-        "click",
-        () => {
-          openWraLatestImage(
-            cam,
-            button
-          );
-        }
-      );
-    });
-  }
+  
 
   highlightSidebar(cam.key);
 }
@@ -3225,80 +3211,20 @@ function closeWraLiveViewer() {
 }
 
 async function getWraLatestImageUrl(cam) {
-  const sourceId = String(
-    cam.sourceId || ""
+  const imageUrl = String(
+    cam.mediaUrl ||
+    cam.imageUrl ||
+    cam.url ||
+    ""
   ).trim();
 
-  const stationId = String(
-    cam.stationId || cam.id || ""
-  ).trim();
-
-  if (!sourceId || !stationId) {
-    throw new Error("缺少水利署攝影機編號");
-  }
-
-  const apiUrl =
-    "https://fhyv.wra.gov.tw/FhyWeb/v1/Api/CCTV/WRA/Cameras/" +
-    `${encodeURIComponent(sourceId)}/` +
-    `${encodeURIComponent(stationId)}`;
-
-  const response = await fetch(apiUrl, {
-    cache: "no-store"
-  });
-
-  if (!response.ok) {
+  if (!imageUrl) {
     throw new Error(
-      `HTTP ${response.status}`
+      "這支攝影機沒有提供影像網址"
     );
   }
 
-  const data = await response.json();
-  const imageUrls = [];
-
-  function collectImageUrls(value) {
-    if (typeof value === "string") {
-      const url = value.trim();
-
-      if (
-        url.startsWith("http://") ||
-        url.startsWith("https://")
-      ) {
-        imageUrls.push(url);
-      }
-
-      return;
-    }
-
-    if (Array.isArray(value)) {
-      value.forEach(collectImageUrls);
-      return;
-    }
-
-    if (
-      value &&
-      typeof value === "object"
-    ) {
-      Object.values(value).forEach(
-        collectImageUrls
-      );
-    }
-  }
-
-  collectImageUrls(data);
-
-  const uniqueUrls = [
-    ...new Set(imageUrls)
-  ];
-
-  if (uniqueUrls.length === 0) {
-    throw new Error(
-      "找不到可開啟的影像網址"
-    );
-  }
-
-  return uniqueUrls[
-    uniqueUrls.length - 1
-  ];
+  return imageUrl;
 }
 
 async function openWraLiveViewer(cam, button) {
