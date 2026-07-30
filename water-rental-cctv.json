@@ -1,6 +1,6 @@
 {
   "count": 110,
-  "sourceCount": 129,
+  "sourceCount": 130,
   "results": [
     {
       "id": "rental-cc27f1a62bd9e34c",
@@ -1543,8 +1543,15 @@
       "source": "臺北市政府工務局水利工程處（水情租賃 CCTV）"
     }
   ],
-  "unmatchedCount": 2,
+  "unmatchedCount": 3,
   "unmatched": [
+    {
+      "name": "大佳10號閘門(科技執法)",
+      "category": "基隆河",
+      "streamUrl": "https://video.nvr.taifo.com.tw/memfs/9531fdbb-254d-4698-a004-fffa0f2301e9.m3u8",
+      "imageUrl": "https://video.nvr.taifo.com.tw/memfs/9531fdbb-254d-4698-a004-fffa0f2301e9.jpg",
+      "lookupKey": "大佳10號閘門"
+    },
     {
       "name": "新店1號(外",
       "category": "新店溪、景美溪及指南溪",
