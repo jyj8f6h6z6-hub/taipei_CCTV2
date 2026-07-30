@@ -1,8 +1,11 @@
 name: 更新水利署 CCTV 資料
 
 on:
+  # 每小時第 17 分執行
   schedule:
-    - cron: "10 20 * * *"
+    - cron: "17 * * * *"
+
+  # 允許手動測試
   workflow_dispatch:
 
 permissions:
@@ -15,92 +18,397 @@ concurrency:
 jobs:
   update:
     runs-on: ubuntu-latest
+    timeout-minutes: 10
 
     steps:
       - name: 下載專案
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
-      - name: 更新水利署站點 JSON
+      - name: 下載水利署開放資料
         shell: bash
         run: |
-          set -u
+          set -euo pipefail
 
-          URLS=(
-            'https://fhyv.wra.gov.tw/FhyWeb/v1/Api/CCTV/WRA/Station?format=JSON'
-            'https://fhyv.wra.gov.tw/FhyWeb/v1/Api/CCTV/WRA/Station?$format=JSON'
-            'https://fhy.wra.gov.tw/FhyWeb/v1/Api/CCTV/WRA/Station?format=JSON'
-            'https://fhy.wra.gov.tw/FhyWeb/v1/Api/CCTV/WRA/Station?$format=JSON'
+          API_URL='https://opendata.wra.gov.tw/api/v2/f71b74eb-cbe5-42c6-8be5-7500450e7db0?format=JSON&sort=_importdate%20asc&limit=1000'
+
+          rm -f wra-open-data.json
+
+          curl \
+            --fail \
+            --show-error \
+            --silent \
+            --location \
+            --compressed \
+            --connect-timeout 20 \
+            --max-time 180 \
+            --retry 5 \
+            --retry-all-errors \
+            --retry-delay 10 \
+            --user-agent "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/150 Safari/537.36" \
+            --header "Accept: application/json,text/plain,*/*" \
+            --header "Accept-Language: zh-TW,zh;q=0.9,en;q=0.8" \
+            --header "Referer: https://data.gov.tw/dataset/36687" \
+            --output wra-open-data.json \
+            "$API_URL"
+
+          if [ ! -s wra-open-data.json ]; then
+            echo "::error::水利署開放資料是空檔案。"
+            exit 1
+          fi
+
+          echo "下載大小：$(wc -c < wra-open-data.json) bytes"
+
+      - name: 轉換水利署 CCTV 資料
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          python3 <<'PY'
+          import json
+          import re
+          from pathlib import Path
+
+          source_file = Path("wra-open-data.json")
+          output_file = Path("wra-stations.json")
+          temporary_file = Path("wra-stations.json.tmp")
+
+          def normalized_key(value):
+              return re.sub(
+                  r"[^a-z0-9\u4e00-\u9fff]",
+                  "",
+                  str(value).lower(),
+              )
+
+          def get_value(row, *names):
+              lookup = {
+                  normalized_key(key): value
+                  for key, value in row.items()
+              }
+
+              for name in names:
+                  value = lookup.get(normalized_key(name))
+
+                  if value not in (None, ""):
+                      return value
+
+              return ""
+
+          def looks_like_camera_rows(value):
+              if not isinstance(value, list) or not value:
+                  return False
+
+              sample = next(
+                  (
+                      item
+                      for item in value
+                      if isinstance(item, dict)
+                  ),
+                  None,
+              )
+
+              if sample is None:
+                  return False
+
+              keys = {
+                  normalized_key(key)
+                  for key in sample
+              }
+
+              return (
+                  "cameraid" in keys
+                  or "imageurl" in keys
+                  or "攝影機編號" in keys
+              )
+
+          def find_rows(value):
+              if looks_like_camera_rows(value):
+                  return value
+
+              if isinstance(value, dict):
+                  for key in (
+                      "records",
+                      "data",
+                      "results",
+                      "result",
+                  ):
+                      if key in value:
+                          found = find_rows(value[key])
+
+                          if found is not None:
+                              return found
+
+                  for child in value.values():
+                      found = find_rows(child)
+
+                      if found is not None:
+                          return found
+
+              return None
+
+          def to_float(value):
+              text = (
+                  str(value)
+                  .strip()
+                  .replace(",", "")
+              )
+
+              return float(text)
+
+          raw_text = source_file.read_text(
+              encoding="utf-8-sig"
           )
 
-          DOWNLOAD_OK="false"
-          rm -f wra-stations.json.tmp
+          if raw_text.lstrip().startswith("<"):
+              raise RuntimeError(
+                  "下載內容是 HTML，不是 JSON；"
+                  "可能被來源網站的防護頁攔截。"
+              )
 
-          for URL in "${URLS[@]}"; do
-            echo "嘗試下載：$URL"
-            rm -f wra-stations.json.tmp
+          payload = json.loads(raw_text)
+          rows = find_rows(payload)
 
-            if curl \
-              --fail \
-              --show-error \
-              --location \
-              --compressed \
-              --http1.1 \
-              --connect-timeout 20 \
-              --max-time 120 \
-              --retry 4 \
-              --retry-all-errors \
-              --retry-delay 8 \
-              --user-agent "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/150 Safari/537.36" \
-              --header "Accept: application/json, text/plain, */*" \
-              --header "Accept-Language: zh-TW,zh;q=0.9" \
-              --header "Referer: https://fhy.wra.gov.tw/fhyv2/monitor/cctvTable" \
-              --output wra-stations.json.tmp \
-              "$URL"; then
+          if rows is None:
+              raise RuntimeError(
+                  "找不到水利署 CCTV 資料陣列。"
+              )
 
-              if jq -e '
-                type == "array" and
-                length > 0 and
-                all(.[]; (.SourceId != null) and (.ID != null))
-              ' wra-stations.json.tmp >/dev/null 2>&1; then
-                DOWNLOAD_OK="true"
-                echo "下載及驗證成功。"
-                break
-              fi
+          output = []
+          camera_ids = set()
+          skipped = 0
 
-              echo "下載內容不是有效的水利署站點陣列。"
-            fi
+          for row in rows:
+              if not isinstance(row, dict):
+                  skipped += 1
+                  continue
 
-            echo "此網址失敗，繼續測試下一個網址。"
-          done
+              camera_id = str(
+                  get_value(
+                      row,
+                      "cameraid",
+                      "CameraID",
+                      "攝影機編號",
+                  )
+              ).strip()
 
-          if [ "$DOWNLOAD_OK" = "true" ]; then
-            mv wra-stations.json.tmp wra-stations.json
-            echo "已更新 wra-stations.json"
-          else
-            rm -f wra-stations.json.tmp
+              camera_name = str(
+                  get_value(
+                      row,
+                      "cameraname",
+                      "CameraName",
+                      "攝影機名稱",
+                  )
+              ).strip()
 
-            if [ -f wra-stations.json ] &&
-               jq -e 'type == "array" and length > 0' \
-                 wra-stations.json >/dev/null 2>&1; then
-              echo "::warning::水利署網站目前無法從 GitHub Actions 下載，保留既有 wra-stations.json。"
-            else
-              echo "::error::下載失敗，而且專案中沒有可用的既有 wra-stations.json。"
-              exit 1
-            fi
-          fi
+              station_name = str(
+                  get_value(
+                      row,
+                      "videosurveillancestationname",
+                      "影像監視站站名",
+                  )
+              ).strip()
+
+              image_url = str(
+                  get_value(
+                      row,
+                      "imageurl",
+                      "ImageURL",
+                      "影像圖片網址",
+                  )
+              ).strip()
+
+              city = str(
+                  get_value(
+                      row,
+                      "countiesandcitieswherethemonitoringpointsarelocated",
+                      "監測點所在縣市",
+                      "縣市",
+                  )
+              ).strip()
+
+              district = str(
+                  get_value(
+                      row,
+                      "administrativedistrictwherethemonitoringpointislocated",
+                      "監測點所在行政區",
+                      "行政區",
+                  )
+              ).strip()
+
+              basin = str(
+                  get_value(
+                      row,
+                      "basinname",
+                      "BasinName",
+                      "流域名稱",
+                  )
+              ).strip()
+
+              status = str(
+                  get_value(
+                      row,
+                      "status",
+                      "Status",
+                      "監測點狀態",
+                  )
+              ).strip()
+
+              try:
+                  latitude = to_float(
+                      get_value(
+                          row,
+                          "latitude_4326",
+                          "latitude4326",
+                          "緯度_4326",
+                          "緯度",
+                      )
+                  )
+
+                  longitude = to_float(
+                      get_value(
+                          row,
+                          "longitude_4326",
+                          "longitude4326",
+                          "經度_4326",
+                          "經度",
+                      )
+                  )
+              except (TypeError, ValueError):
+                  skipped += 1
+                  continue
+
+              if (
+                  not camera_id
+                  or not image_url.startswith(
+                      ("http://", "https://")
+                  )
+                  or not 21 <= latitude <= 26.5
+                  or not 118 <= longitude <= 123.5
+              ):
+                  skipped += 1
+                  continue
+
+              if camera_id in camera_ids:
+                  raise RuntimeError(
+                      f"發現重複 CameraID：{camera_id}"
+                  )
+
+              camera_ids.add(camera_id)
+
+              if station_name and camera_name:
+                  if station_name in camera_name:
+                      display_name = camera_name
+                  else:
+                      display_name = (
+                          f"{station_name}－{camera_name}"
+                      )
+              else:
+                  display_name = (
+                      camera_name
+                      or station_name
+                      or f"水利署 CCTV {camera_id}"
+                  )
+
+              output.append(
+                  {
+                      "SourceId": 1,
+                      "ID": camera_id,
+                      "Name": display_name,
+                      "Counname": city or "未判定",
+                      "Town_name": district or "未判定",
+                      "Basin_name": basin,
+                      "lat": latitude,
+                      "lng": longitude,
+                      "imageUrl": image_url,
+                      "mediaUrl": image_url,
+                      "status": status,
+                      "stationName": station_name,
+                  }
+              )
+
+          output.sort(
+              key=lambda item: (
+                  item["Counname"],
+                  item["Town_name"],
+                  item["Name"],
+                  item["ID"],
+              )
+          )
+
+          # 避免來源只回傳少量或錯誤資料時覆蓋正式檔案
+          if len(output) < 50:
+              raise RuntimeError(
+                  "有效攝影機數量少於 50，"
+                  "拒絕覆蓋原有資料。"
+                  f"目前只有 {len(output)} 筆。"
+              )
+
+          temporary_file.write_text(
+              json.dumps(
+                  output,
+                  ensure_ascii=False,
+                  indent=2,
+              )
+              + "\n",
+              encoding="utf-8",
+          )
+
+          temporary_file.replace(output_file)
+
+          print(f"來源筆數：{len(rows)}")
+          print(f"有效攝影機：{len(output)}")
+          print(f"略過資料：{skipped}")
+          PY
+
+          rm -f wra-open-data.json
 
       - name: 驗證正式 JSON
         shell: bash
         run: |
           set -euo pipefail
 
-          jq -e '
-            type == "array" and
-            length > 0 and
-            all(.[]; (.SourceId != null) and (.ID != null))
-          ' wra-stations.json >/dev/null
+          python3 <<'PY'
+          import json
+          from pathlib import Path
 
-          echo "水利署站點數量：$(jq 'length' wra-stations.json)"
+          path = Path("wra-stations.json")
+          rows = json.loads(
+              path.read_text(encoding="utf-8")
+          )
+
+          if not isinstance(rows, list):
+              raise RuntimeError(
+                  "wra-stations.json 不是陣列。"
+              )
+
+          if len(rows) < 50:
+              raise RuntimeError(
+                  "wra-stations.json 資料過少。"
+              )
+
+          required = {
+              "SourceId",
+              "ID",
+              "Name",
+              "lat",
+              "lng",
+              "imageUrl",
+          }
+
+          for index, row in enumerate(rows):
+              missing = required - row.keys()
+
+              if missing:
+                  raise RuntimeError(
+                      f"第 {index + 1} 筆缺少欄位："
+                      f"{sorted(missing)}"
+                  )
+
+          print(
+              f"JSON 驗證通過，共 {len(rows)} 支 CCTV。"
+          )
+          PY
 
       - name: 提交更新
         shell: bash
@@ -110,12 +418,29 @@ jobs:
           git add wra-stations.json
 
           if git diff --cached --quiet; then
-            echo "水利署站點資料沒有變更，不需要提交。"
+            echo "水利署 CCTV 資料沒有變更。"
             exit 0
           fi
 
           git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git config user.email \
+            "41898282+github-actions[bot]@users.noreply.github.com"
 
-          git commit -m "chore: 更新水利署 CCTV 站點資料"
-          git push
+          git commit -m \
+            "chore: 更新水利署 CCTV 開放資料"
+
+          for ATTEMPT in 1 2 3; do
+            echo "推送嘗試：$ATTEMPT"
+
+            git pull --rebase origin main
+
+            if git push origin HEAD:main; then
+              echo "水利署 CCTV 資料推送成功。"
+              exit 0
+            fi
+
+            sleep 10
+          done
+
+          echo "::error::重試三次後仍無法推送。"
+          exit 1
