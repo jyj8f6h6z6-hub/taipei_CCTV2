@@ -85,6 +85,12 @@ const CAMERA_TYPES = {
 
 let allCams = [];
 
+/*
+ * 水利署資料需要在 loadData() 與
+ * filteredCams() 之間共用，所以放在函式外。
+ */
+let wraCams = [];
+
 let cameraCounts = {
   road: 0,
   provincial: 0,
@@ -1677,15 +1683,22 @@ function normalizeWraStations(data) {
   ];
 
   return data
-    // 先只保留主要水利署來源
     .filter(item => {
-      return Number(item.SourceId) === 1;
+      const sourceId = Number(
+        item.SourceId ??
+        item.sourceId ??
+        1
+      );
+
+      return sourceId === 1;
     })
 
-    // 再排除名稱中明確標示為外部提供的站點
     .filter(item => {
-      const stationName =
-        String(item.Name || "").trim();
+      const stationName = String(
+        item.Name ||
+        item.name ||
+        ""
+      ).trim();
 
       return !excludedKeywords.some(
         keyword =>
@@ -1694,28 +1707,50 @@ function normalizeWraStations(data) {
     })
 
     .map(item => {
-      const lat = Number(item.lat);
-      const lng = Number(item.lng);
+      const lat = Number(
+        item.lat ??
+        item.latitude ??
+        item.y
+      );
+
+      const lng = Number(
+        item.lng ??
+        item.longitude ??
+        item.x
+      );
+
+      const sourceId = String(
+        item.SourceId ??
+        item.sourceId ??
+        "1"
+      ).trim();
+
+      const stationId = String(
+        item.ID ??
+        item.id ??
+        item.cameraId ??
+        ""
+      ).trim();
+
+      /*
+       * 尋找可能使用的影像網址欄位。
+       */
+      const imageUrl = String(
+        item.imageUrl ||
+        item.mediaUrl ||
+        item.url ||
+        item.ImageURL ||
+        item.ImageUrl ||
+        ""
+      ).trim();
 
       if (
+        !stationId ||
         !Number.isFinite(lat) ||
         !Number.isFinite(lng)
       ) {
         return null;
       }
-
-      const sourceId =
-        String(item.SourceId || "").trim();
-
-      const stationId =
-        String(item.ID || "").trim();
-
-      const mediaUrl = String(
-        item.mediaUrl ||
-        item.imageUrl ||
-        item.ImageURL ||
-        ""
-      ).trim();
 
       return {
         key:
@@ -1725,43 +1760,50 @@ function normalizeWraStations(data) {
         stationId,
         sourceId,
 
-        name:
-          String(
-            item.Name ||
-            `水利署 CCTV ${stationId}`
-          ).trim(),
+        name: String(
+          item.Name ||
+          item.name ||
+          `水利署 CCTV ${stationId}`
+        ).trim(),
 
-        city:
-          String(
-            item.Counname || ""
-          ).trim(),
+        city: String(
+          item.Counname ||
+          item.city ||
+          "未判定"
+        ).trim(),
 
-        district:
-          String(
-            item.Town_name || ""
-          ).trim(),
+        district: String(
+          item.Town_name ||
+          item.district ||
+          "未判定"
+        ).trim(),
 
-        basin:
-          String(
-            item.Basin_name || ""
-          ).trim(),
+        basin: String(
+          item.Basin_name ||
+          item.basinName ||
+          item.basin ||
+          ""
+        ).trim(),
 
         lat,
         lng,
 
-        // 依照你原本欄位名稱，
-        // 若原本使用 x、y 就保留這兩個
         x: lng,
         y: lat,
+
+        /*
+         * 三個欄位都放入同一個影像網址，
+         * 避免其他函式使用不同名稱時讀不到。
+         */
+        url: imageUrl,
+        imageUrl,
+        mediaUrl: imageUrl,
 
         type: "wra",
 
         source:
-          "經濟部水利署政府開放資料",
-
-        url: mediaUrl,
-        imageUrl: mediaUrl,
-        mediaUrl
+          item.source ||
+          "經濟部水利署政府開放資料"
       };
     })
 
@@ -1965,7 +2007,6 @@ async function loadData() {
   let provincialRoadCams = [];
   let freewayCams = [];
   let waterCams = [];
-  let wraCams = [];
   let waterRentalCams = [];
 
   const errors = [];
