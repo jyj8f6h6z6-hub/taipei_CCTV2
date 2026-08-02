@@ -1,11 +1,11 @@
 {
    "metadata" : {
       "authorityCode" : "THB",
-      "generatedAt" : "2026-08-01T20:15:42Z",
+      "generatedAt" : "2026-08-02T20:17:01Z",
       "skipped" : 1,
       "source" : "交通部公路局",
       "sourceUpdateInterval" : "86400",
-      "sourceUpdateTime" : "2026-08-02T04:10:16+08:00",
+      "sourceUpdateTime" : "2026-08-03T04:10:17+08:00",
       "sourceUrl" : "https://cctv-maintain.thb.gov.tw/opendataCCTVs.xml",
       "total" : 2325
    },
@@ -904,9 +904,9 @@
          "locationType" : "6",
          "name" : "省道 CCTV CCTV-12-0150-000-007",
          "source" : "交通部公路局",
-         "streamUrl" : "https://cctv-ss08.thb.gov.tw:443/T15-0K+500",
+         "streamUrl" : "https://cctv-ss07.thb.gov.tw:443/T15-0K+500",
          "type" : "provincial",
-         "url" : "https://cctv-ss08.thb.gov.tw:443/T15-0K+500",
+         "url" : "https://cctv-ss07.thb.gov.tw:443/T15-0K+500",
          "x" : 121.4594,
          "y" : 25.12686
       },
@@ -919,9 +919,9 @@
          "locationType" : "6",
          "name" : "省道 CCTV CCTV-12-0150-000-008",
          "source" : "交通部公路局",
-         "streamUrl" : "https://cctv-ss08.thb.gov.tw:443/T15-0K+750",
+         "streamUrl" : "https://cctv-ss07.thb.gov.tw:443/T15-0K+750",
          "type" : "provincial",
-         "url" : "https://cctv-ss08.thb.gov.tw:443/T15-0K+750",
+         "url" : "https://cctv-ss07.thb.gov.tw:443/T15-0K+750",
          "x" : 121.4578,
          "y" : 25.12588
       },
@@ -934,9 +934,9 @@
          "locationType" : "1",
          "name" : "省道 CCTV CCTV-12-0150-000-010",
          "source" : "交通部公路局",
-         "streamUrl" : "https://cctv-ss08.thb.gov.tw:443/T15-0K+450-2",
+         "streamUrl" : "https://cctv-ss07.thb.gov.tw:443/T15-0K+450-2",
          "type" : "provincial",
-         "url" : "https://cctv-ss08.thb.gov.tw:443/T15-0K+450-2",
+         "url" : "https://cctv-ss07.thb.gov.tw:443/T15-0K+450-2",
          "x" : 121.460131,
          "y" : 25.1274122
       },
@@ -949,9 +949,9 @@
          "locationType" : "1",
          "name" : "省道 CCTV CCTV-12-0150-001-001",
          "source" : "交通部公路局",
-         "streamUrl" : "https://cctv-ss08.thb.gov.tw:443/T15-1K+160",
+         "streamUrl" : "https://cctv-ss07.thb.gov.tw:443/T15-1K+160",
          "type" : "provincial",
-         "url" : "https://cctv-ss08.thb.gov.tw:443/T15-1K+160",
+         "url" : "https://cctv-ss07.thb.gov.tw:443/T15-1K+160",
          "x" : 121.4542498,
          "y" : 25.1236226
       },
@@ -6094,9 +6094,9 @@
          "locationType" : "6",
          "name" : "省道 CCTV CCTV-14-062A-003-020",
          "source" : "交通部公路局",
-         "streamUrl" : "https://cctv-ss08.thb.gov.tw:443/T62A-3K+600",
+         "streamUrl" : "https://cctv-ss07.thb.gov.tw:443/T62A-3K+600",
          "type" : "provincial",
-         "url" : "https://cctv-ss08.thb.gov.tw:443/T62A-3K+600",
+         "url" : "https://cctv-ss07.thb.gov.tw:443/T62A-3K+600",
          "x" : 121.778636,
          "y" : 25.125347
       },
