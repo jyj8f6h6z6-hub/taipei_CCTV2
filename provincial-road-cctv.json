@@ -1,11 +1,11 @@
 {
    "metadata" : {
       "authorityCode" : "THB",
-      "generatedAt" : "2026-08-08T19:45:24Z",
+      "generatedAt" : "2026-08-09T19:49:13Z",
       "skipped" : 1,
       "source" : "交通部公路局",
       "sourceUpdateInterval" : "86400",
-      "sourceUpdateTime" : "2026-08-09T03:10:29+08:00",
+      "sourceUpdateTime" : "2026-08-10T03:10:01+08:00",
       "sourceUrl" : "https://cctv-maintain.thb.gov.tw/opendataCCTVs.xml",
       "total" : 2324
    },
