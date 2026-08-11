@@ -1,5 +1,5 @@
 {
-  "count": 53,
+  "count": 50,
   "results": [
     {
       "id": "PB077",
@@ -281,42 +281,6 @@
       "source": "臺北市政府工務局水利工程處"
     },
     {
-      "id": "PB210",
-      "name": "大湖1號閘門1",
-      "x": 121.607,
-      "y": 25.077,
-      "url": "https://heocctv2.gov.taipei/channel14/snapshot",
-      "type": "water",
-      "source": "臺北市政府工務局水利工程處"
-    },
-    {
-      "id": "PB211",
-      "name": "大湖1號閘門2",
-      "x": 121.607,
-      "y": 25.077,
-      "url": "https://heocctv2.gov.taipei/channel15/snapshot",
-      "type": "water",
-      "source": "臺北市政府工務局水利工程處"
-    },
-    {
-      "id": "PB212",
-      "name": "大湖2號閘門1",
-      "x": 121.607,
-      "y": 25.079,
-      "url": "https://heocctv2.gov.taipei/channel16/snapshot",
-      "type": "water",
-      "source": "臺北市政府工務局水利工程處"
-    },
-    {
-      "id": "PB213",
-      "name": "大湖2號閘門2",
-      "x": 121.607,
-      "y": 25.079,
-      "url": "https://heocctv2.gov.taipei/channel17/snapshot",
-      "type": "water",
-      "source": "臺北市政府工務局水利工程處"
-    },
-    {
       "id": "PB218",
       "name": "碧湖公園1",
       "x": 121.583,
@@ -376,6 +340,15 @@
       "x": 121.544772,
       "y": 25.085373,
       "url": "https://heocctv2.gov.taipei/channel24/snapshot",
+      "type": "water",
+      "source": "臺北市政府工務局水利工程處"
+    },
+    {
+      "id": "PB242",
+      "name": "基隆河內二疏散門",
+      "x": 121.617869,
+      "y": 25.06578,
+      "url": "https://heocctv4.gov.taipei/channel10/snapshot",
       "type": "water",
       "source": "臺北市政府工務局水利工程處"
     },
