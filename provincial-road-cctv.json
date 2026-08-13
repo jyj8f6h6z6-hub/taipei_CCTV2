@@ -1,13 +1,13 @@
 {
    "metadata" : {
       "authorityCode" : "THB",
-      "generatedAt" : "2026-08-12T20:05:06Z",
+      "generatedAt" : "2026-08-13T19:59:54Z",
       "skipped" : 0,
       "source" : "交通部公路局",
       "sourceUpdateInterval" : "86400",
-      "sourceUpdateTime" : "2026-08-13T03:10:07+08:00",
+      "sourceUpdateTime" : "2026-08-14T03:10:09+08:00",
       "sourceUrl" : "https://cctv-maintain.thb.gov.tw/opendataCCTVs.xml",
-      "total" : 2325
+      "total" : 2324
    },
    "results" : [
       {
@@ -9733,21 +9733,6 @@
       {
          "city" : "",
          "district" : "",
-         "id" : "CCTV-21-1280-002-001",
-         "key" : "provincial-CCTV-21-1280-002-001",
-         "linkId" : "4012800000285K",
-         "locationType" : "6",
-         "name" : "省道 CCTV CCTV-21-1280-002-001",
-         "source" : "交通部公路局",
-         "streamUrl" : "https://cctv-ss03.thb.gov.tw:443/C128-2K+900",
-         "type" : "provincial",
-         "url" : "https://cctv-ss03.thb.gov.tw:443/C128-2K+900",
-         "x" : 120.7039809,
-         "y" : 24.4968958
-      },
-      {
-         "city" : "",
-         "district" : "",
          "id" : "CCTV-22-0010-143-002",
          "key" : "provincial-CCTV-22-0010-143-002",
          "linkId" : "3000100114383K",
@@ -17533,11 +17518,11 @@
       {
          "city" : "",
          "district" : "",
-         "id" : "CCTV-32-0170-272-002",
-         "key" : "provincial-CCTV-32-0170-272-002",
+         "id" : "CCTV-32-0170-272-003",
+         "key" : "provincial-CCTV-32-0170-272-003",
          "linkId" : "6761380300030T",
          "locationType" : "6",
-         "name" : "省道 CCTV CCTV-32-0170-272-002",
+         "name" : "省道 CCTV CCTV-32-0170-272-003",
          "source" : "交通部公路局",
          "streamUrl" : "https://cctv-ss05.thb.gov.tw:443/T17-272K+300",
          "type" : "provincial",
