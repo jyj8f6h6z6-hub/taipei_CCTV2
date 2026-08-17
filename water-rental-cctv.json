@@ -1,5 +1,5 @@
 {
-  "count": 110,
+  "count": 108,
   "sourceCount": 131,
   "results": [
     {
@@ -1165,34 +1165,6 @@
       "source": "臺北市政府工務局水利工程處（水情租賃 CCTV）"
     },
     {
-      "id": "rental-5002a09a3dd64e62",
-      "name": "雙溪左岸河雙21鐵便橋旁(鏡頭往下游)(科技執法))",
-      "x": 121.5115728,
-      "y": 25.0975127,
-      "url": "https://video.nvr.taifo.com.tw/memfs/e7d224fb-7171-4070-bce6-04db301ffdd3.jpg",
-      "imageUrl": "https://video.nvr.taifo.com.tw/memfs/e7d224fb-7171-4070-bce6-04db301ffdd3.jpg",
-      "streamUrl": "https://video.nvr.taifo.com.tw/memfs/e7d224fb-7171-4070-bce6-04db301ffdd3.m3u8",
-      "type": "water-rental",
-      "category": "磺港溪、磺溪及雙溪",
-      "coordinateKind": "enforcement",
-      "coordinateNo": "15",
-      "source": "臺北市政府工務局水利工程處（水情租賃 CCTV）"
-    },
-    {
-      "id": "rental-5bee948a2d61efa4",
-      "name": "雙溪左岸河雙21鐵便橋旁(鏡頭往上游)(科技執法))",
-      "x": 121.5111564,
-      "y": 25.097379,
-      "url": "https://video.nvr.taifo.com.tw/memfs/cb1ee1f4-adef-4bfd-8a2b-3263d62bdf3d.jpg",
-      "imageUrl": "https://video.nvr.taifo.com.tw/memfs/cb1ee1f4-adef-4bfd-8a2b-3263d62bdf3d.jpg",
-      "streamUrl": "https://video.nvr.taifo.com.tw/memfs/cb1ee1f4-adef-4bfd-8a2b-3263d62bdf3d.m3u8",
-      "type": "water-rental",
-      "category": "磺港溪、磺溪及雙溪",
-      "coordinateKind": "enforcement",
-      "coordinateNo": "16",
-      "source": "臺北市政府工務局水利工程處（水情租賃 CCTV）"
-    },
-    {
       "id": "rental-b453e9081fa2c3bb",
       "name": "內溝溪-09-往行人自行車道方向",
       "x": 121.623656,
@@ -1543,7 +1515,7 @@
       "source": "臺北市政府工務局水利工程處（水情租賃 CCTV）"
     }
   ],
-  "unmatchedCount": 3,
+  "unmatchedCount": 5,
   "unmatched": [
     {
       "name": "大佳10號閘門(科技執法)",
@@ -1560,6 +1532,20 @@
       "lookupKey": "新店1號(外"
     },
     {
+      "name": "百齡右岸鐵便橋旁(鏡頭往下游)(科技執法)",
+      "category": "磺港溪、磺溪及雙溪",
+      "streamUrl": "https://video.nvr.taifo.com.tw/memfs/e7d224fb-7171-4070-bce6-04db301ffdd3.m3u8",
+      "imageUrl": "https://video.nvr.taifo.com.tw/memfs/e7d224fb-7171-4070-bce6-04db301ffdd3.jpg",
+      "lookupKey": "百齡右岸鐵便橋旁(鏡頭往下游)"
+    },
+    {
+      "name": "百齡右岸鐵便橋旁(鏡頭往上游)(科技執法)",
+      "category": "磺港溪、磺溪及雙溪",
+      "streamUrl": "https://video.nvr.taifo.com.tw/memfs/cb1ee1f4-adef-4bfd-8a2b-3263d62bdf3d.m3u8",
+      "imageUrl": "https://video.nvr.taifo.com.tw/memfs/cb1ee1f4-adef-4bfd-8a2b-3263d62bdf3d.jpg",
+      "lookupKey": "百齡右岸鐵便橋旁(鏡頭往上游)"
+    },
+    {
       "name": "西園路二段52巷",
       "category": "公園或沉砂池",
       "streamUrl": "https://video.nvr.taifo.com.tw/memfs/063946ca-1ceb-4bdb-94a2-a9782e581174.m3u8",
@@ -1567,7 +1553,7 @@
       "lookupKey": "西園路二段52巷"
     }
   ],
-  "unusedCoordinateCount": 3,
+  "unusedCoordinateCount": 5,
   "unusedCoordinates": [
     {
       "kind": "water",
@@ -1589,6 +1575,20 @@
       "stationName": "科技執法CCTV3-大佳河濱公園3",
       "longitude": 121.5356536,
       "latitude": 25.0743731
+    },
+    {
+      "kind": "enforcement",
+      "number": "15",
+      "stationName": "科技執法CCTV15-雙溪左岸河雙21鐵便橋旁(鏡頭往下游)",
+      "longitude": 121.5115728,
+      "latitude": 25.0975127
+    },
+    {
+      "kind": "enforcement",
+      "number": "16",
+      "stationName": "科技執法CCTV16-雙溪左岸河雙21鐵便橋旁(鏡頭往上游)",
+      "longitude": 121.5111564,
+      "latitude": 25.097379
     }
   ]
 }
