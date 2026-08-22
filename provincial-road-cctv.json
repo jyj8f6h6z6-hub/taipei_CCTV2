@@ -1,11 +1,11 @@
 {
    "metadata" : {
       "authorityCode" : "THB",
-      "generatedAt" : "2026-08-21T19:38:44Z",
+      "generatedAt" : "2026-08-22T19:36:38Z",
       "skipped" : 0,
       "source" : "交通部公路局",
       "sourceUpdateInterval" : "86400",
-      "sourceUpdateTime" : "2026-08-22T03:10:24+08:00",
+      "sourceUpdateTime" : "2026-08-23T03:10:26+08:00",
       "sourceUrl" : "https://cctv-maintain.thb.gov.tw/opendataCCTVs.xml",
       "total" : 2325
    },
@@ -6358,11 +6358,11 @@
       {
          "city" : "",
          "district" : "",
-         "id" : "CCTV-15-0030-041-001",
-         "key" : "provincial-CCTV-15-0030-041-001",
-         "linkId" : "6370160500020H",
+         "id" : "CCTV-15-0030-041-002",
+         "key" : "provincial-CCTV-15-0030-041-002",
+         "linkId" : "3000300004095H",
          "locationType" : "6",
-         "name" : "省道 CCTV CCTV-15-0030-041-001",
+         "name" : "省道 CCTV CCTV-15-0030-041-002",
          "source" : "交通部公路局",
          "streamUrl" : "https://cctv-ss02.thb.gov.tw:443/T3-41K+050",
          "type" : "provincial",
