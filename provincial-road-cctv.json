@@ -1,11 +1,11 @@
 {
    "metadata" : {
       "authorityCode" : "THB",
-      "generatedAt" : "2026-08-26T22:10:45Z",
+      "generatedAt" : "2026-08-28T03:36:04Z",
       "skipped" : 0,
       "source" : "交通部公路局",
       "sourceUpdateInterval" : "86400",
-      "sourceUpdateTime" : "2026-08-27T06:10:04+08:00",
+      "sourceUpdateTime" : "2026-08-28T11:10:07+08:00",
       "sourceUrl" : "https://cctv-maintain.thb.gov.tw/opendataCCTVs.xml",
       "total" : 2324
    },
@@ -2458,21 +2458,6 @@
       {
          "city" : "",
          "district" : "",
-         "id" : "CCTV-12-0650-010-004",
-         "key" : "provincial-CCTV-12-0650-010-004",
-         "linkId" : "1006500001020F",
-         "locationType" : "6",
-         "name" : "省道 CCTV CCTV-12-0650-010-004",
-         "source" : "交通部公路局",
-         "streamUrl" : "https://cctv-ss03.thb.gov.tw:443/T65-10K+811",
-         "type" : "provincial",
-         "url" : "https://cctv-ss03.thb.gov.tw:443/T65-10K+811",
-         "x" : 121.4362,
-         "y" : 24.97682
-      },
-      {
-         "city" : "",
-         "district" : "",
          "id" : "CCTV-12-0650-010-005",
          "key" : "provincial-CCTV-12-0650-010-005",
          "linkId" : "1006500001020F",
@@ -2514,6 +2499,21 @@
          "url" : "https://cctv-ss03.thb.gov.tw:443/T65-10K+126",
          "x" : 121.439,
          "y" : 24.98241
+      },
+      {
+         "city" : "",
+         "district" : "",
+         "id" : "CCTV-12-0650-010-008",
+         "key" : "provincial-CCTV-12-0650-010-008",
+         "linkId" : "1006500001020F",
+         "locationType" : "6",
+         "name" : "省道 CCTV CCTV-12-0650-010-008",
+         "source" : "交通部公路局",
+         "streamUrl" : "https://cctv-ss03.thb.gov.tw:443/T65-10K+811",
+         "type" : "provincial",
+         "url" : "https://cctv-ss03.thb.gov.tw:443/T65-10K+811",
+         "x" : 121.4362,
+         "y" : 24.97682
       },
       {
          "city" : "",
@@ -18465,7 +18465,7 @@
          "district" : "",
          "id" : "CCTV-33-0110-117-001",
          "key" : "provincial-CCTV-33-0110-117-001",
-         "linkId" : "3001100111785V",
+         "linkId" : "3001100011785V",
          "locationType" : "6",
          "name" : "省道 CCTV CCTV-33-0110-117-001",
          "source" : "交通部公路局",
