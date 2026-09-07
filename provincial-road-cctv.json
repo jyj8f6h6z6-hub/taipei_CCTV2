@@ -1,13 +1,13 @@
 {
    "metadata" : {
       "authorityCode" : "THB",
-      "generatedAt" : "2026-09-06T21:22:35Z",
+      "generatedAt" : "2026-09-07T22:02:20Z",
       "skipped" : 0,
       "source" : "交通部公路局",
       "sourceUpdateInterval" : "86400",
-      "sourceUpdateTime" : "2026-09-07T05:10:26+08:00",
+      "sourceUpdateTime" : "2026-09-08T05:10:28+08:00",
       "sourceUrl" : "https://cctv-maintain.thb.gov.tw/opendataCCTVs.xml",
-      "total" : 2323
+      "total" : 2326
    },
    "results" : [
       {
@@ -11218,21 +11218,6 @@
       {
          "city" : "",
          "district" : "",
-         "id" : "CCTV-23-0170-020-001",
-         "key" : "provincial-CCTV-23-0170-020-001",
-         "linkId" : "3001700002002N",
-         "locationType" : "6",
-         "name" : "省道 CCTV CCTV-23-0170-020-001",
-         "source" : "交通部公路局",
-         "streamUrl" : "https://cctv-ss08.thb.gov.tw:443/T17-020K+900",
-         "type" : "provincial",
-         "url" : "https://cctv-ss08.thb.gov.tw:443/T17-020K+900",
-         "x" : 120.493759,
-         "y" : 24.171519
-      },
-      {
-         "city" : "",
-         "district" : "",
          "id" : "CCTV-23-0170-020-002",
          "key" : "provincial-CCTV-23-0170-020-002",
          "linkId" : "6586300000000N",
@@ -22183,6 +22168,21 @@
       {
          "city" : "",
          "district" : "",
+         "id" : "CCTV-37-0090-399-001",
+         "key" : "provincial-CCTV-37-0090-399-001",
+         "linkId" : "3000900039864V",
+         "locationType" : "1",
+         "name" : "省道 CCTV CCTV-37-0090-399-001",
+         "source" : "交通部公路局",
+         "streamUrl" : "https://cctv-ss07.thb.gov.tw:443/T9-399K+100",
+         "type" : "provincial",
+         "url" : "https://cctv-ss07.thb.gov.tw:443/T9-399K+100",
+         "x" : 120.96469,
+         "y" : 22.52048
+      },
+      {
+         "city" : "",
+         "district" : "",
          "id" : "CCTV-37-0090-400-003",
          "key" : "provincial-CCTV-37-0090-400-003",
          "linkId" : "3000900040010V",
@@ -22228,6 +22228,21 @@
       {
          "city" : "",
          "district" : "",
+         "id" : "CCTV-37-0090-402-001",
+         "key" : "provincial-CCTV-37-0090-402-001",
+         "linkId" : "3000900040262V",
+         "locationType" : "1",
+         "name" : "省道 CCTV CCTV-37-0090-402-001",
+         "source" : "交通部公路局",
+         "streamUrl" : "https://cctv-ss07.thb.gov.tw:443/T9-402K+610",
+         "type" : "provincial",
+         "url" : "https://cctv-ss07.thb.gov.tw:443/T9-402K+610",
+         "x" : 120.95364,
+         "y" : 22.48816
+      },
+      {
+         "city" : "",
+         "district" : "",
          "id" : "CCTV-37-0090-403-001",
          "key" : "provincial-CCTV-37-0090-403-001",
          "linkId" : "3000900140262V",
@@ -22243,6 +22258,21 @@
       {
          "city" : "",
          "district" : "",
+         "id" : "CCTV-37-0090-403-002",
+         "key" : "provincial-CCTV-37-0090-403-002",
+         "linkId" : "3000900040362V",
+         "locationType" : "1",
+         "name" : "省道 CCTV CCTV-37-0090-403-002",
+         "source" : "交通部公路局",
+         "streamUrl" : "https://cctv-ss07.thb.gov.tw:443/T9-403K+600",
+         "type" : "provincial",
+         "url" : "https://cctv-ss07.thb.gov.tw:443/T9-403K+600",
+         "x" : 120.95097,
+         "y" : 22.47925
+      },
+      {
+         "city" : "",
+         "district" : "",
          "id" : "CCTV-37-0090-404-002",
          "key" : "provincial-CCTV-37-0090-404-002",
          "linkId" : "3000900140362V",
@@ -22254,6 +22284,21 @@
          "url" : "https://cctv-ss05.thb.gov.tw:443/T9-404K+600",
          "x" : 120.948814,
          "y" : 22.471273
+      },
+      {
+         "city" : "",
+         "district" : "",
+         "id" : "CCTV-37-0090-404-003",
+         "key" : "provincial-CCTV-37-0090-404-003",
+         "linkId" : "3000900040362V",
+         "locationType" : "1",
+         "name" : "省道 CCTV CCTV-37-0090-404-003",
+         "source" : "交通部公路局",
+         "streamUrl" : "https://cctv-ss07.thb.gov.tw:443/T9-404K+340",
+         "type" : "provincial",
+         "url" : "https://cctv-ss07.thb.gov.tw:443/T9-404K+340",
+         "x" : 120.94959,
+         "y" : 22.47382
       },
       {
          "city" : "",
@@ -22393,6 +22438,21 @@
       {
          "city" : "",
          "district" : "",
+         "id" : "CCTV-37-0090-416-004",
+         "key" : "provincial-CCTV-37-0090-416-004",
+         "linkId" : "3000900041581V",
+         "locationType" : "1",
+         "name" : "省道 CCTV CCTV-37-0090-416-004",
+         "source" : "交通部公路局",
+         "streamUrl" : "https://cctv-ss07.thb.gov.tw:443/T9-416K+800-1",
+         "type" : "provincial",
+         "url" : "https://cctv-ss07.thb.gov.tw:443/T9-416K+800-1",
+         "x" : 120.91059,
+         "y" : 22.37275
+      },
+      {
+         "city" : "",
+         "district" : "",
          "id" : "CCTV-37-0090-417-001",
          "key" : "provincial-CCTV-37-0090-417-001",
          "linkId" : "3000900141770V",
@@ -22404,6 +22464,21 @@
          "url" : "https://cctv-ss07.thb.gov.tw:443/T9-417K+900",
          "x" : 120.907341,
          "y" : 22.363427
+      },
+      {
+         "city" : "",
+         "district" : "",
+         "id" : "CCTV-37-0090-417-002",
+         "key" : "provincial-CCTV-37-0090-417-002",
+         "linkId" : "3000900041581V",
+         "locationType" : "1",
+         "name" : "省道 CCTV CCTV-37-0090-417-002",
+         "source" : "交通部公路局",
+         "streamUrl" : "https://cctv-ss07.thb.gov.tw:443/T9-417K+300",
+         "type" : "provincial",
+         "url" : "https://cctv-ss07.thb.gov.tw:443/T9-417K+300",
+         "x" : 120.90951,
+         "y" : 22.36837
       },
       {
          "city" : "",
@@ -22494,6 +22569,21 @@
          "url" : "https://cctv-ss07.thb.gov.tw:443/T9-420K+200",
          "x" : 120.89862,
          "y" : 22.3451
+      },
+      {
+         "city" : "",
+         "district" : "",
+         "id" : "CCTV-37-0090-420-004",
+         "key" : "provincial-CCTV-37-0090-420-004",
+         "linkId" : "6841140100000V",
+         "locationType" : "1",
+         "name" : "省道 CCTV CCTV-37-0090-420-004",
+         "source" : "交通部公路局",
+         "streamUrl" : "https://cctv-ss07.thb.gov.tw:443/T9-420K+980-1",
+         "type" : "provincial",
+         "url" : "https://cctv-ss07.thb.gov.tw:443/T9-420K+980-1",
+         "x" : 120.89322,
+         "y" : 22.34101
       },
       {
          "city" : "",
@@ -32158,21 +32248,6 @@
       {
          "city" : "",
          "district" : "",
-         "id" : "CCTV-53-0610-282-001",
-         "key" : "provincial-CCTV-53-0610-282-001",
-         "linkId" : "1006100027529D",
-         "locationType" : "6",
-         "name" : "省道 CCTV CCTV-53-0610-282-001",
-         "source" : "交通部公路局",
-         "streamUrl" : "https://cctv-ss06.thb.gov.tw:443/T61-282K+644",
-         "type" : "provincial",
-         "url" : "https://cctv-ss06.thb.gov.tw:443/T61-282K+644",
-         "x" : 120.13292,
-         "y" : 23.28802
-      },
-      {
-         "city" : "",
-         "district" : "",
          "id" : "CCTV-53-0610-283-001",
          "key" : "provincial-CCTV-53-0610-283-001",
          "linkId" : "1006100127629D",
@@ -33373,36 +33448,6 @@
       {
          "city" : "",
          "district" : "",
-         "id" : "CCTV-54-0610-297-001",
-         "key" : "provincial-CCTV-54-0610-297-001",
-         "linkId" : "1006100028929D",
-         "locationType" : "6",
-         "name" : "省道 CCTV CCTV-54-0610-297-001",
-         "source" : "交通部公路局",
-         "streamUrl" : "https://cctv-ss06.thb.gov.tw:443/T61-297K+300",
-         "type" : "provincial",
-         "url" : "https://cctv-ss06.thb.gov.tw:443/T61-297K+300",
-         "x" : 120.08947,
-         "y" : 23.16539
-      },
-      {
-         "city" : "",
-         "district" : "",
-         "id" : "CCTV-54-0610-298-001",
-         "key" : "provincial-CCTV-54-0610-298-001",
-         "linkId" : "4017310100814D",
-         "locationType" : "6",
-         "name" : "省道 CCTV CCTV-54-0610-298-001",
-         "source" : "交通部公路局",
-         "streamUrl" : "https://cctv-ss06.thb.gov.tw:443/T61-298K+580",
-         "type" : "provincial",
-         "url" : "https://cctv-ss06.thb.gov.tw:443/T61-298K+580",
-         "x" : 120.08965,
-         "y" : 23.1539
-      },
-      {
-         "city" : "",
-         "district" : "",
          "id" : "CCTV-54-0610-298-003",
          "key" : "provincial-CCTV-54-0610-298-003",
          "linkId" : "1006100029137D",
@@ -33414,21 +33459,6 @@
          "url" : "https://cctv-ss06.thb.gov.tw:443/T61-298K+720(S)",
          "x" : 120.08945,
          "y" : 23.15267
-      },
-      {
-         "city" : "",
-         "district" : "",
-         "id" : "CCTV-54-0610-299-001",
-         "key" : "provincial-CCTV-54-0610-299-001",
-         "linkId" : "1006100129121D",
-         "locationType" : "6",
-         "name" : "省道 CCTV CCTV-54-0610-299-001",
-         "source" : "交通部公路局",
-         "streamUrl" : "https://cctv-ss06.thb.gov.tw:443/T61-299K+495",
-         "type" : "provincial",
-         "url" : "https://cctv-ss06.thb.gov.tw:443/T61-299K+495",
-         "x" : 120.08956,
-         "y" : 23.14564
       },
       {
          "city" : "",
@@ -33534,6 +33564,21 @@
          "url" : "https://cctv-ss08.thb.gov.tw:443/T86-5K+576",
          "x" : 120.22652,
          "y" : 22.932817
+      },
+      {
+         "city" : "",
+         "district" : "",
+         "id" : "CCTV-54-0860-006-002",
+         "key" : "provincial-CCTV-54-0860-006-002",
+         "linkId" : "1008600000610D",
+         "locationType" : "4",
+         "name" : "省道 CCTV CCTV-54-0860-006-002",
+         "source" : "交通部公路局",
+         "streamUrl" : "https://cctv-ss08.thb.gov.tw:443/T86-6K+319",
+         "type" : "provincial",
+         "url" : "https://cctv-ss08.thb.gov.tw:443/T86-6K+319",
+         "x" : 120.232778,
+         "y" : 22.936389
       },
       {
          "city" : "",
