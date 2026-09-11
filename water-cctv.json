@@ -1,5 +1,5 @@
 {
-  "count": 50,
+  "count": 49,
   "results": [
     {
       "id": "PB077",
@@ -304,15 +304,6 @@
       "x": 121.583,
       "y": 25.08,
       "url": "https://heocctv2.gov.taipei/channel36/snapshot",
-      "type": "water",
-      "source": "臺北市政府工務局水利工程處"
-    },
-    {
-      "id": "PB233",
-      "name": "雙溪右岸復興橋",
-      "x": 121.536723,
-      "y": 25.100909,
-      "url": "https://heocctv4.gov.taipei/channel1/snapshot",
       "type": "water",
       "source": "臺北市政府工務局水利工程處"
     },
