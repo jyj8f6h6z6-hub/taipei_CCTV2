@@ -1,6 +1,6 @@
 {
   "count": 108,
-  "sourceCount": 131,
+  "sourceCount": 132,
   "results": [
     {
       "id": "rental-cc27f1a62bd9e34c",
@@ -1515,7 +1515,7 @@
       "source": "臺北市政府工務局水利工程處（水情租賃 CCTV）"
     }
   ],
-  "unmatchedCount": 5,
+  "unmatchedCount": 6,
   "unmatched": [
     {
       "name": "大佳10號閘門(科技執法)",
@@ -1530,6 +1530,13 @@
       "streamUrl": "https://video.nvr.taifo.com.tw/memfs/1e33f60f-79de-408b-99e5-23d20f46615e.m3u8",
       "imageUrl": "https://video.nvr.taifo.com.tw/memfs/1e33f60f-79de-408b-99e5-23d20f46615e.jpg",
       "lookupKey": "新店1號(外"
+    },
+    {
+      "name": "磺港溪出口",
+      "category": "磺港溪、磺溪及雙溪",
+      "streamUrl": "https://stream.nvr.taifo.com.tw/camera/hls/N098/9b6689d1-778b-40b1-b084-3ea6f48ecaa4/index.m3u8",
+      "imageUrl": "https://stream.nvr.taifo.com.tw/camera/screenshot/N098/2b916a49-39e4-4300-bd20-dcd7bb22d68a.jpg",
+      "lookupKey": "磺港溪出口"
     },
     {
       "name": "百齡右岸鐵便橋旁(鏡頭往下游)(科技執法)",
