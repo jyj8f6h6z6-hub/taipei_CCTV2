@@ -1534,7 +1534,7 @@
     {
       "name": "磺港溪出口",
       "category": "磺港溪、磺溪及雙溪",
-      "streamUrl": "https://stream.nvr.taifo.com.tw/camera/hls/N098/9b6689d1-778b-40b1-b084-3ea6f48ecaa4/index.m3u8",
+      "streamUrl": "https://stream.nvr.taifo.com.tw/hls/teekjs123/index.m3u8",
       "imageUrl": "https://stream.nvr.taifo.com.tw/camera/screenshot/N098/2b916a49-39e4-4300-bd20-dcd7bb22d68a.jpg",
       "lookupKey": "磺港溪出口"
     },
