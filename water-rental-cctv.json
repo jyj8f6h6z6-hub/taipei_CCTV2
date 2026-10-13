@@ -1,6 +1,6 @@
 {
   "count": 108,
-  "sourceCount": 132,
+  "sourceCount": 135,
   "results": [
     {
       "id": "rental-cc27f1a62bd9e34c",
@@ -1515,7 +1515,7 @@
       "source": "臺北市政府工務局水利工程處（水情租賃 CCTV）"
     }
   ],
-  "unmatchedCount": 6,
+  "unmatchedCount": 9,
   "unmatched": [
     {
       "name": "大佳10號閘門(科技執法)",
@@ -1530,6 +1530,27 @@
       "streamUrl": "https://video.nvr.taifo.com.tw/memfs/1e33f60f-79de-408b-99e5-23d20f46615e.m3u8",
       "imageUrl": "https://video.nvr.taifo.com.tw/memfs/1e33f60f-79de-408b-99e5-23d20f46615e.jpg",
       "lookupKey": "新店1號(外"
+    },
+    {
+      "name": "磺港溪分流入口",
+      "category": "磺港溪、磺溪及雙溪",
+      "streamUrl": "https://stream.nvr.taifo.com.tw/hls/sk120ckzn/index.m3u8",
+      "imageUrl": "https://stream.nvr.taifo.com.tw/camera/screenshot/N100/f966c1dd-68e5-4b3b-9d11-bae128618d66.jpg",
+      "lookupKey": "磺港溪分流入口"
+    },
+    {
+      "name": "磺港溪分流入口下游",
+      "category": "磺港溪、磺溪及雙溪",
+      "streamUrl": "https://stream.nvr.taifo.com.tw/hls/bvm108dzo/index.m3u8",
+      "imageUrl": "https://stream.nvr.taifo.com.tw/camera/screenshot/N101/a5063aff-47c6-4163-b307-f22e206e34fb.jpg",
+      "lookupKey": "磺港溪分流入口下游"
+    },
+    {
+      "name": "磺港溪出口(抽水機)",
+      "category": "磺港溪、磺溪及雙溪",
+      "streamUrl": "https://stream.nvr.taifo.com.tw/hls/ui23jks8k2/index.m3u8",
+      "imageUrl": "https://stream.nvr.taifo.com.tw/camera/screenshot/N099/625f5e10-07c0-42d8-92fa-4d8e86702fae.jpg",
+      "lookupKey": "磺港溪出口(抽水機)"
     },
     {
       "name": "磺港溪出口",
