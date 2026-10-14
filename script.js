@@ -6,7 +6,7 @@
  *   3. 在 CHANGELOG.md 記錄這次改了什麼
  * ========================================================= */
 
-const APP_VERSION = "2.0.0";
+const APP_VERSION = "2.1.0";
 const APP_UPDATED = "2026-10-14";
 
 
@@ -2572,6 +2572,17 @@ if (appVersionElement) {
 }
 
 console.log(`即時 CCTV 地圖 v${APP_VERSION}（${APP_UPDATED}）`);
+
+/* 註冊 Service Worker（第二次開啟後更快、更省流量） */
+if ("serviceWorker" in navigator) {
+  window.addEventListener("load", () => {
+    navigator.serviceWorker
+      .register("./sw.js")
+      .catch(error => {
+        console.warn("Service Worker 註冊失敗：", error);
+      });
+  });
+}
 
 initPlaceAutocomplete();
 initMap();
