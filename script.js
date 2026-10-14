@@ -6,7 +6,7 @@
  *   3. 在 CHANGELOG.md 記錄這次改了什麼
  * ========================================================= */
 
-const APP_VERSION = "2.1.0";
+const APP_VERSION = "2.2.0";
 const APP_UPDATED = "2026-10-14";
 
 
@@ -1920,19 +1920,33 @@ function openInfo(marker) {
         ▶ 開啟動態影像
       </button>
     `;
-  } else if (mediaUrl) {
-    actionHtml = `
+} else if (mediaUrl) {
+  actionHtml = `
+    <a
+      class="iw-btn"
+      href="${esc(mediaUrl)}"
+      target="_blank"
+      rel="noopener noreferrer"
+      ${saveViewAttribute}
+    >
+      ${buttonText}
+    </a>
+  `;
+
+  // 有另外的預覽圖時，多提供一個備用按鈕
+  if (cam.imageUrl && cam.imageUrl !== mediaUrl) {
+    actionHtml += `
       <a
-        class="iw-btn"
-        href="${esc(mediaUrl)}"
+        class="iw-btn iw-btn-secondary"
+        href="${esc(cam.imageUrl)}"
         target="_blank"
         rel="noopener noreferrer"
-        ${saveViewAttribute}
       >
-        ${buttonText}
+        🖼 查看預覽圖
       </a>
     `;
-  } else {
+  }
+} else {
     actionHtml = `
       <div class="iw-no-media">
         ${
