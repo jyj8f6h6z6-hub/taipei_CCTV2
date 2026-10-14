@@ -2560,6 +2560,89 @@ window.addEventListener("pageshow", event => {
 
 
 /* =========================================================
+ * 更新通知
+ * ========================================================= */
+
+/* 在畫面下方顯示通知條 */
+function showUpdateBanner(message, buttonText, onClick) {
+  let banner = document.getElementById("updateBanner");
+
+  if (!banner) {
+    banner = document.createElement("div");
+    banner.id = "updateBanner";
+    banner.className = "update-banner";
+    banner.setAttribute("role", "status");
+    document.body.appendChild(banner);
+  }
+
+  banner.innerHTML = `
+    <span>${esc(message)}</span>
+    ${
+      buttonText
+        ? `<button type="button" class="update-banner-btn">${esc(buttonText)}</button>`
+        : ""
+    }
+    <button type="button" class="update-banner-close" aria-label="關閉">×</button>
+  `;
+
+  if (buttonText && onClick) {
+    banner
+      .querySelector(".update-banner-btn")
+      .addEventListener("click", onClick);
+  }
+
+  banner
+    .querySelector(".update-banner-close")
+    .addEventListener("click", () => banner.remove());
+}
+
+/* 版本更新提示：和上次開啟時的版號比對 */
+function checkVersionChange() {
+  const VERSION_KEY = "cctv-map-version";
+
+  try {
+    const lastVersion = localStorage.getItem(VERSION_KEY);
+
+    if (lastVersion && lastVersion !== APP_VERSION) {
+      showUpdateBanner(`網站已更新至 v${APP_VERSION}`);
+
+      setTimeout(() => {
+        document.getElementById("updateBanner")?.remove();
+      }, 5000);
+    }
+
+    localStorage.setItem(VERSION_KEY, APP_VERSION);
+
+  } catch (error) {
+    // 無痕模式等情況可能無法使用 localStorage，略過即可
+  }
+}
+
+/* 資料更新提示：Service Worker 發現資料有新版時通知 */
+function listenForDataUpdates() {
+  if (!("serviceWorker" in navigator)) {
+    return;
+  }
+
+  let notified = false;
+
+  navigator.serviceWorker.addEventListener("message", event => {
+    if (event.data?.type !== "data-updated" || notified) {
+      return;
+    }
+
+    // 好幾個檔案同時更新時，只顯示一次
+    notified = true;
+
+    showUpdateBanner(
+      "攝影機資料有更新",
+      "重新載入",
+      () => location.reload()
+    );
+  });
+}
+
+/* =========================================================
  * 正式啟動
  * ========================================================= */
 
@@ -2583,6 +2666,9 @@ if ("serviceWorker" in navigator) {
       });
   });
 }
+
+checkVersionChange();
+listenForDataUpdates();
 
 initPlaceAutocomplete();
 initMap();

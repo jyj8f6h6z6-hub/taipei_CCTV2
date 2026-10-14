@@ -1,9 +1,12 @@
 /*
- * Service Worker：讓網站第二次開啟後幾乎秒開、更省流量
+ * Service Worker：讓網站開啟更快、更省流量，並自動偵測更新
  *
  * 策略：
- * - 本站檔案（網頁、程式、資料）：先用手機裡存的版本立刻顯示，
- *   同時在背景下載新版，下次開啟就是新的
+ * - 網頁本身（index.html）：每次先上網檢查新版，
+ *   3 秒內沒回應才用存檔 → 網站改版會自動生效
+ * - 程式與資料（script.js、style.css、data/*.json）：
+ *   先用存檔立刻顯示，背景下載新版；
+ *   若攝影機資料有變化，通知網頁顯示「資料有更新」
  * - 外部程式庫（Leaflet、行政區邊界）：版本固定，存一次就一直用
  * - 其他（Google 地圖、地圖底圖、CCTV 影像）：不經手，照常連網
  *
@@ -12,6 +15,9 @@
  */
 
 const CACHE_NAME = "cctv-map-cache-v1";
+
+/* 網頁本身等待網路的最長時間（毫秒） */
+const NETWORK_TIMEOUT = 3000;
 
 /* 這些網站上的程式庫版本固定，可以放心長期保存 */
 const CDN_HOSTS = [
@@ -65,12 +71,18 @@ self.addEventListener("fetch", event => {
   const scopePath =
     new URL(self.registration.scope).pathname;
 
-  // 本站檔案：先顯示存檔，背景更新
+  // 本站檔案
   if (
     url.origin === self.location.origin &&
     url.pathname.startsWith(scopePath)
   ) {
-    event.respondWith(staleWhileRevalidate(event));
+    if (request.mode === "navigate") {
+      // 網頁本身：網路優先，確保改版自動生效
+      event.respondWith(networkFirst(event));
+    } else {
+      // 程式與資料：先顯示存檔，背景更新
+      event.respondWith(staleWhileRevalidate(event));
+    }
     return;
   }
 
@@ -83,19 +95,62 @@ self.addEventListener("fetch", event => {
 });
 
 
+/* 網路優先：先上網，逾時或失敗才用存檔 */
+async function networkFirst(event) {
+  const request = event.request;
+  const cache = await caches.open(CACHE_NAME);
+
+  try {
+    const response = await fetchWithTimeout(
+      request,
+      NETWORK_TIMEOUT
+    );
+
+    if (response.ok) {
+      event.waitUntil(
+        cache.put(request, response.clone())
+      );
+    }
+
+    return response;
+
+  } catch (error) {
+    const cached = await cache.match(request);
+    return cached || Response.error();
+  }
+}
+
+
 /* 先回傳存檔，同時在背景下載新版 */
 async function staleWhileRevalidate(event) {
   const request = event.request;
   const cache = await caches.open(CACHE_NAME);
   const cached = await cache.match(request);
 
+  // 先複製一份舊存檔，等一下用來比對內容
+  const cachedCopy = cached ? cached.clone() : null;
+
   const networkUpdate = fetch(request)
     .then(response => {
       if (response.ok) {
-        const copy = response.clone();
+        const copyForCache = response.clone();
+
         event.waitUntil(
-          saveToCache(cache, request, copy)
+          saveToCache(cache, request, copyForCache)
         );
+
+        // 攝影機資料：比對新舊內容，有變化就通知網頁
+        if (cachedCopy && isDataFile(request.url)) {
+          const copyForCompare = response.clone();
+
+          event.waitUntil(
+            notifyIfChanged(
+              cachedCopy,
+              copyForCompare,
+              request.url
+            )
+          );
+        }
       }
 
       return response;
@@ -129,6 +184,57 @@ async function cacheFirst(request) {
   }
 
   return response;
+}
+
+
+/* 有時間限制的網路請求 */
+function fetchWithTimeout(request, milliseconds) {
+  return new Promise((resolve, reject) => {
+    const timer = setTimeout(() => {
+      reject(new Error("網路逾時"));
+    }, milliseconds);
+
+    fetch(request).then(
+      response => {
+        clearTimeout(timer);
+        resolve(response);
+      },
+      error => {
+        clearTimeout(timer);
+        reject(error);
+      }
+    );
+  });
+}
+
+
+/* 判斷是不是 data 資料夾裡的攝影機資料 */
+function isDataFile(url) {
+  return new URL(url).pathname.includes("/data/");
+}
+
+
+/* 比對新舊資料，內容不同就通知所有開著的網頁 */
+async function notifyIfChanged(oldResponse, newResponse, url) {
+  const [oldText, newText] = await Promise.all([
+    oldResponse.text(),
+    newResponse.text()
+  ]);
+
+  if (oldText === newText) {
+    return;
+  }
+
+  const windows = await self.clients.matchAll({
+    type: "window"
+  });
+
+  windows.forEach(client => {
+    client.postMessage({
+      type: "data-updated",
+      url
+    });
+  });
 }
 
 

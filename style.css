@@ -575,3 +575,48 @@ header{
   vertical-align:middle;
   cursor:help;
 }
+
+/* ── 更新通知條 ── */
+
+.update-banner{
+  position:fixed;
+  left:50%;
+  bottom:calc(16px + env(safe-area-inset-bottom));
+  transform:translateX(-50%);
+  z-index:3000;
+
+  display:flex;
+  align-items:center;
+  gap:10px;
+  max-width:calc(100% - 24px);
+
+  padding:10px 10px 10px 16px;
+  border-radius:12px;
+  background:#1f2937;
+  color:#ffffff;
+  font-size:14px;
+  box-shadow:0 8px 30px rgba(15,23,42,.3);
+}
+
+.update-banner-btn{
+  flex-shrink:0;
+  border:0;
+  border-radius:8px;
+  padding:6px 12px;
+  background:var(--accent);
+  color:#ffffff;
+  font-size:13px;
+  font-weight:700;
+  cursor:pointer;
+}
+
+.update-banner-close{
+  flex-shrink:0;
+  border:0;
+  padding:0 4px;
+  background:transparent;
+  color:#9ca3af;
+  font-size:20px;
+  line-height:1;
+  cursor:pointer;
+}
