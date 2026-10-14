@@ -1,8 +1,14 @@
 import json
 import re
-
+from pathlib import Path
 import requests
 
+# 輸出到專案的 data 資料夾（不論從哪裡執行都正確）
+OUTPUT_FILE = (
+    Path(__file__).resolve().parent.parent
+    / "data"
+    / "taoyuan-road-cctv.json"
+)
 
 API_URL = (
     "https://tcintgr.tycg.gov.tw/"
@@ -170,7 +176,7 @@ def main():
     }
 
     with open(
-        "taoyuan-road-cctv.json",
+        OUTPUT_FILE,
         "w",
         encoding="utf-8",
     ) as file:

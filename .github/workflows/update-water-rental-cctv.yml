@@ -14,6 +14,9 @@ permissions:
 jobs:
   update-water-rental-cctv:
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: data
 
     steps:
       - name: 取得網站程式
@@ -27,7 +30,7 @@ jobs:
       - name: 下載並整理水情租賃 CCTV
         env:
           RENTAL_CCTV_API: "https://heovcenter.gov.taipei/cia/WebLayout/GetCCTVGroupByTaican"
-          RENTAL_COORDINATES_FILE: "water-rental-cctv-coordinates.csv"
+          RENTAL_COORDINATES_FILE: "../raw/water-rental-cctv-coordinates.csv"
         run: |
           python - <<'PY'
           import csv

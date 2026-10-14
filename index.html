@@ -12,8 +12,20 @@
 
   <meta
     name="description"
-    content="整合各縣市道路 CCTV、台北水情 CCTV 與台北水情租賃 CCTV 的即時影像地圖。"
+    content="整合各縣市道路、省道、國道、水利署與台北水情 CCTV 的即時影像地圖。"
   >
+
+  <!-- 網站圖示、加入主畫面設定 -->
+  <link rel="icon" href="./favicon.ico" type="image/x-icon">
+  <link rel="icon" href="./icons/favicon-32x32.png" type="image/png" sizes="32x32">
+  <link rel="icon" href="./icons/favicon-16x16.png" type="image/png" sizes="16x16">
+  <link rel="apple-touch-icon" href="./apple-touch-icon.png" sizes="180x180">
+  <link rel="manifest" href="./manifest.webmanifest">
+  <meta name="theme-color" content="#2563eb">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="CCTV 地圖">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
 
   <!-- Leaflet 地圖樣式 -->
   <link
@@ -24,10 +36,7 @@
   >
 
   <!-- 網站樣式 -->
-  <link rel="stylesheet" href="style.css?v=4">
-
-  <!-- 避免 favicon 404 -->
-  <link rel="icon" href="data:,">
+  <link rel="stylesheet" href="style.css?v=5">
 </head>
 
 <body>
@@ -46,72 +55,42 @@
         ></div>
 
         <!-- 縣市 -->
-        <select
-          id="cityFilter"
-          aria-label="選擇縣市"
-        >
+        <select id="cityFilter" aria-label="選擇縣市">
           <option value="全部">全部縣市</option>
         </select>
 
         <!-- 行政區 -->
-        <select
-          id="districtFilter"
-          aria-label="選擇行政區"
-        >
+        <select id="districtFilter" aria-label="選擇行政區">
           <option value="全部">全部行政區</option>
         </select>
 
-        <!-- CCTV 類型 -->
-        <select
-          id="sourceFilter"
-          aria-label="選擇 CCTV 類型"
-        >
+        <!-- CCTV 類型（實際選項由 script.js 產生） -->
+        <select id="sourceFilter" aria-label="選擇 CCTV 類型">
           <option value="all">全部 CCTV</option>
-          <option value="road">道路 CCTV</option>
-          <option value="water">台北水情 CCTV</option>
-          <option value="water-rental">台北水情租賃 CCTV</option>
         </select>
 
-        <button
-          id="clearSearchBtn"
-          type="button"
-          hidden
-        >
+        <button id="clearSearchBtn" type="button" hidden>
           ✕ 清除搜尋
         </button>
 
         <!-- 定位 -->
-        <button
-          id="locationBtn"
-          type="button"
-        >
+        <button id="locationBtn" type="button">
           📍 我的位置
         </button>
 
       </div>
     </div>
 
-    <div
-      class="status-bar"
-      id="status"
-      aria-live="polite"
-    >
+    <div class="status-bar" id="status" aria-live="polite">
       載入中……
     </div>
   </header>
 
   <main class="body">
 
-    <aside
-      class="sidebar"
-      id="sidebar"
-      aria-label="CCTV 清單"
-    ></aside>
+    <aside class="sidebar" id="sidebar" aria-label="CCTV 清單"></aside>
 
-    <div
-      id="map"
-      aria-label="即時 CCTV 地圖"
-    ></div>
+    <div id="map" aria-label="即時 CCTV 地圖"></div>
 
   </main>
 
@@ -122,18 +101,13 @@
     crossorigin=""
   ></script>
 
-  <!-- HLS 串流播放 -->
-  <script
-    src="https://cdn.jsdelivr.net/npm/hls.js@latest"
-  ></script>
-
   <!-- Google Maps 地點搜尋 -->
   <script
     src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDHJ18rC0CuG4OGUbF-c4H7xavGoKOrTgw&libraries=places&language=zh-TW&region=TW"
   ></script>
 
   <!-- 再載入網站程式 -->
-  <script src="script.js?v=4"></script>
+  <script src="script.js?v=5"></script>
 
 </body>
 </html>

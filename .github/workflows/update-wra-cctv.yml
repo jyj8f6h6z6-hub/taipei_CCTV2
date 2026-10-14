@@ -18,6 +18,10 @@ concurrency:
 jobs:
   update:
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: data
+
     timeout-minutes: 10
 
     steps:

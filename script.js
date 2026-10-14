@@ -1,43 +1,22 @@
-const ROAD_API_URL = "./cctv.json";
-const NEWTAIPEI_ROAD_API_URL = "./newtaipei-road-cctv.json";
+/* =========================================================
+ * 資料來源網址
+ * ========================================================= */
 
-const WATER_API_URL = "./water-cctv.json";
-const WATER_RENTAL_API_URL = "./water-rental-cctv.json";
-
-const TAOYUAN_ROAD_API_URL =
-  "./taoyuan-road-cctv.json";
-
-const KEELUNG_ROAD_API_URL =
-  "./keelung-road-cctv.json";
-
-const YILAN_ROAD_API_URL =
-  "./yilan-road-cctv.json";
-
-const TAICHUNG_ROAD_API_URL =
-  "./taichung-road-cctv.json";
-
-const NANTOU_ROAD_API_URL =
-  "./nantou-road-cctv.json";
-
-  
-const TAINAN_ROAD_API_URL =
-  "./tainan-road-cctv.json";
-
-const CHIAYI_COUNTY_ROAD_API_URL =
-  "./chiayi-county-road-cctv.json";
-
-const KAOHSIUNG_ROAD_API_URL =
-  "./kaohsiung-road-cctv.json";
-
-const PROVINCIAL_ROAD_API_URL =
-  "./provincial-road-cctv.json";
-
-const FREEWAY_CCTV_API_URL =
-  "./freeway-cctv.json";
-
-
-const WRA_STATION_API_URL =
-  "./wra-stations.json";
+const ROAD_API_URL = "./data/cctv.json";
+const NEWTAIPEI_ROAD_API_URL = "./data/newtaipei-road-cctv.json";
+const TAOYUAN_ROAD_API_URL = "./data/taoyuan-road-cctv.json";
+const KEELUNG_ROAD_API_URL = "./data/keelung-road-cctv.json";
+const YILAN_ROAD_API_URL = "./data/yilan-road-cctv.json";
+const TAICHUNG_ROAD_API_URL = "./data/taichung-road-cctv.json";
+const NANTOU_ROAD_API_URL = "./data/nantou-road-cctv.json";
+const TAINAN_ROAD_API_URL = "./data/tainan-road-cctv.json";
+const CHIAYI_COUNTY_ROAD_API_URL = "./data/chiayi-county-road-cctv.json";
+const KAOHSIUNG_ROAD_API_URL = "./data/kaohsiung-road-cctv.json";
+const PROVINCIAL_ROAD_API_URL = "./data/provincial-road-cctv.json";
+const FREEWAY_CCTV_API_URL = "./data/freeway-cctv.json";
+const WRA_STATION_API_URL = "./data/wra-stations.json";
+const WATER_API_URL = "./data/water-cctv.json";
+const WATER_RENTAL_API_URL = "./data/water-rental-cctv.json";
 
 const TAIWAN_TOWNS_TOPOJSON_URL =
   "https://cdn.jsdelivr.net/npm/taiwan-atlas/towns-10t.json";
@@ -45,43 +24,63 @@ const TAIWAN_TOWNS_TOPOJSON_URL =
 const TOPOJSON_CLIENT_URL =
   "https://cdn.jsdelivr.net/npm/topojson-client@3/dist/topojson-client.min.js";
 
+
+/* =========================================================
+ * CCTV 類型設定
+ * ========================================================= */
+
 const CAMERA_TYPES = {
   road: {
     label: "道路 CCTV",
     color: "#2563eb",
     icon: "🔵"
   },
-
   provincial: {
     label: "省道 CCTV",
     color: "#7c3aed",
     icon: "🟣"
   },
-
   highway: {
     label: "國道 CCTV",
     color: "#dc2626",
     icon: "🔴"
   },
-
   wra: {
     label: "水利署 CCTV",
     color: "#0891b2",
     icon: "🔷"
   },
-
   water: {
     label: "台北水情 CCTV",
     color: "#22c55e",
     icon: "🟢"
   },
-
   "water-rental": {
     label: "台北水情租賃 CCTV",
     color: "#f59e0b",
     icon: "🟠"
   }
 };
+
+/* 縣市顯示順序 */
+const CITY_ORDER = [
+  "臺北市",
+  "台北市",
+  "新北市",
+  "基隆市",
+  "桃園市",
+  "臺中市",
+  "南投縣",
+  "臺南市",
+  "高雄市",
+  "嘉義縣",
+  "宜蘭縣"
+];
+
+
+/* =========================================================
+ * 全域狀態
+ * ========================================================= */
 
 let allCams = [];
 
@@ -116,8 +115,12 @@ let districtGeoJSON = null;
 let visibleRenderTimer = null;
 const VISIBLE_RENDER_DELAY = 250;
 
-const TAOYUAN_MAP_VIEW_KEY =
-  "taoyuan-map-view";
+
+/* =========================================================
+ * 桃園：開啟影像後返回時，恢復地圖位置
+ * ========================================================= */
+
+const TAOYUAN_MAP_VIEW_KEY = "taoyuan-map-view";
 
 function saveTaoyuanMapView(cam) {
   if (
@@ -145,9 +148,7 @@ function restoreTaoyuanMapView() {
   }
 
   const saved =
-    sessionStorage.getItem(
-      TAOYUAN_MAP_VIEW_KEY
-    );
+    sessionStorage.getItem(TAOYUAN_MAP_VIEW_KEY);
 
   if (!saved) {
     return false;
@@ -169,39 +170,21 @@ function restoreTaoyuanMapView() {
     map.setView(
       [view.lat, view.lng],
       view.zoom,
-      {
-        animate: false
-      }
+      { animate: false }
     );
 
     return true;
 
   } catch (error) {
-    console.warn(
-      "桃園地圖位置恢復失敗：",
-      error
-    );
-
+    console.warn("桃園地圖位置恢復失敗：", error);
     return false;
   }
 }
 
 
-/* 縣市顯示順序 */
-const CITY_ORDER = [
-  "臺北市",
-  "台北市",
-  "新北市",
-  "基隆市",
-  "桃園市",
-  "臺中市",
-  "南投縣",
-  "臺南市",
-  "高雄市",
-  "嘉義縣",
-  "宜蘭縣"
-];
-
+/* =========================================================
+ * 通用工具
+ * ========================================================= */
 
 /* 動態載入外部 JavaScript */
 function loadScriptOnce(src) {
@@ -214,19 +197,9 @@ function loadScriptOnce(src) {
       if (existing.dataset.loaded === "true") {
         resolve();
       } else {
-        existing.addEventListener(
-          "load",
-          resolve,
-          { once: true }
-        );
-
-        existing.addEventListener(
-          "error",
-          reject,
-          { once: true }
-        );
+        existing.addEventListener("load", resolve, { once: true });
+        existing.addEventListener("error", reject, { once: true });
       }
-
       return;
     }
 
@@ -248,11 +221,7 @@ function loadScriptOnce(src) {
     script.addEventListener(
       "error",
       () => {
-        reject(
-          new Error(
-            `無法載入外部程式：${src}`
-          )
-        );
+        reject(new Error(`無法載入外部程式：${src}`));
       },
       { once: true }
     );
@@ -261,392 +230,33 @@ function loadScriptOnce(src) {
   });
 }
 
-/* 載入臺北市行政區邊界 */
-async function loadDistrictBoundaries() {
-  await loadScriptOnce(TOPOJSON_CLIENT_URL);
+/* 讀取 JSON（no-cache：檔案沒變就用瀏覽器快取，有變才重新下載） */
+async function fetchJson(url) {
+  const response = await fetch(url, {
+    cache: "no-cache"
+  });
 
-  if (!window.topojson?.feature) {
+  if (!response.ok) {
     throw new Error(
-      "行政區轉換程式載入失敗"
+      `${url} 載入失敗，HTTP ${response.status}`
     );
   }
 
-  const topology = await fetchJson(
-    TAIWAN_TOWNS_TOPOJSON_URL
+  return response.json();
+}
+
+/* 安全顯示文字 */
+function esc(value) {
+  return String(value ?? "").replace(
+    /[&<>"']/g,
+    character => ({
+      "&": "&amp;",
+      "<": "&lt;",
+      ">": "&gt;",
+      '"': "&quot;",
+      "'": "&#039;"
+    })[character]
   );
-
-  const townsObject =
-    topology.objects?.towns;
-
-  if (!townsObject) {
-    throw new Error(
-      "行政區資料格式不正確"
-    );
-  }
-
-  const allTowns =
-    window.topojson.feature(
-      topology,
-      townsObject
-    );
-
-  const features =
-    allTowns.features.filter(feature => {
-      const properties =
-        feature.properties || {};
-
-      const county = String(
-        properties.COUNTYNAME ||
-        properties.COUNTY ||
-        ""
-      ).trim();
-
-      return [
-          "臺北市",
-          "台北市",
-          "新北市",
-          "基隆市",
-          "桃園市",
-          "臺中市",
-          "南投縣",
-          "臺南市",
-          "高雄市",
-          "嘉義縣",
-          "宜蘭縣"
-      ].includes(county);
-    });
-
-    districtGeoJSON = {
-      type: "FeatureCollection",
-      features
-    };
-
-    console.log(
-      "已載入的縣市：",
-      [
-        ...new Set(
-          features.map(feature =>
-            feature.properties?.COUNTYNAME
-          )
-        )
-      ]
-    );
-}
-
-/* 取得行政區名稱 */
-function getDistrictName(feature) {
-  const properties =
-    feature?.properties || {};
-
-  return normalizeDistrict(
-    properties.TOWNNAME ||
-    properties.TOWN ||
-    properties.TNAME ||
-    properties["行政區"] ||
-    ""
-  );
-}
-
-function getCountyName(feature) {
-  const properties =
-    feature?.properties || {};
-
-  const county = String(
-    properties.COUNTYNAME ||
-    properties.COUNTY ||
-    ""
-  ).trim();
-
-  if (
-    county === "臺北市" ||
-    county === "台北市"
-  ) {
-    return "台北市";
-  }
-
-  return county;
-}
-
-/* 判斷一個點是否在線環裡 */
-function pointInRing(point, ring) {
-  const [x, y] = point;
-  let inside = false;
-
-  for (
-    let i = 0, j = ring.length - 1;
-    i < ring.length;
-    j = i++
-  ) {
-    const [xi, yi] = ring[i];
-    const [xj, yj] = ring[j];
-
-    const intersects =
-      (yi > y) !== (yj > y) &&
-      x <
-        ((xj - xi) * (y - yi)) /
-          (yj - yi) +
-        xi;
-
-    if (intersects) {
-      inside = !inside;
-    }
-  }
-
-  return inside;
-}
-
-/* 處理 Polygon */
-function pointInPolygonCoordinates(
-  point,
-  coordinates
-) {
-  if (
-    !coordinates?.length ||
-    !pointInRing(point, coordinates[0])
-  ) {
-    return false;
-  }
-
-  return !coordinates
-    .slice(1)
-    .some(hole =>
-      pointInRing(point, hole)
-    );
-}
-
-/* 同時支援 Polygon 與 MultiPolygon */
-function pointInFeature(point, feature) {
-  const geometry = feature?.geometry;
-
-  if (!geometry) {
-    return false;
-  }
-
-  if (geometry.type === "Polygon") {
-    return pointInPolygonCoordinates(
-      point,
-      geometry.coordinates
-    );
-  }
-
-  if (geometry.type === "MultiPolygon") {
-    return geometry.coordinates.some(
-      polygon =>
-        pointInPolygonCoordinates(
-          point,
-          polygon
-        )
-    );
-  }
-
-  return false;
-}
-
-/* 找出攝影機所在行政區 */
-function districtByCoord(x, y) {
-  if (
-    !Number.isFinite(x) ||
-    !Number.isFinite(y) ||
-    !districtGeoJSON
-  ) {
-    return "未判定";
-  }
-
-  const feature =
-    districtGeoJSON.features.find(
-      item =>
-        pointInFeature(
-          [x, y],
-          item
-        )
-    );
-
-  return feature
-    ? getDistrictName(feature)
-    : "未判定";
-}
-
-/* 地圖自動縮放到選取的行政區 */
-function zoomToDistrict(
-  districtName,
-  cityName = "全部"
-) {
-  if (!map || !districtGeoJSON) {
-    return;
-  }
-
-  if (!districtName || districtName === "全部") {
-    const allDistrictLayer =
-      L.geoJSON(districtGeoJSON);
-
-    const bounds =
-      allDistrictLayer.getBounds();
-
-    if (bounds.isValid()) {
-      map.fitBounds(bounds, {
-        padding: [20, 20],
-        maxZoom: 11
-      });
-    }
-
-    return;
-  }
-
-  const feature =
-    districtGeoJSON.features.find(item => {
-      const featureDistrict =
-        normalizeDistrict(
-          getDistrictName(item)
-        );
-
-      const featureCity =
-        normalizeCity(
-          getCountyName(item)
-        );
-
-      const districtMatches =
-        featureDistrict ===
-        normalizeDistrict(districtName);
-
-      const cityMatches =
-        cityName === "全部" ||
-        featureCity ===
-          normalizeCity(cityName);
-
-      return (
-        districtMatches &&
-        cityMatches
-      );
-    });
-
-  if (!feature) {
-    console.warn(
-      "找不到行政區：",
-      cityName,
-      districtName
-    );
-
-    return;
-  }
-
-  const districtLayer =
-    L.geoJSON(feature);
-
-  const bounds =
-    districtLayer.getBounds();
-
-  if (bounds.isValid()) {
-    map.fitBounds(bounds, {
-      padding: [30, 30],
-      maxZoom: 15
-    });
-  }
-}
-
-/* 地圖縮放到指定縣市 */
-function zoomToCity(cityName) {
-  if (!map || !districtGeoJSON) {
-    return;
-  }
-
-  if (!cityName || cityName === "全部") {
-    const allLayer = L.geoJSON(districtGeoJSON);
-    const bounds = allLayer.getBounds();
-
-    if (bounds.isValid()) {
-      map.fitBounds(bounds, {
-        padding: [20, 20],
-        maxZoom: 11
-      });
-    }
-
-    return;
-  }
-
-  const cityFeatures =
-    districtGeoJSON.features.filter(feature => {
-      return normalizeCity(
-        getCountyName(feature)
-      ) === normalizeCity(cityName);
-    });
-
-  
-  if (cityFeatures.length === 0) {
-    console.warn(
-      "找不到縣市邊界：",
-      cityName
-    );
-
-    return;
-  }
-
-  const cityGeoJSON = {
-    type: "FeatureCollection",
-    features: cityFeatures
-  };
-
-  const cityLayer = L.geoJSON(cityGeoJSON);
-  const bounds = cityLayer.getBounds();
-
-  if (bounds.isValid()) {
-    map.fitBounds(bounds, {
-      padding: [30, 30],
-      maxZoom: 12
-    });
-  }
-}
-
-/* 顯示被選取的行政區 */
-function showSelectedDistrictBoundary(districtName) {
-  if (!map || !districtGeoJSON) {
-    return;
-  }
-
-  if (selectedDistrictLayer) {
-    map.removeLayer(selectedDistrictLayer);
-    selectedDistrictLayer = null;
-  }
-
-  if (!districtName || districtName === "全部") {
-    return;
-  }
-
-  const feature =
-    districtGeoJSON.features.find(item => {
-      return getDistrictName(item) === districtName;
-    });
-
-  if (!feature) {
-    console.warn(
-      "找不到行政區邊界：",
-      districtName
-    );
-
-    return;
-  }
-
-  selectedDistrictLayer = L.geoJSON(
-    feature,
-    {
-      style: {
-        color: "#0066ff",
-        weight: 4,
-        opacity: 1,
-        fillColor: "#3388ff",
-        fillOpacity: 0.08
-      }
-    }
-  ).addTo(map);
-
-  const bounds =
-    selectedDistrictLayer.getBounds();
-
-  if (bounds.isValid()) {
-    map.fitBounds(bounds, {
-      padding: [30, 30],
-      maxZoom: 15
-    });
-  }
 }
 
 /* 清除道路攝影機名稱前方的編號 */
@@ -673,35 +283,6 @@ function getCameraType(type) {
   };
 }
 
-/* 安全顯示文字 */
-function esc(value) {
-  return String(value ?? "").replace(
-    /[&<>"']/g,
-    character => ({
-      "&": "&amp;",
-      "<": "&lt;",
-      ">": "&gt;",
-      '"': "&quot;",
-      "'": "&#039;"
-    })[character]
-  );
-}
-
-/* 讀取 JSON */
-async function fetchJson(url) {
-  const response = await fetch(url, {
-    cache: "no-store"
-  });
-
-  if (!response.ok) {
-    throw new Error(
-      `${url} 載入失敗，HTTP ${response.status}`
-    );
-  }
-
-  return response.json();
-}
-
 /* 統一縣市名稱 */
 function normalizeCity(value, fallback = "") {
   const text = String(value || "")
@@ -723,18 +304,16 @@ function normalizeCity(value, fallback = "") {
     南投縣: "南投縣",
     宜蘭縣: "宜蘭縣",
     台南市: "臺南市",
+    臺南市: "臺南市",
     高雄市: "高雄市",
-    嘉義縣: "嘉義縣",
-    臺南市: "臺南市"
+    嘉義縣: "嘉義縣"
   };
 
   return cityAliases[text] || text;
 }
 
-function normalizeDistrict(
-  value,
-  defaultValue = ""
-) {
+/* 統一行政區名稱（沒有「區市鎮鄉」結尾就補「區」） */
+function normalizeDistrict(value, defaultValue = "") {
   const name = String(value || "").trim();
 
   if (!name) {
@@ -742,12 +321,311 @@ function normalizeDistrict(
   }
 
   return /[區市鎮鄉]$/.test(name)
-
     ? name
     : `${name}區`;
 }
 
-/* 整理道路 CCTV 資料 */
+
+/* =========================================================
+ * 行政區邊界
+ * ========================================================= */
+
+/* 載入各縣市行政區邊界 */
+async function loadDistrictBoundaries() {
+  await loadScriptOnce(TOPOJSON_CLIENT_URL);
+
+  if (!window.topojson?.feature) {
+    throw new Error("行政區轉換程式載入失敗");
+  }
+
+  const topology = await fetchJson(TAIWAN_TOWNS_TOPOJSON_URL);
+
+  const townsObject = topology.objects?.towns;
+
+  if (!townsObject) {
+    throw new Error("行政區資料格式不正確");
+  }
+
+  const allTowns = window.topojson.feature(
+    topology,
+    townsObject
+  );
+
+  const features = allTowns.features.filter(feature => {
+    const properties = feature.properties || {};
+
+    const county = String(
+      properties.COUNTYNAME ||
+      properties.COUNTY ||
+      ""
+    ).trim();
+
+    return CITY_ORDER.includes(county);
+  });
+
+  districtGeoJSON = {
+    type: "FeatureCollection",
+    features
+  };
+
+  console.log(
+    "已載入的縣市：",
+    [
+      ...new Set(
+        features.map(feature =>
+          feature.properties?.COUNTYNAME
+        )
+      )
+    ]
+  );
+}
+
+/* 取得行政區名稱 */
+function getDistrictName(feature) {
+  const properties = feature?.properties || {};
+
+  return normalizeDistrict(
+    properties.TOWNNAME ||
+    properties.TOWN ||
+    properties.TNAME ||
+    properties["行政區"] ||
+    ""
+  );
+}
+
+/* 取得縣市名稱 */
+function getCountyName(feature) {
+  const properties = feature?.properties || {};
+
+  const county = String(
+    properties.COUNTYNAME ||
+    properties.COUNTY ||
+    ""
+  ).trim();
+
+  if (county === "臺北市" || county === "台北市") {
+    return "台北市";
+  }
+
+  return county;
+}
+
+/* 判斷一個點是否在線環裡 */
+function pointInRing(point, ring) {
+  const [x, y] = point;
+  let inside = false;
+
+  for (
+    let i = 0, j = ring.length - 1;
+    i < ring.length;
+    j = i++
+  ) {
+    const [xi, yi] = ring[i];
+    const [xj, yj] = ring[j];
+
+    const intersects =
+      (yi > y) !== (yj > y) &&
+      x < ((xj - xi) * (y - yi)) / (yj - yi) + xi;
+
+    if (intersects) {
+      inside = !inside;
+    }
+  }
+
+  return inside;
+}
+
+/* 處理 Polygon */
+function pointInPolygonCoordinates(point, coordinates) {
+  if (
+    !coordinates?.length ||
+    !pointInRing(point, coordinates[0])
+  ) {
+    return false;
+  }
+
+  return !coordinates
+    .slice(1)
+    .some(hole => pointInRing(point, hole));
+}
+
+/*
+ * 計算行政區的外框（最小、最大經緯度），算一次就存起來。
+ * 先用外框快速排除，不在框內的就不用做精細判斷。
+ */
+function getFeatureBbox(feature) {
+  if (feature._bbox) {
+    return feature._bbox;
+  }
+
+  let minX = Infinity;
+  let minY = Infinity;
+  let maxX = -Infinity;
+  let maxY = -Infinity;
+
+  function scan(coords) {
+    if (typeof coords[0] === "number") {
+      const [x, y] = coords;
+      if (x < minX) minX = x;
+      if (x > maxX) maxX = x;
+      if (y < minY) minY = y;
+      if (y > maxY) maxY = y;
+      return;
+    }
+
+    coords.forEach(scan);
+  }
+
+  scan(feature.geometry.coordinates);
+
+  feature._bbox = [minX, minY, maxX, maxY];
+  return feature._bbox;
+}
+
+/* 同時支援 Polygon 與 MultiPolygon */
+function pointInFeature(point, feature) {
+  const geometry = feature?.geometry;
+
+  if (!geometry) {
+    return false;
+  }
+
+  const [x, y] = point;
+  const [minX, minY, maxX, maxY] = getFeatureBbox(feature);
+
+  if (x < minX || x > maxX || y < minY || y > maxY) {
+    return false;
+  }
+
+  if (geometry.type === "Polygon") {
+    return pointInPolygonCoordinates(
+      point,
+      geometry.coordinates
+    );
+  }
+
+  if (geometry.type === "MultiPolygon") {
+    return geometry.coordinates.some(polygon =>
+      pointInPolygonCoordinates(point, polygon)
+    );
+  }
+
+  return false;
+}
+
+/* 找出攝影機所在行政區 */
+function districtByCoord(x, y) {
+  if (
+    !Number.isFinite(x) ||
+    !Number.isFinite(y) ||
+    !districtGeoJSON
+  ) {
+    return "未判定";
+  }
+
+  const feature = districtGeoJSON.features.find(item =>
+    pointInFeature([x, y], item)
+  );
+
+  return feature
+    ? getDistrictName(feature)
+    : "未判定";
+}
+
+/* 地圖自動縮放到選取的行政區 */
+function zoomToDistrict(districtName, cityName = "全部") {
+  if (!map || !districtGeoJSON) {
+    return;
+  }
+
+  if (!districtName || districtName === "全部") {
+    const bounds = L.geoJSON(districtGeoJSON).getBounds();
+
+    if (bounds.isValid()) {
+      map.fitBounds(bounds, {
+        padding: [20, 20],
+        maxZoom: 11
+      });
+    }
+    return;
+  }
+
+  const feature = districtGeoJSON.features.find(item => {
+    const featureDistrict = normalizeDistrict(getDistrictName(item));
+    const featureCity = normalizeCity(getCountyName(item));
+
+    const districtMatches =
+      featureDistrict === normalizeDistrict(districtName);
+
+    const cityMatches =
+      cityName === "全部" ||
+      featureCity === normalizeCity(cityName);
+
+    return districtMatches && cityMatches;
+  });
+
+  if (!feature) {
+    console.warn("找不到行政區：", cityName, districtName);
+    return;
+  }
+
+  const bounds = L.geoJSON(feature).getBounds();
+
+  if (bounds.isValid()) {
+    map.fitBounds(bounds, {
+      padding: [30, 30],
+      maxZoom: 15
+    });
+  }
+}
+
+/* 地圖縮放到指定縣市 */
+function zoomToCity(cityName) {
+  if (!map || !districtGeoJSON) {
+    return;
+  }
+
+  if (!cityName || cityName === "全部") {
+    const bounds = L.geoJSON(districtGeoJSON).getBounds();
+
+    if (bounds.isValid()) {
+      map.fitBounds(bounds, {
+        padding: [20, 20],
+        maxZoom: 11
+      });
+    }
+    return;
+  }
+
+  const cityFeatures = districtGeoJSON.features.filter(feature =>
+    normalizeCity(getCountyName(feature)) === normalizeCity(cityName)
+  );
+
+  if (cityFeatures.length === 0) {
+    console.warn("找不到縣市邊界：", cityName);
+    return;
+  }
+
+  const bounds = L.geoJSON({
+    type: "FeatureCollection",
+    features: cityFeatures
+  }).getBounds();
+
+  if (bounds.isValid()) {
+    map.fitBounds(bounds, {
+      padding: [30, 30],
+      maxZoom: 12
+    });
+  }
+}
+
+
+/* =========================================================
+ * 各資料來源的整理函式（normalize）
+ * 每個函式把官方格式轉成網站統一使用的格式
+ * ========================================================= */
+
+/* 臺北市道路 */
 function normalizeRoadCams(json) {
   const rows = json.result?.results;
 
@@ -780,18 +658,13 @@ function normalizeRoadCams(json) {
         row["WGSY(WGS84緯度座標)"]
       );
 
-      const officialDistrict =
-        normalizeDistrict(
-          row["行政區"] ??
-          row["行政區域"] ??
-          row["區域"] ??
-          row["DISTRICT"] ??
-          row["district"]
-        );
-
-      const district =
-        officialDistrict ||
-        districtByCoord(x, y);
+      const officialDistrict = normalizeDistrict(
+        row["行政區"] ??
+        row["行政區域"] ??
+        row["區域"] ??
+        row["DISTRICT"] ??
+        row["district"]
+      );
 
       return {
         key: `road-${id}`,
@@ -800,7 +673,7 @@ function normalizeRoadCams(json) {
         rawName,
         x,
         y,
-        district,
+        district: officialDistrict || districtByCoord(x, y),
         url: playerUrl(id),
         city: "臺北市",
         type: "road",
@@ -814,9 +687,11 @@ function normalizeRoadCams(json) {
     );
 }
 
-
+/* 新北市道路 */
 function normalizeNewTaipeiRoad(data) {
-  if (!Array.isArray(data)) return [];
+  if (!Array.isArray(data)) {
+    throw new Error("新北道路 CCTV 資料格式不正確");
+  }
 
   return data.map(cam => ({
     key: `ntpc-road-${cam.cctv_id}`,
@@ -824,20 +699,47 @@ function normalizeNewTaipeiRoad(data) {
     name: cam.address,
     x: Number(cam.longitude),
     y: Number(cam.latitude),
-    district: normalizeDistrict(
-        cam.district,
-        "未判定"
-      ),
+    district: normalizeDistrict(cam.district, "未判定"),
     city: "新北市",
-
-    url:
-      `https://atis.ntpc.gov.tw/ATIS/ShowFrame4CCTV/${cam.areacode}`,
-
+    url: `https://atis.ntpc.gov.tw/ATIS/ShowFrame4CCTV/${cam.areacode}`,
     type: "road",
     source: "新北市政府交通局"
   }));
 }
 
+/* 桃園市道路 */
+function normalizeTaoyuanRoad(json) {
+  const rows = json?.results;
+
+  if (!Array.isArray(rows)) {
+    throw new Error("桃園道路 CCTV 資料格式不正確");
+  }
+
+  return rows
+    .map(cam => ({
+      ...cam,
+      key: `taoyuan-road-${cam.id}`,
+      id: String(cam.id || "").trim(),
+      name: String(cam.name || "").trim(),
+      x: Number(cam.x),
+      y: Number(cam.y),
+      city: normalizeCity(cam.city, "桃園市"),
+      district: normalizeDistrict(cam.district, "未判定"),
+      url: String(cam.url || "").trim(),
+      streamUrl: String(cam.streamUrl || cam.url || "").trim(),
+      type: "road",
+      source: cam.source || "桃園市政府交通局"
+    }))
+    .filter(cam =>
+      cam.id &&
+      cam.name &&
+      cam.url &&
+      Number.isFinite(cam.x) &&
+      Number.isFinite(cam.y)
+    );
+}
+
+/* 基隆市道路 */
 function normalizeKeelungRoad(json) {
   const rows =
     json.results ||
@@ -845,78 +747,40 @@ function normalizeKeelungRoad(json) {
     json.data;
 
   if (!Array.isArray(rows)) {
-    throw new Error(
-      "基隆道路 CCTV 資料格式不正確"
-    );
+    throw new Error("基隆道路 CCTV 資料格式不正確");
   }
 
   return rows
     .map(cam => {
-      const id = String(
-        cam.id || ""
-      ).trim();
-
+      const id = String(cam.id || "").trim();
       const x = Number(cam.x);
       const y = Number(cam.y);
 
       const suppliedDistrict =
-        cam.district &&
-        cam.district !== "未判定"
+        cam.district && cam.district !== "未判定"
           ? normalizeDistrict(cam.district)
           : "";
 
       return {
-        key:
-          cam.key ||
-          `keelung-road-${id}`,
-
+        key: cam.key || `keelung-road-${id}`,
         id,
-
         name: String(
           cam.name ||
           cam.roadName ||
           cam.description ||
           id
         ).trim(),
-
         x,
         y,
-
         city: "基隆市",
-
-        district:
-          suppliedDistrict ||
-          districtByCoord(x, y),
-
-        url: String(
-          cam.url ||
-          cam.streamUrl ||
-          ""
-        ).trim(),
-
-        streamUrl: String(
-          cam.streamUrl ||
-          cam.url ||
-          ""
-        ).trim(),
-
+        district: suppliedDistrict || districtByCoord(x, y),
+        url: String(cam.url || cam.streamUrl || "").trim(),
+        streamUrl: String(cam.streamUrl || cam.url || "").trim(),
         type: "road",
-
-        source:
-          cam.source ||
-          "基隆市政府交通處",
-
-        roadName: String(
-          cam.roadName || ""
-        ).trim(),
-
-        direction: String(
-          cam.direction || ""
-        ).trim(),
-
-        description: String(
-          cam.description || ""
-        ).trim()
+        source: cam.source || "基隆市政府交通處",
+        roadName: String(cam.roadName || "").trim(),
+        direction: String(cam.direction || "").trim(),
+        description: String(cam.description || "").trim()
       };
     })
     .filter(cam =>
@@ -927,6 +791,7 @@ function normalizeKeelungRoad(json) {
     );
 }
 
+/* 宜蘭縣道路 */
 function normalizeYilanRoad(json) {
   const rows =
     json.results ||
@@ -934,64 +799,29 @@ function normalizeYilanRoad(json) {
     json.data;
 
   if (!Array.isArray(rows)) {
-    throw new Error(
-      "宜蘭道路 CCTV 資料格式不正確"
-    );
+    throw new Error("宜蘭道路 CCTV 資料格式不正確");
   }
 
   return rows
     .map(cam => {
-      const id = String(
-        cam.id || ""
-      ).trim();
-
+      const id = String(cam.id || "").trim();
       const x = Number(cam.x);
       const y = Number(cam.y);
 
       return {
-        key:
-          cam.key ||
-          `yilan-road-${id}`,
-
+        key: cam.key || `yilan-road-${id}`,
         id,
-
-        officialId: String(
-          cam.officialId || ""
-        ).trim(),
-
-        name: String(
-          cam.name || id
-        ).trim(),
-
+        officialId: String(cam.officialId || "").trim(),
+        name: String(cam.name || id).trim(),
         x,
         y,
-
         city: "宜蘭縣",
-
-        district: normalizeDistrict(
-          cam.district,
-          "未判定"
-        ),
-
-        imageUrl: String(
-          cam.imageUrl || ""
-        ).trim(),
-
-        url: String(
-          cam.url ||
-          cam.imageUrl ||
-          ""
-        ).trim(),
-
-        streamUrl: String(
-          cam.streamUrl || ""
-        ).trim(),
-
+        district: normalizeDistrict(cam.district, "未判定"),
+        imageUrl: String(cam.imageUrl || "").trim(),
+        url: String(cam.url || cam.imageUrl || "").trim(),
+        streamUrl: String(cam.streamUrl || "").trim(),
         type: "road",
-
-        source:
-          cam.source ||
-          "宜蘭縣政府警察局公開即時路況"
+        source: cam.source || "宜蘭縣政府警察局公開即時路況"
       };
     })
     .filter(cam =>
@@ -1002,26 +832,21 @@ function normalizeYilanRoad(json) {
     );
 }
 
+/* 臺中市道路 */
 function normalizeTaichungRoad(data) {
   if (!Array.isArray(data)) {
-    throw new Error(
-      "臺中道路 CCTV 資料格式不正確"
-    );
+    throw new Error("臺中道路 CCTV 資料格式不正確");
   }
 
   return data
     .map(cam => {
-      const fullId = String(
-        cam.cctvid || ""
-      ).trim();
+      const fullId = String(cam.cctvid || "").trim();
 
       /*
        * 官方 cctvid 為 66000C000001，
        * 播放器網址使用 C000001。
        */
-      const id =
-        fullId.match(/C\d+$/)?.[0] ||
-        fullId;
+      const id = fullId.match(/C\d+$/)?.[0] || fullId;
 
       const x = Number(cam.px);
       const y = Number(cam.py);
@@ -1030,48 +855,25 @@ function normalizeTaichungRoad(data) {
        * roadsection 同時含中文與英文，
        * 先保留逗號前面的中文名稱。
        */
-      const name = String(
-        cam.roadsection || id
-      )
+      const name = String(cam.roadsection || id)
         .split(",")[0]
         .trim();
 
       return {
-        key:
-          `taichung-road-${fullId}`,
-
+        key: `taichung-road-${fullId}`,
         id,
         officialId: fullId,
-
-        name:
-          name || "未命名臺中攝影機",
-
+        name: name || "未命名臺中攝影機",
         x,
         y,
-
         city: "臺中市",
-
-        district:
-          districtByCoord(x, y),
-
-        url: String(
-          cam.url || ""
-        ).trim(),
-
+        district: districtByCoord(x, y),
+        url: String(cam.url || "").trim(),
         streamUrl: "",
-
         type: "road",
-
-        source:
-          "臺中市政府交通局",
-
-        status: String(
-          cam.status ?? ""
-        ).trim(),
-
-        areaCode: String(
-          cam.AreaCode || ""
-        ).trim()
+        source: "臺中市政府交通局",
+        status: String(cam.status ?? "").trim(),
+        areaCode: String(cam.AreaCode || "").trim()
       };
     })
     .filter(cam =>
@@ -1082,89 +884,42 @@ function normalizeTaichungRoad(data) {
     );
 }
 
+/* 南投縣道路 */
 function normalizeNantouRoad(json) {
-  const rows =
-    json.results ||
-    json.data ||
-    json;
+  const rows = json.results || json.data || json;
 
   if (!Array.isArray(rows)) {
-    throw new Error(
-      "南投道路 CCTV 資料格式不正確"
-    );
+    throw new Error("南投道路 CCTV 資料格式不正確");
   }
 
   return rows
     .map(cam => {
-      const id = String(
-        cam.id || ""
-      ).trim();
-
+      const id = String(cam.id || "").trim();
       const x = Number(cam.x);
       const y = Number(cam.y);
 
       const suppliedDistrict =
-        cam.district &&
-        cam.district !== "未判定"
-          ? normalizeDistrict(
-              cam.district
-            )
+        cam.district && cam.district !== "未判定"
+          ? normalizeDistrict(cam.district)
           : "";
 
       return {
-        key:
-          `nantou-road-${id}`,
-
+        key: `nantou-road-${id}`,
         id,
-
-        name: String(
-          cam.name ||
-          cam.roadName ||
-          id
-        ).trim(),
-
+        name: String(cam.name || cam.roadName || id).trim(),
         x,
         y,
-
         city: "南投縣",
-
-        district:
-          suppliedDistrict ||
-          districtByCoord(x, y),
-
-        url: String(
-          cam.url || ""
-        ).trim(),
-
-        streamUrl: String(
-          cam.streamUrl || ""
-        ).trim(),
-
+        district: suppliedDistrict || districtByCoord(x, y),
+        url: String(cam.url || "").trim(),
+        streamUrl: String(cam.streamUrl || "").trim(),
         type: "road",
-
-        source:
-          cam.source ||
-          "南投縣政府建設處／南投縣即時交通監控系統",
-
-        linkId: String(
-          cam.linkId || ""
-        ).trim(),
-
-        roadId: String(
-          cam.roadId || ""
-        ).trim(),
-
-        roadName: String(
-          cam.roadName || ""
-        ).trim(),
-
-        roadClass: String(
-          cam.roadClass || ""
-        ).trim(),
-
-        locationType: String(
-          cam.locationType || ""
-        ).trim()
+        source: cam.source || "南投縣政府建設處／南投縣即時交通監控系統",
+        linkId: String(cam.linkId || "").trim(),
+        roadId: String(cam.roadId || "").trim(),
+        roadName: String(cam.roadName || "").trim(),
+        roadClass: String(cam.roadClass || "").trim(),
+        locationType: String(cam.locationType || "").trim()
       };
     })
     .filter(cam =>
@@ -1175,64 +930,37 @@ function normalizeNantouRoad(json) {
     );
 }
 
+/* 臺南市道路 */
 function normalizeTainanRoad(json) {
-  const rows =
-    json.results ||
-    json.data ||
-    json;
+  const rows = json.results || json.data || json;
 
   if (!Array.isArray(rows)) {
-    throw new Error(
-      "臺南道路 CCTV 資料格式不正確"
-    );
+    throw new Error("臺南道路 CCTV 資料格式不正確");
   }
 
   return rows
     .map(cam => {
-      const id = String(
-        cam.id || ""
-      ).trim();
-
+      const id = String(cam.id || "").trim();
       const x = Number(cam.x);
       const y = Number(cam.y);
 
       const suppliedDistrict =
-        cam.district &&
-        cam.district !== "未判定"
+        cam.district && cam.district !== "未判定"
           ? normalizeDistrict(cam.district)
           : "";
 
       return {
         key: `tainan-road-${id}`,
-
         id,
-
-        name: String(
-          cam.name || id
-        ).trim(),
-
+        name: String(cam.name || id).trim(),
         x,
         y,
-
         city: "臺南市",
-
-        district:
-          suppliedDistrict ||
-          districtByCoord(x, y),
-
-        url: String(
-          cam.url || ""
-        ).trim(),
-
-        streamUrl: String(
-          cam.streamUrl || ""
-        ).trim(),
-
+        district: suppliedDistrict || districtByCoord(x, y),
+        url: String(cam.url || "").trim(),
+        streamUrl: String(cam.streamUrl || "").trim(),
         type: "road",
-
-        source:
-          cam.source ||
-          "臺南市政府交通局"
+        source: cam.source || "臺南市政府交通局"
       };
     })
     .filter(cam =>
@@ -1243,99 +971,49 @@ function normalizeTainanRoad(json) {
     );
 }
 
+/* 嘉義縣道路 */
 function normalizeChiayiCountyRoad(json) {
-  const rows =
-    json.results ||
-    json.data ||
-    json;
+  const rows = json.results || json.data || json;
 
   if (!Array.isArray(rows)) {
-    throw new Error(
-      "嘉義縣道路 CCTV 資料格式不正確"
-    );
+    throw new Error("嘉義縣道路 CCTV 資料格式不正確");
   }
 
   return rows
     .map(cam => {
-      const id = String(
-        cam.id || ""
-      ).trim();
-
+      const id = String(cam.id || "").trim();
       const x = Number(cam.x);
       const y = Number(cam.y);
 
-      const originalUrl = String(
-        cam.url || ""
-      ).trim();
+      const originalUrl = String(cam.url || "").trim();
 
       const isUnavailableHost =
-        /chiayicctv\.hungmingai\.com/i.test(
-          originalUrl
-        );
+        /chiayicctv\.hungmingai\.com/i.test(originalUrl);
 
       const suppliedDistrict =
-        cam.district &&
-        cam.district !== "未判定"
+        cam.district && cam.district !== "未判定"
           ? normalizeDistrict(cam.district)
           : "";
 
       return {
         key: `chiayi-county-road-${id}`,
-
         id,
-
-        name: String(
-          cam.name ||
-          cam.roadName ||
-          id
-        ).trim(),
-
+        name: String(cam.name || cam.roadName || id).trim(),
         x,
         y,
-
         city: "嘉義縣",
-
-        district:
-          suppliedDistrict ||
-          districtByCoord(x, y),
-
-        url:
-          isUnavailableHost
-            ? ""
-            : originalUrl,
-
-        streamUrl: String(
-          cam.streamUrl || ""
-        ).trim(),
-
+        district: suppliedDistrict || districtByCoord(x, y),
+        url: isUnavailableHost ? "" : originalUrl,
+        streamUrl: String(cam.streamUrl || "").trim(),
         originalUrl,
         isUnavailable: isUnavailableHost,
-
         type: "road",
-
-        source:
-          cam.source ||
-          "嘉義縣政府",
-
-        linkId: String(
-          cam.linkId || ""
-        ).trim(),
-
-        roadId: String(
-          cam.roadId || ""
-        ).trim(),
-
-        roadName: String(
-          cam.roadName || ""
-        ).trim(),
-
-        roadClass: String(
-          cam.roadClass || ""
-        ).trim(),
-
-        locationType: String(
-          cam.locationType || ""
-        ).trim()
+        source: cam.source || "嘉義縣政府",
+        linkId: String(cam.linkId || "").trim(),
+        roadId: String(cam.roadId || "").trim(),
+        roadName: String(cam.roadName || "").trim(),
+        roadClass: String(cam.roadClass || "").trim(),
+        locationType: String(cam.locationType || "").trim()
       };
     })
     .filter(cam =>
@@ -1345,76 +1023,44 @@ function normalizeChiayiCountyRoad(json) {
     );
 }
 
+/* 高雄市道路 */
 function normalizeKaohsiungRoad(json) {
-  const rows =
-    json.results ||
-    json.data ||
-    json;
+  const rows = json.results || json.data || json;
 
   if (!Array.isArray(rows)) {
-    throw new Error(
-      "高雄道路 CCTV 資料格式不正確"
-    );
+    throw new Error("高雄道路 CCTV 資料格式不正確");
   }
 
   return rows
     .map(cam => {
-      const id = String(
-        cam.id || ""
-      ).trim();
-
+      const id = String(cam.id || "").trim();
       const x = Number(cam.x);
       const y = Number(cam.y);
 
       return {
-        key:
-          cam.key ||
-          `kaohsiung-road-${id}`,
-
+        key: cam.key || `kaohsiung-road-${id}`,
         id,
-
-        name: String(
-          cam.name || id
-        ).trim(),
-
+        name: String(cam.name || id).trim(),
         x,
         y,
-
         city: "高雄市",
-
-        district:
-          normalizeDistrict(
-            cam.district,
-            "未判定"
-          ),
-
-        imageUrl: String(
-          cam.imageUrl || ""
-        ).trim(),
-
+        district: normalizeDistrict(cam.district, "未判定"),
+        imageUrl: String(cam.imageUrl || "").trim(),
         url: String(
           cam.url ||
           cam.videoUrl ||
           cam.imageUrl ||
           ""
         ).trim(),
-
         streamUrl: String(
           cam.streamUrl ||
           cam.videoUrl ||
           cam.url ||
           ""
         ).trim(),
-
-        locationImage: String(
-          cam.locationImage || ""
-        ).trim(),
-
+        locationImage: String(cam.locationImage || "").trim(),
         type: "road",
-
-        source:
-          cam.source ||
-          "高雄市政府交通局"
+        source: cam.source || "高雄市政府交通局"
       };
     })
     .filter(cam =>
@@ -1425,35 +1071,19 @@ function normalizeKaohsiungRoad(json) {
     );
 }
 
+/* 省道 */
 function normalizeProvincialRoad(json) {
-  const rows =
-    json.results ||
-    json.data ||
-    json;
+  const rows = json.results || json.data || json;
 
   if (!Array.isArray(rows)) {
-    throw new Error(
-      "省道 CCTV 資料格式不正確"
-    );
+    throw new Error("省道 CCTV 資料格式不正確");
   }
 
   return rows
     .map(cam => {
-      const id = String(
-        cam.id ||
-        cam.CCTVID ||
-        ""
-      ).trim();
-
-      const x = Number(
-        cam.x ??
-        cam.PositionLon
-      );
-
-      const y = Number(
-        cam.y ??
-        cam.PositionLat
-      );
+      const id = String(cam.id || cam.CCTVID || "").trim();
+      const x = Number(cam.x ?? cam.PositionLon);
+      const y = Number(cam.y ?? cam.PositionLat);
 
       const url = String(
         cam.streamUrl ||
@@ -1462,59 +1092,31 @@ function normalizeProvincialRoad(json) {
         ""
       ).trim();
 
+      const feature = districtGeoJSON?.features?.find(item =>
+        pointInFeature([x, y], item)
+      );
+
       return {
-        key:
-          cam.key ||
-          `provincial-${id}`,
-
+        key: cam.key || `provincial-${id}`,
         id,
-
-        name: String(
-          cam.name ||
-          `省道 CCTV ${id}`
-        ).trim(),
-
+        name: String(cam.name || `省道 CCTV ${id}`).trim(),
         x,
         y,
-
         city:
           normalizeCity(
             cam.city ||
-            districtGeoJSON
-              ?.features
-              ?.find(feature =>
-                pointInFeature(
-                  [x, y],
-                  feature
-                )
-              )
-              ?.properties
-              ?.COUNTYNAME
+            feature?.properties?.COUNTYNAME
           ) || "未判定",
-
-        district:
-          normalizeDistrict(
-            cam.district ||
-            districtByCoord(x, y),
-            "未判定"
-          ),
-
+        district: normalizeDistrict(
+          cam.district ||
+          (feature ? getDistrictName(feature) : ""),
+          "未判定"
+        ),
         url,
-
         streamUrl: url,
-
         type: "provincial",
-
-        source:
-          cam.source ||
-          "交通部公路局",
-
-        linkId: String(
-          cam.linkId ||
-          cam.LinkID ||
-          ""
-        ).trim(),
-
+        source: cam.source || "交通部公路局",
+        linkId: String(cam.linkId || cam.LinkID || "").trim(),
         locationType: String(
           cam.locationType ||
           cam.LocationType ||
@@ -1530,35 +1132,19 @@ function normalizeProvincialRoad(json) {
     );
 }
 
+/* 國道 */
 function normalizeFreewayCams(json) {
-  const rows =
-    json.results ||
-    json.data ||
-    json;
+  const rows = json.results || json.data || json;
 
   if (!Array.isArray(rows)) {
-    throw new Error(
-      "國道 CCTV 資料格式不正確"
-    );
+    throw new Error("國道 CCTV 資料格式不正確");
   }
 
   return rows
     .map(cam => {
-      const id = String(
-        cam.id ||
-        cam.CCTVID ||
-        ""
-      ).trim();
-
-      const x = Number(
-        cam.x ??
-        cam.PositionLon
-      );
-
-      const y = Number(
-        cam.y ??
-        cam.PositionLat
-      );
+      const id = String(cam.id || cam.CCTVID || "").trim();
+      const x = Number(cam.x ?? cam.PositionLon);
+      const y = Number(cam.y ?? cam.PositionLat);
 
       const url = String(
         cam.streamUrl ||
@@ -1567,94 +1153,42 @@ function normalizeFreewayCams(json) {
         ""
       ).trim();
 
-      const feature =
-        districtGeoJSON
-          ?.features
-          ?.find(item =>
-            pointInFeature(
-              [x, y],
-              item
-            )
-          );
-
-      const detectedCity =
-        feature
-          ? getCountyName(feature)
-          : "";
+      const feature = districtGeoJSON?.features?.find(item =>
+        pointInFeature([x, y], item)
+      );
 
       return {
-        key:
-          cam.key ||
-          `highway-${id}`,
-
+        key: cam.key || `highway-${id}`,
         id,
-
         name: String(
           cam.name ||
           cam.roadName ||
           `國道 CCTV ${id}`
         ).trim(),
-
         x,
         y,
-
         city:
           normalizeCity(
             cam.city ||
-            detectedCity
+            (feature ? getCountyName(feature) : "")
           ) || "未判定",
-
-        district:
-          normalizeDistrict(
-            cam.district ||
-            districtByCoord(x, y),
-            "未判定"
-          ),
-
+        district: normalizeDistrict(
+          cam.district ||
+          (feature ? getDistrictName(feature) : ""),
+          "未判定"
+        ),
         url,
-
-        streamUrl: String(
-          cam.streamUrl ||
-          url
-        ).trim(),
-
+        streamUrl: String(cam.streamUrl || url).trim(),
         type: "highway",
-
-        source:
-          cam.source ||
-          "交通部高速公路局",
-
-        roadId: String(
-          cam.roadId || ""
-        ).trim(),
-
-        roadName: String(
-          cam.roadName || ""
-        ).trim(),
-
-        direction: String(
-          cam.direction || ""
-        ).trim(),
-
-        locationMile: String(
-          cam.locationMile || ""
-        ).trim(),
-
-        start: String(
-          cam.start || ""
-        ).trim(),
-
-        end: String(
-          cam.end || ""
-        ).trim(),
-
-        linkId: String(
-          cam.linkId || ""
-        ).trim(),
-
-        locationType: String(
-          cam.locationType || ""
-        ).trim()
+        source: cam.source || "交通部高速公路局",
+        roadId: String(cam.roadId || "").trim(),
+        roadName: String(cam.roadName || "").trim(),
+        direction: String(cam.direction || "").trim(),
+        locationMile: String(cam.locationMile || "").trim(),
+        start: String(cam.start || "").trim(),
+        end: String(cam.end || "").trim(),
+        linkId: String(cam.linkId || "").trim(),
+        locationType: String(cam.locationType || "").trim()
       };
     })
     .filter(cam =>
@@ -1665,11 +1199,10 @@ function normalizeFreewayCams(json) {
     );
 }
 
+/* 水利署 */
 function normalizeWraStations(data) {
   if (!Array.isArray(data)) {
-    throw new Error(
-      "水利署 CCTV 站點資料格式不正確"
-    );
+    throw new Error("水利署 CCTV 站點資料格式不正確");
   }
 
   const excludedKeywords = [
@@ -1689,35 +1222,18 @@ function normalizeWraStations(data) {
         item.sourceId ??
         1
       );
-
       return sourceId === 1;
     })
-
     .filter(item => {
-      const stationName = String(
-        item.Name ||
-        item.name ||
-        ""
-      ).trim();
+      const stationName = String(item.Name || item.name || "").trim();
 
-      return !excludedKeywords.some(
-        keyword =>
-          stationName.includes(keyword)
+      return !excludedKeywords.some(keyword =>
+        stationName.includes(keyword)
       );
     })
-
     .map(item => {
-      const lat = Number(
-        item.lat ??
-        item.latitude ??
-        item.y
-      );
-
-      const lng = Number(
-        item.lng ??
-        item.longitude ??
-        item.x
-      );
+      const lat = Number(item.lat ?? item.latitude ?? item.y);
+      const lng = Number(item.lng ?? item.longitude ?? item.x);
 
       const sourceId = String(
         item.SourceId ??
@@ -1732,9 +1248,7 @@ function normalizeWraStations(data) {
         ""
       ).trim();
 
-      /*
-       * 尋找可能使用的影像網址欄位。
-       */
+      /* 尋找可能使用的影像網址欄位 */
       const imageUrl = String(
         item.imageUrl ||
         item.mediaUrl ||
@@ -1753,64 +1267,38 @@ function normalizeWraStations(data) {
       }
 
       return {
-        key:
-          `wra-${sourceId}-${stationId}`,
-
+        key: `wra-${sourceId}-${stationId}`,
         id: stationId,
         stationId,
         sourceId,
-
         name: String(
           item.Name ||
           item.name ||
           `水利署 CCTV ${stationId}`
         ).trim(),
-
-        city: String(
-          item.Counname ||
-          item.city ||
-          "未判定"
-        ).trim(),
-
-        district: String(
-          item.Town_name ||
-          item.district ||
-          "未判定"
-        ).trim(),
-
+        city: String(item.Counname || item.city || "未判定").trim(),
+        district: String(item.Town_name || item.district || "未判定").trim(),
         basin: String(
           item.Basin_name ||
           item.basinName ||
           item.basin ||
           ""
         ).trim(),
-
         lat,
         lng,
-
         x: lng,
         y: lat,
-
-        /*
-         * 三個欄位都放入同一個影像網址，
-         * 避免其他函式使用不同名稱時讀不到。
-         */
         url: imageUrl,
         imageUrl,
         mediaUrl: imageUrl,
-
         type: "wra",
-
-        source:
-          item.source ||
-          "經濟部水利署政府開放資料"
+        source: item.source || "經濟部水利署政府開放資料"
       };
     })
-
     .filter(Boolean);
 }
 
-/* 整理水情 CCTV 資料 */
+/* 台北水情 */
 function normalizeWaterCams(json) {
   const rows =
     json.results ||
@@ -1823,35 +1311,11 @@ function normalizeWaterCams(json) {
 
   return rows
     .map(row => {
-      const id = String(
-        row.id ||
-        row.stationNo ||
-        ""
-      ).trim();
-
-      const name = String(
-        row.name ||
-        row.stationName ||
-        ""
-      ).trim();
-
-      const x = parseFloat(
-        row.x ??
-        row.longitude ??
-        row.lng
-      );
-
-      const y = parseFloat(
-        row.y ??
-        row.latitude ??
-        row.lat
-      );
-
-      const url = String(
-        row.url ||
-        row.imageUrl ||
-        ""
-      ).trim();
+      const id = String(row.id || row.stationNo || "").trim();
+      const name = String(row.name || row.stationName || "").trim();
+      const x = parseFloat(row.x ?? row.longitude ?? row.lng);
+      const y = parseFloat(row.y ?? row.latitude ?? row.lat);
+      const url = String(row.url || row.imageUrl || "").trim();
 
       return {
         key: `water-${id}`,
@@ -1865,9 +1329,7 @@ function normalizeWaterCams(json) {
         streamUrl: getWaterStreamUrl({ url }),
         city: "臺北市",
         type: "water",
-        source:
-          row.source ||
-          "臺北市政府工務局水利工程處"
+        source: row.source || "臺北市政府工務局水利工程處"
       };
     })
     .filter(cam =>
@@ -1881,13 +1343,10 @@ function normalizeWaterCams(json) {
 function getWaterStreamUrl(cam) {
   if (!cam.url) return null;
 
-  return cam.url.replace(
-    "/snapshot",
-    "/index.m3u8"
-  );
+  return cam.url.replace("/snapshot", "/index.m3u8");
 }
 
-/* 整理水情租賃 CCTV 資料 */
+/* 台北水情租賃 */
 function normalizeWaterRentalCams(json) {
   const rows =
     json.results ||
@@ -1895,54 +1354,22 @@ function normalizeWaterRentalCams(json) {
     json.data;
 
   if (!Array.isArray(rows)) {
-    throw new Error(
-      "水情租賃 CCTV 資料格式不正確"
-    );
+    throw new Error("水情租賃 CCTV 資料格式不正確");
   }
 
   return rows
     .map(row => {
-      const id = String(
-        row.id ||
-        row.stationNo ||
-        ""
-      ).trim();
-
-      const name = String(
-        row.name ||
-        row.stationName ||
-        ""
-      ).trim();
-
-      const x = parseFloat(
-        row.x ??
-        row.longitude ??
-        row.lng
-      );
-
-      const y = parseFloat(
-        row.y ??
-        row.latitude ??
-        row.lat
-      );
-
-      const imageUrl = String(
-        row.imageUrl ||
-        row.url ||
-        ""
-      ).trim();
-
-      const streamUrl = String(
-        row.streamUrl ||
-        ""
-      ).trim();
+      const id = String(row.id || row.stationNo || "").trim();
+      const name = String(row.name || row.stationName || "").trim();
+      const x = parseFloat(row.x ?? row.longitude ?? row.lng);
+      const y = parseFloat(row.y ?? row.latitude ?? row.lat);
+      const imageUrl = String(row.imageUrl || row.url || "").trim();
+      const streamUrl = String(row.streamUrl || "").trim();
 
       return {
         key: `water-rental-${id}`,
         id,
-        name:
-          name ||
-          "未命名水情租賃攝影機",
+        name: name || "未命名水情租賃攝影機",
         rawName: `${id}-${name}`,
         x,
         y,
@@ -1950,14 +1377,10 @@ function normalizeWaterRentalCams(json) {
         url: imageUrl || streamUrl,
         imageUrl,
         streamUrl,
-        category: String(
-          row.category || ""
-        ).trim(),
+        category: String(row.category || "").trim(),
         city: "臺北市",
         type: "water-rental",
-        source:
-          row.source ||
-          "臺北市政府工務局水利工程處"
+        source: row.source || "臺北市政府工務局水利工程處"
       };
     })
     .filter(cam =>
@@ -1968,473 +1391,96 @@ function normalizeWaterRentalCams(json) {
     );
 }
 
-/* 同時載入道路與水情資料 */
+
+/* =========================================================
+ * 資料來源設定表
+ * 以後要新增縣市：寫好 normalize 函式，再在這裡加一行就好。
+ * group 決定這批資料算哪一種 CCTV（對應 CAMERA_TYPES）。
+ * ========================================================= */
+
+const DATA_SOURCES = [
+  { label: "台北道路 CCTV",     url: ROAD_API_URL,               normalize: normalizeRoadCams,         group: "road" },
+  { label: "新北道路 CCTV",     url: NEWTAIPEI_ROAD_API_URL,     normalize: normalizeNewTaipeiRoad,    group: "road" },
+  { label: "桃園道路 CCTV",     url: TAOYUAN_ROAD_API_URL,       normalize: normalizeTaoyuanRoad,      group: "road" },
+  { label: "基隆道路 CCTV",     url: KEELUNG_ROAD_API_URL,       normalize: normalizeKeelungRoad,      group: "road" },
+  { label: "宜蘭道路 CCTV",     url: YILAN_ROAD_API_URL,         normalize: normalizeYilanRoad,        group: "road" },
+  { label: "臺中道路 CCTV",     url: TAICHUNG_ROAD_API_URL,      normalize: normalizeTaichungRoad,     group: "road" },
+  { label: "南投道路 CCTV",     url: NANTOU_ROAD_API_URL,        normalize: normalizeNantouRoad,       group: "road" },
+  { label: "臺南道路 CCTV",     url: TAINAN_ROAD_API_URL,        normalize: normalizeTainanRoad,       group: "road" },
+  { label: "嘉義縣道路 CCTV",   url: CHIAYI_COUNTY_ROAD_API_URL, normalize: normalizeChiayiCountyRoad, group: "road" },
+  { label: "高雄道路 CCTV",     url: KAOHSIUNG_ROAD_API_URL,     normalize: normalizeKaohsiungRoad,    group: "road" },
+  { label: "省道 CCTV",         url: PROVINCIAL_ROAD_API_URL,    normalize: normalizeProvincialRoad,   group: "provincial" },
+  { label: "國道 CCTV",         url: FREEWAY_CCTV_API_URL,       normalize: normalizeFreewayCams,      group: "highway" },
+  { label: "水利署 CCTV",       url: WRA_STATION_API_URL,        normalize: normalizeWraStations,      group: "wra" },
+  { label: "台北水情 CCTV",     url: WATER_API_URL,              normalize: normalizeWaterCams,        group: "water" },
+  { label: "台北水情租賃 CCTV", url: WATER_RENTAL_API_URL,       normalize: normalizeWaterRentalCams,  group: "water-rental" }
+];
+
+
+/* =========================================================
+ * 載入所有資料
+ * ========================================================= */
+
 async function loadData() {
   const status = document.getElementById("status");
 
-  status.textContent =
-    "正在載入道路與水情 CCTV……";
+  status.textContent = "正在載入 CCTV 資料……";
 
-  const results = await Promise.allSettled([
-    fetchJson(ROAD_API_URL),
-    fetchJson(NEWTAIPEI_ROAD_API_URL),   
-    fetchJson(TAOYUAN_ROAD_API_URL),
-    fetchJson(KEELUNG_ROAD_API_URL),
-    fetchJson(YILAN_ROAD_API_URL),
-    fetchJson(TAICHUNG_ROAD_API_URL),
-    fetchJson(NANTOU_ROAD_API_URL),
-    fetchJson(TAINAN_ROAD_API_URL),
-    fetchJson(CHIAYI_COUNTY_ROAD_API_URL),
-    fetchJson(KAOHSIUNG_ROAD_API_URL),
-    fetchJson(PROVINCIAL_ROAD_API_URL),
-    fetchJson(FREEWAY_CCTV_API_URL),
-    fetchJson(WRA_STATION_API_URL),
-    fetchJson(WATER_API_URL),
-    fetchJson(WATER_RENTAL_API_URL)
-    
-  ]);
-
-  let roadCams = [];
-  let newTaipeiRoadCams = [];
-  let taoyuanRoadCams = [];
-  let keelungRoadCams = [];
-  let yilanRoadCams = [];
-  let taichungRoadCams = [];
-  let nantouRoadCams = [];
-  let tainanRoadCams = [];
-  let chiayiCountyRoadCams = [];
-  let kaohsiungRoadCams = [];
-  let provincialRoadCams = [];
-  let freewayCams = [];
-  let waterCams = [];
-  let waterRentalCams = [];
+  const results = await Promise.allSettled(
+    DATA_SOURCES.map(source => fetchJson(source.url))
+  );
 
   const errors = [];
 
-  if (results[0].status === "fulfilled") {
-    try {
-      roadCams = normalizeRoadCams(
-        results[0].value
-      );
-    } catch (error) {
-      errors.push(error.message);
+  const camsByGroup = {
+    road: [],
+    provincial: [],
+    highway: [],
+    wra: [],
+    water: [],
+    "water-rental": []
+  };
+
+  results.forEach((result, index) => {
+    const source = DATA_SOURCES[index];
+
+    if (result.status === "rejected") {
+      errors.push(`${source.label}：${result.reason.message}`);
+      return;
     }
-  } else {
-    errors.push(
-      `道路 CCTV：${results[0].reason.message}`
-    );
-  }
 
-  if (results[1].status === "fulfilled") {
     try {
-      newTaipeiRoadCams =
-        normalizeNewTaipeiRoad(
-          results[1].value
-        );
-      
-      console.log("台北道路：", roadCams.length);
-      console.log("新北道路：", newTaipeiRoadCams.length);
+      const cams = source.normalize(result.value);
+
+      camsByGroup[source.group] =
+        camsByGroup[source.group].concat(cams);
+
+      console.log(`${source.label}：`, cams.length);
 
     } catch (error) {
-      errors.push(
-        `新北道路 CCTV：${error.message}`
-      );
+      errors.push(`${source.label}：${error.message}`);
     }
-  } else {
-    errors.push(
-      `新北道路 CCTV：` +
-      results[1].reason.message
-    );
-  }
+  });
 
-  if (results[2].status === "fulfilled") {
-    try {
-      const rows =
-        results[2].value?.results;
-
-      taoyuanRoadCams =
-        Array.isArray(rows)
-          ? rows
-              .map(cam => ({
-                ...cam,
-                key:
-                  `taoyuan-road-${cam.id}`,
-
-                id: String(
-                  cam.id || ""
-                ).trim(),
-
-                name: String(
-                  cam.name || ""
-                ).trim(),
-
-                x: Number(cam.x),
-                y: Number(cam.y),
-
-                city: normalizeCity(
-                  cam.city,
-                  "桃園市"
-                ),
-
-                district:
-                  normalizeDistrict(
-                    cam.district,
-                    "未判定"
-                  ),
-
-                url: String(
-                  cam.url || ""
-                ).trim(),
-
-                streamUrl: String(
-                  cam.streamUrl ||
-                  cam.url ||
-                  ""
-                ).trim(),
-
-                type: "road",
-
-                source:
-                  cam.source ||
-                  "桃園市政府交通局"
-              }))
-              .filter(cam =>
-                cam.id &&
-                cam.name &&
-                cam.url &&
-                Number.isFinite(cam.x) &&
-                Number.isFinite(cam.y)
-              )
-          : [];
-
-      console.log(
-        "桃園道路：",
-        taoyuanRoadCams.length
-      );
-    } catch (error) {
-      errors.push(
-        `桃園道路 CCTV：${error.message}`
-      );
-    }
-  } else {
-    errors.push(
-      `桃園道路 CCTV：` +
-      results[2].reason.message
-    );
-  }
-
-  if (results[3].status === "fulfilled") {
-    try {
-      keelungRoadCams =
-        normalizeKeelungRoad(
-          results[3].value
-        );
-
-      console.log(
-        "基隆道路：",
-        keelungRoadCams.length
-      );
-    } catch (error) {
-      errors.push(
-        `基隆道路 CCTV：${error.message}`
-      );
-    }
-  } else {
-    errors.push(
-      `基隆道路 CCTV：` +
-      results[3].reason.message
-    );
-  }
-
-  if (results[4].status === "fulfilled") {
-  try {
-    yilanRoadCams =
-      normalizeYilanRoad(
-        results[4].value
-      );
-
-    console.log(
-      "宜蘭道路：",
-      yilanRoadCams.length
-    );
-  } catch (error) {
-    errors.push(
-      `宜蘭道路 CCTV：${error.message}`
-    );
-  }
-} else {
-  errors.push(
-    `宜蘭道路 CCTV：` +
-    results[4].reason.message
-  );
-}
-
-if (results[5].status === "fulfilled") {
-  try {
-    taichungRoadCams =
-      normalizeTaichungRoad(
-        results[5].value
-      );
-
-    console.log(
-      "臺中道路：",
-      taichungRoadCams.length
-    );
-
-  } catch (error) {
-    errors.push(
-      `臺中道路 CCTV：${error.message}`
-    );
-  }
-} else {
-  errors.push(
-    `臺中道路 CCTV：` +
-    results[5].reason.message
-  );
-}
-
-if (results[6].status === "fulfilled") {
-  try {
-    nantouRoadCams =
-      normalizeNantouRoad(
-        results[6].value
-      );
-
-    console.log(
-      "南投道路：",
-      nantouRoadCams.length
-    );
-
-  } catch (error) {
-    errors.push(
-      `南投道路 CCTV：${error.message}`
-    );
-  }
-} else {
-  errors.push(
-    `南投道路 CCTV：` +
-    results[6].reason.message
-  );
-}
-
-if (results[7].status === "fulfilled") {
-  try {
-    tainanRoadCams =
-      normalizeTainanRoad(
-        results[7].value
-      );
-
-    console.log(
-      "臺南道路：",
-      tainanRoadCams.length
-    );
-
-  } catch (error) {
-    errors.push(
-      `臺南道路 CCTV：${error.message}`
-    );
-  }
-} else {
-  errors.push(
-    `臺南道路 CCTV：` +
-    results[7].reason.message
-  );
-}
-
-if (results[8].status === "fulfilled") {
-  try {
-    chiayiCountyRoadCams =
-      normalizeChiayiCountyRoad(
-        results[8].value
-      );
-
-    console.log(
-      "嘉義縣道路：",
-      chiayiCountyRoadCams.length
-    );
-
-  } catch (error) {
-    errors.push(
-      `嘉義縣道路 CCTV：${error.message}`
-    );
-  }
-} else {
-  errors.push(
-    `嘉義縣道路 CCTV：` +
-    results[8].reason.message
-  );
-}
-
-if (results[9].status === "fulfilled") {
-  try {
-    kaohsiungRoadCams =
-      normalizeKaohsiungRoad(
-        results[9].value
-      );
-
-    console.log(
-      "高雄道路：",
-      kaohsiungRoadCams.length
-    );
-
-  } catch (error) {
-    errors.push(
-      `高雄道路 CCTV：${error.message}`
-    );
-  }
-
-} else {
-  errors.push(
-    `高雄道路 CCTV：` +
-    results[9].reason.message
-  );
-}
-
-if (results[10].status === "fulfilled") {
-  try {
-    provincialRoadCams =
-      normalizeProvincialRoad(
-        results[10].value
-      );
-
-    console.log(
-      "省道 CCTV：",
-      provincialRoadCams.length
-    );
-
-  } catch (error) {
-    errors.push(
-      `省道 CCTV：${error.message}`
-    );
-  }
-} else {
-  errors.push(
-    `省道 CCTV：` +
-    results[10].reason.message
-  );
-}
-
-if (results[11].status === "fulfilled") {
-  try {
-    freewayCams =
-      normalizeFreewayCams(
-        results[11].value
-      );
-
-    console.log(
-      "國道 CCTV：",
-      freewayCams.length
-    );
-
-  } catch (error) {
-    errors.push(
-      `國道 CCTV：${error.message}`
-    );
-  }
-} else {
-  errors.push(
-    `國道 CCTV：` +
-    results[11].reason.message
-  );
-}
-
-// 水利署 CCTV
-if (results[12].status === "fulfilled") {
-  try {
-    wraCams = normalizeWraStations(
-      results[12].value
-    );
-
-    console.log(
-      "水利署 CCTV：",
-      wraCams.length
-    );
-  } catch (error) {
-    errors.push(
-      `水利署 CCTV：${error.message}`
-    );
-  }
-} else {
-  errors.push(
-    `水利署 CCTV：${results[12].reason.message}`
-  );
-}
-
-
-// 台北水情 CCTV
-if (results[13].status === "fulfilled") {
-  try {
-    waterCams = normalizeWaterCams(
-      results[13].value
-    );
-  } catch (error) {
-    errors.push(
-      `水情 CCTV：${error.message}`
-    );
-  }
-} else {
-  errors.push(
-    `水情 CCTV：${results[13].reason.message}`
-  );
-}
-
-
-// 台北水情租賃 CCTV
-if (results[14].status === "fulfilled") {
-  try {
-    waterRentalCams =
-      normalizeWaterRentalCams(
-        results[14].value
-      );
-  } catch (error) {
-    errors.push(
-      `水情租賃 CCTV：${error.message}`
-    );
-  }
-} else {
-  errors.push(
-    `水情租賃 CCTV：${results[14].reason.message}`
-  );
-}
+  /*
+   * 水利署點位很多（約 2,500 支），
+   * 單獨存放，只有選「水利署 CCTV」時才顯示。
+   */
+  wraCams = camsByGroup.wra;
 
   allCams = [
-    ...roadCams,
-    ...newTaipeiRoadCams,
-    ...taoyuanRoadCams,
-    ...keelungRoadCams,
-    ...yilanRoadCams,
-    ...taichungRoadCams,
-    ...tainanRoadCams,
-    ...nantouRoadCams,
-    ...chiayiCountyRoadCams,
-    ...kaohsiungRoadCams,
-    ...provincialRoadCams,
-    ...freewayCams,
-  
-    ...waterCams,
-    ...waterRentalCams,
-    
+    ...camsByGroup.road,
+    ...camsByGroup.provincial,
+    ...camsByGroup.highway,
+    ...camsByGroup.water,
+    ...camsByGroup["water-rental"]
   ];
 
-  cameraCounts = {
-    road:
-      roadCams.length +
-      newTaipeiRoadCams.length +
-      taoyuanRoadCams.length +
-      keelungRoadCams.length +
-      yilanRoadCams.length +
-      taichungRoadCams.length +
-      nantouRoadCams.length +
-      tainanRoadCams.length +
-      chiayiCountyRoadCams.length +
-      kaohsiungRoadCams.length,
-      provincial: provincialRoadCams.length,
-      highway: freewayCams.length,
-      water: waterCams.length,
-      wra: wraCams.length,
-
-      "water-rental": waterRentalCams.length
-  };
+  cameraCounts = Object.fromEntries(
+    Object.entries(camsByGroup).map(
+      ([group, cams]) => [group, cams.length]
+    )
+  );
 
   console.log("全部 CCTV：", allCams.length);
 
@@ -2442,8 +1488,7 @@ if (results[14].status === "fulfilled") {
 
   if (allCams.length === 0) {
     throw new Error(
-      errors.join("；") ||
-      "沒有載入任何 CCTV 資料"
+      errors.join("；") || "沒有載入任何 CCTV 資料"
     );
   }
 
@@ -2453,18 +1498,18 @@ if (results[14].status === "fulfilled") {
   render();
 
   if (errors.length > 0) {
-    console.warn(
-      "部分資料來源載入失敗：",
-      errors
-    );
+    console.warn("部分資料來源載入失敗：", errors);
   }
 }
 
-/* 建立縣市選單 */
+
+/* =========================================================
+ * 選單
+ * ========================================================= */
+
 /* 建立縣市選單 */
 function buildCityOptions() {
-  const citySelect =
-    document.getElementById("cityFilter");
+  const citySelect = document.getElementById("cityFilter");
 
   if (!citySelect) {
     return;
@@ -2473,9 +1518,7 @@ function buildCityOptions() {
   const availableCities = [
     ...new Set(
       allCams
-        .map(cam =>
-          normalizeCity(cam.city)
-        )
+        .map(cam => normalizeCity(cam.city))
         .filter(Boolean)
     )
   ];
@@ -2484,75 +1527,39 @@ function buildCityOptions() {
     const indexA = CITY_ORDER.indexOf(a);
     const indexB = CITY_ORDER.indexOf(b);
 
-    if (indexA !== -1 && indexB !== -1) {
-      return indexA - indexB;
-    }
-
-    if (indexA !== -1) {
-      return -1;
-    }
-
-    if (indexB !== -1) {
-      return 1;
-    }
+    if (indexA !== -1 && indexB !== -1) return indexA - indexB;
+    if (indexA !== -1) return -1;
+    if (indexB !== -1) return 1;
 
     return a.localeCompare(b, "zh-Hant");
   });
 
   citySelect.innerHTML = [
     `<option value="全部">全部縣市</option>`,
-
-    ...availableCities.map(city => {
-      return (
-        `<option value="${esc(city)}">` +
-        `${esc(city)}` +
-        `</option>`
-      );
-    })
+    ...availableCities.map(city =>
+      `<option value="${esc(city)}">${esc(city)}</option>`
+    )
   ].join("");
 }
 
 /* 依照縣市建立 CCTV 類型選單 */
 function buildSourceOptions() {
-  const citySelect =
-    document.getElementById("cityFilter");
-
-  const sourceSelect =
-    document.getElementById("sourceFilter");
+  const citySelect = document.getElementById("cityFilter");
+  const sourceSelect = document.getElementById("sourceFilter");
 
   if (!sourceSelect) {
     return;
   }
 
-  const selectedCity =
-    normalizeCity(
-      citySelect?.value || "全部"
-    );
-
-  const previousValue =
-    sourceSelect.value || "all";
+  const selectedCity = normalizeCity(citySelect?.value || "全部");
+  const previousValue = sourceSelect.value || "all";
 
   const options = [
-    {
-      value: "all",
-      label: "全部 CCTV"
-    },
-    {
-      value: "road",
-      label: CAMERA_TYPES.road.label
-    },
-    {
-      value: "provincial",
-      label: CAMERA_TYPES.provincial.label
-    },
-    {
-      value: "highway",
-      label: CAMERA_TYPES.highway.label
-    },
-    {
-      value: "wra",
-      label: CAMERA_TYPES.wra.label
-    }
+    { value: "all", label: "全部 CCTV" },
+    { value: "road", label: CAMERA_TYPES.road.label },
+    { value: "provincial", label: CAMERA_TYPES.provincial.label },
+    { value: "highway", label: CAMERA_TYPES.highway.label },
+    { value: "wra", label: CAMERA_TYPES.wra.label }
   ];
 
   const showTaipeiWaterTypes =
@@ -2561,144 +1568,82 @@ function buildSourceOptions() {
 
   if (showTaipeiWaterTypes) {
     options.push(
-      {
-        value: "water",
-        label: CAMERA_TYPES.water.label
-      },
-      {
-        value: "water-rental",
-        label:
-          CAMERA_TYPES["water-rental"].label
-      }
+      { value: "water", label: CAMERA_TYPES.water.label },
+      { value: "water-rental", label: CAMERA_TYPES["water-rental"].label }
     );
   }
 
-  sourceSelect.innerHTML =
-    options
-      .map(option => {
-        return (
-          `<option value="${esc(option.value)}">` +
-          `${esc(option.label)}` +
-          `</option>`
-        );
-      })
-      .join("");
+  sourceSelect.innerHTML = options
+    .map(option =>
+      `<option value="${esc(option.value)}">${esc(option.label)}</option>`
+    )
+    .join("");
 
-  const previousStillAvailable =
-    options.some(
-      option =>
-        option.value === previousValue
-    );
+  const previousStillAvailable = options.some(
+    option => option.value === previousValue
+  );
 
-  sourceSelect.value =
-    previousStillAvailable
-      ? previousValue
-      : "all";
+  sourceSelect.value = previousStillAvailable
+    ? previousValue
+    : "all";
 }
 
 /* 依照目前縣市建立行政區選單 */
 function buildDistrictOptions() {
-  const citySelect =
-    document.getElementById("cityFilter");
-
-  const districtSelect =
-    document.getElementById("districtFilter");
+  const citySelect = document.getElementById("cityFilter");
+  const districtSelect = document.getElementById("districtFilter");
 
   if (!districtSelect) {
     return;
   }
 
-  const selectedCity =
-    citySelect?.value || "全部";
+  const selectedCity = citySelect?.value || "全部";
 
   const districts = [
     ...new Set(
       allCams
-        .filter(cam => {
-          const cameraCity =
-            normalizeCity(cam.city);
-
-          return (
-            selectedCity === "全部" ||
-            cameraCity === selectedCity
-          );
-        })
-        .map(cam =>
-          normalizeDistrict(
-            cam.district,
-            "未判定"
-          )
+        .filter(cam =>
+          selectedCity === "全部" ||
+          normalizeCity(cam.city) === selectedCity
         )
+        .map(cam => normalizeDistrict(cam.district, "未判定"))
         .filter(Boolean)
     )
-  ].sort((a, b) =>
-    a.localeCompare(b, "zh-Hant")
-  );
+  ].sort((a, b) => a.localeCompare(b, "zh-Hant"));
 
   districtSelect.innerHTML = [
     `<option value="全部">全部行政區</option>`,
-
-    ...districts.map(district => {
-      return (
-        `<option value="${esc(district)}">` +
-        `${esc(district)}` +
-        `</option>`
-      );
-    })
+    ...districts.map(district =>
+      `<option value="${esc(district)}">${esc(district)}</option>`
+    )
   ].join("");
 }
 
-/* 取得符合目前搜尋條件的 CCTV */
-function filteredCams() {
-  const query = "";
 
+/* =========================================================
+ * 篩選與畫面顯示
+ * ========================================================= */
+
+/* 取得符合目前篩選條件的 CCTV */
+function filteredCams() {
   const city =
-    document.getElementById("cityFilter")
-      ?.value || "全部";
+    document.getElementById("cityFilter")?.value || "全部";
 
   const district =
-    document.getElementById("districtFilter")
-      ?.value || "全部";
+    document.getElementById("districtFilter")?.value || "全部";
 
-  const sourceFilter =
-    document.getElementById("sourceFilter");
-
-  const source = sourceFilter
-    ? sourceFilter.value
-    : "all";
+  const source =
+    document.getElementById("sourceFilter")?.value || "all";
 
   /*
-   * 選擇水利署時，改用 wraCams。
-   * 其他來源則使用 allCams。
-   *
-   * 因為 allCams 已經拿掉 ...wraCams，
-   * 所以預設「全部 CCTV」不會建立 2,521 個水利署 Marker。
+   * 選擇水利署時，改用 wraCams；其他來源使用 allCams。
+   * 所以預設「全部 CCTV」不會建立 2,500 多個水利署 Marker。
    */
-  const sourceCams =
-    source === "wra"
-      ? wraCams
-      : allCams;
+  const sourceCams = source === "wra"
+    ? wraCams
+    : allCams;
 
   return sourceCams.filter(cam => {
-    const typeInfo =
-      getCameraType(cam.type);
-
-    const searchableText = [
-      cam.name,
-      cam.rawName,
-      cam.id,
-      cam.district,
-      cam.source,
-      typeInfo.label
-    ]
-      .filter(Boolean)
-      .join(" ")
-      .toLowerCase();
-
-    const matchesSearch =
-      !query ||
-      searchableText.includes(query);
-
     const matchesDistrict =
       district === "全部" ||
       cam.district === district;
@@ -2707,19 +1652,11 @@ function filteredCams() {
       source === "all" ||
       cam.type === source;
 
-    const cameraCity =
-      normalizeCity(cam.city);
-
     const matchesCity =
       city === "全部" ||
-      cameraCity === city;
+      normalizeCity(cam.city) === city;
 
-    return (
-      matchesSearch &&
-      matchesCity &&
-      matchesDistrict &&
-      matchesSource
-    );
+    return matchesCity && matchesDistrict && matchesSource;
   });
 }
 
@@ -2755,71 +1692,45 @@ function camsInCurrentMapBounds(cams) {
  * autoZoom 必須關閉，否則每次更新又會重新縮放地圖。
  */
 function scheduleVisibleCamerasRender() {
-  if (
-    !map ||
-    allCams.length === 0
-  ) {
+  if (!map || allCams.length === 0) {
     return;
   }
 
   clearTimeout(visibleRenderTimer);
 
   visibleRenderTimer = setTimeout(() => {
-    render({
-      autoZoom: false
-    });
+    render({ autoZoom: false });
   }, VISIBLE_RENDER_DELAY);
 }
 
 /* 重新顯示側欄與地圖標記 */
 function render(options = {}) {
-  const {
-    autoZoom = true
-  } = options;
+  const { autoZoom = true } = options;
 
   const matchedCams = filteredCams();
-
-  const cams = camsInCurrentMapBounds(
-    matchedCams
-  );
-
-  const roadCount = cameraCounts.road;
-  const provincialCount =
-    cameraCounts.provincial;
-  const highwayCount =
-    cameraCounts.highway;
-  const waterCount = cameraCounts.water;
-  const waterRentalCount =
-    cameraCounts["water-rental"];
+  const cams = camsInCurrentMapBounds(matchedCams);
 
   document.getElementById("status").textContent =
     `目前畫面 ${cams.length} 支（篩選後 ${matchedCams.length} 支）；` +
-    `道路 ${roadCount} 支；` +
-    `省道 ${provincialCount} 支；` +
-    `國道 ${highwayCount} 支；` +
-    `水情 ${waterCount} 支；` +
-    `水情租賃 ${waterRentalCount} 支；` +
+    `道路 ${cameraCounts.road} 支；` +
+    `省道 ${cameraCounts.provincial} 支；` +
+    `國道 ${cameraCounts.highway} 支；` +
+    `水情 ${cameraCounts.water} 支；` +
+    `水情租賃 ${cameraCounts["water-rental"]} 支；` +
     `水利署 ${cameraCounts.wra} 支。`;
 
   renderSidebar(cams);
   renderMarkers(cams);
 
   const selectedCity =
-  document.getElementById(
-    "cityFilter"
-  )?.value || "全部";
+    document.getElementById("cityFilter")?.value || "全部";
 
   const selectedDistrict =
-    document.getElementById(
-      "districtFilter"
-    )?.value || "全部";
+    document.getElementById("districtFilter")?.value || "全部";
 
   if (autoZoom) {
     if (selectedDistrict !== "全部") {
-      zoomToDistrict(
-        selectedDistrict,
-        selectedCity
-      );
+      zoomToDistrict(selectedDistrict, selectedCity);
     } else {
       zoomToCity(selectedCity);
     }
@@ -2830,17 +1741,13 @@ function render(options = {}) {
 function renderSidebar(cams) {
   const SIDEBAR_LIMIT = 200;
 
-  const limitedCams = cams.slice(
-    0,
-    SIDEBAR_LIMIT
-  );
+  const limitedCams = cams.slice(0, SIDEBAR_LIMIT);
 
   const grouped = {};
 
   limitedCams.forEach(cam => {
     const city = cam.city || "其他";
-    const district =
-      cam.district || "未判定";
+    const district = cam.district || "未判定";
 
     if (!grouped[city]) {
       grouped[city] = {};
@@ -2853,23 +1760,13 @@ function renderSidebar(cams) {
     grouped[city][district].push(cam);
   });
 
-  const preferredCities = [
-    "台北市",
-    "臺北市",
-    "新北市"
-  ];
+  const preferredCities = ["台北市", "臺北市", "新北市"];
 
   const cityOrder = [
-    ...preferredCities.filter(
-      city => grouped[city]
-    ),
+    ...preferredCities.filter(city => grouped[city]),
     ...Object.keys(grouped)
-      .filter(
-        city => !preferredCities.includes(city)
-      )
-      .sort((a, b) =>
-        a.localeCompare(b, "zh-Hant")
-      )
+      .filter(city => !preferredCities.includes(city))
+      .sort((a, b) => a.localeCompare(b, "zh-Hant"))
   ];
 
   let html = "";
@@ -2885,15 +1782,11 @@ function renderSidebar(cams) {
   }
 
   cityOrder.forEach(city => {
-    const districts = Object.keys(
-      grouped[city]
-    ).sort((a, b) =>
-      a.localeCompare(b, "zh-Hant")
-    );
+    const districts = Object.keys(grouped[city])
+      .sort((a, b) => a.localeCompare(b, "zh-Hant"));
 
     districts.forEach(district => {
-      const list =
-        grouped[city][district];
+      const list = grouped[city][district];
 
       if (!list || list.length === 0) {
         return;
@@ -2903,22 +1796,14 @@ function renderSidebar(cams) {
         <div class="district-group">
           <div class="district-header">
             ${esc(city)}・${esc(district)}
-            <span class="badge">
-              ${list.length}
-            </span>
+            <span class="badge">${list.length}</span>
           </div>
       `;
 
       list
-        .sort((a, b) =>
-          a.name.localeCompare(
-            b.name,
-            "zh-Hant"
-          )
-        )
+        .sort((a, b) => a.name.localeCompare(b.name, "zh-Hant"))
         .forEach(cam => {
-          const typeInfo =
-            getCameraType(cam.type);
+          const typeInfo = getCameraType(cam.type);
 
           html += `
             <div
@@ -2927,15 +1812,11 @@ function renderSidebar(cams) {
               onclick="focusCam('${esc(cam.key)}')"
             >
               <div class="cam-name">
-                <span class="cam-type-icon">
-                  ${typeInfo.icon}
-                </span>
+                <span class="cam-type-icon">${typeInfo.icon}</span>
                 ${esc(cam.name)}
               </div>
-
               <div class="cam-id">
-                ${esc(typeInfo.label)}
-                ・ID ${esc(cam.id)}
+                ${esc(typeInfo.label)}・ID ${esc(cam.id)}
               </div>
             </div>
           `;
@@ -2947,9 +1828,7 @@ function renderSidebar(cams) {
 
   document.getElementById("sidebar").innerHTML =
     html ||
-    `<div class="empty-msg">
-      找不到符合條件的 CCTV。
-    </div>`;
+    `<div class="empty-msg">找不到符合條件的 CCTV。</div>`;
 }
 
 /* 顯示地圖上的攝影機標記 */
@@ -2958,8 +1837,7 @@ function renderMarkers(cams) {
     return;
   }
 
-  const markerRadius =
-    window.innerWidth <= 900 ? 10 : 8;
+  const markerRadius = window.innerWidth <= 900 ? 10 : 8;
 
   markers.forEach(marker => {
     map.removeLayer(marker);
@@ -2968,19 +1846,15 @@ function renderMarkers(cams) {
   markers = [];
 
   cams.forEach(cam => {
-    const typeInfo =
-      getCameraType(cam.type);
+    const typeInfo = getCameraType(cam.type);
 
-    const marker = L.circleMarker(
-      [cam.y, cam.x],
-      {
-        radius: markerRadius,
-        fillColor: typeInfo.color,
-        fillOpacity: 0.85,
-        color: "#ffffff",
-        weight: 2
-      }
-    );
+    const marker = L.circleMarker([cam.y, cam.x], {
+      radius: markerRadius,
+      fillColor: typeInfo.color,
+      fillOpacity: 0.85,
+      color: "#ffffff",
+      weight: 2
+    });
 
     marker.camData = cam;
 
@@ -2993,23 +1867,24 @@ function renderMarkers(cams) {
   });
 }
 
-/* 開啟攝影機資訊視窗 */
+
+/* =========================================================
+ * 攝影機資訊視窗
+ * ========================================================= */
+
 function openInfo(marker) {
   const cam = marker.camData;
-  const typeInfo =
-    getCameraType(cam.type);
+  const typeInfo = getCameraType(cam.type);
 
   const mediaUrl =
     cam.type === "water"
       ? (cam.streamUrl || cam.url)
       : cam.type === "water-rental"
-        ? cam.streamUrl
+        ? (cam.streamUrl || cam.imageUrl)
         : cam.url;
 
   const isSnapshot =
-    /\.(jpg|jpeg|png|webp)(\?|$)/i.test(
-      mediaUrl || ""
-    );
+    /\.(jpg|jpeg|png|webp)(\?|$)/i.test(mediaUrl || "");
 
   const buttonText =
     cam.type === "water" || isSnapshot
@@ -3017,226 +1892,84 @@ function openInfo(marker) {
       : "▶ 開啟即時影像";
 
   const saveViewAttribute =
-  normalizeCity(cam.city) === "桃園市"
-    ? `onclick="saveTaoyuanMapView(
-        window.debugCameras.find(
-          item => item.key === '${esc(cam.key)}'
-        )
-      )"`
-    : "";
-  
-  const actionHtml =
-    cam.type === "wra"
-      ? `
-        <button
-          type="button"
-          class="iw-btn wra-image-btn"
-        >
-          ▶ 開啟動態影像
-        </button>
-      `
-      : mediaUrl
-        ? `
-          <a
-            class="iw-btn"
-            href="${esc(mediaUrl)}"
-            target="_blank"
-            rel="noopener noreferrer"
-            ${saveViewAttribute}
-          >
-            ${buttonText}
-          </a>
-        `
-        : `
-          <div class="iw-no-media">
-            ${
-              cam.isUnavailable
-                ? "官方影像主機目前無法連線。"
-                : "目前僅提供 CCTV 點位資料，尚無可開啟的即時影像網址。"
-            }
-          </div>
-        `;
+    normalizeCity(cam.city) === "桃園市"
+      ? `onclick="saveTaoyuanMapView(
+          window.debugCameras.find(
+            item => item.key === '${esc(cam.key)}'
+          )
+        )"`
+      : "";
+
+  let actionHtml;
+
+  if (cam.type === "wra") {
+    actionHtml = `
+      <button type="button" class="iw-btn wra-image-btn">
+        ▶ 開啟動態影像
+      </button>
+    `;
+  } else if (mediaUrl) {
+    actionHtml = `
+      <a
+        class="iw-btn"
+        href="${esc(mediaUrl)}"
+        target="_blank"
+        rel="noopener noreferrer"
+        ${saveViewAttribute}
+      >
+        ${buttonText}
+      </a>
+    `;
+  } else {
+    actionHtml = `
+      <div class="iw-no-media">
+        ${
+          cam.isUnavailable
+            ? "官方影像主機目前無法連線。"
+            : "目前僅提供 CCTV 點位資料，尚無可開啟的即時影像網址。"
+        }
+      </div>
+    `;
+  }
 
   const content = `
     <div class="iw-wrap">
-      <div class="iw-title">
-        ${esc(cam.name)}
-      </div>
-
+      <div class="iw-title">${esc(cam.name)}</div>
       <div class="iw-meta">
-        ${esc(typeInfo.label)}
-        ・ID ${esc(cam.id)}
-        ・${esc(cam.district)}
+        ${esc(typeInfo.label)}・ID ${esc(cam.id)}・${esc(cam.district)}
       </div>
-
-      <div class="iw-source">
-        資料來源：${esc(cam.source)}
-      </div>
-
+      <div class="iw-source">資料來源：${esc(cam.source)}</div>
       ${actionHtml}
     </div>
   `;
 
-  marker.bindPopup(content, {
-    maxWidth: 300
-  });
+  marker.bindPopup(content, { maxWidth: 300 });
 
   if (cam.type === "wra") {
     marker.once("popupopen", event => {
-      const popupElement =
-        event.popup.getElement();
-
-      const button =
-        popupElement?.querySelector(
-          ".wra-image-btn"
-        );
+      const button = event.popup
+        .getElement()
+        ?.querySelector(".wra-image-btn");
 
       if (!button) {
         return;
       }
 
-      button.addEventListener(
-        "click",
-        () => {
-          openWraLiveViewer(
-            cam,
-            button
-          );
-        }
-      );
+      button.addEventListener("click", () => {
+        openWraLiveViewer(cam);
+      });
     });
   }
 
   marker.openPopup();
-  
-  
 
   highlightSidebar(cam.key);
 }
 
-async function openWraLatestImage(cam, button) {
-  const sourceId = String(
-    cam.sourceId || ""
-  ).trim();
 
-  const stationId = String(
-    cam.stationId || cam.id || ""
-  ).trim();
-
-  if (!sourceId || !stationId) {
-    alert("缺少水利署攝影機編號。");
-    return;
-  }
-
-  const originalText =
-    button?.textContent ||
-    "開啟即時影像";
-
-  if (button) {
-    button.disabled = true;
-    button.textContent = "影像載入中…";
-  }
-
-  try {
-    const apiUrl =
-      `https://fhyv.wra.gov.tw/FhyWeb/v1/Api/CCTV/WRA/Cameras/` +
-      `${encodeURIComponent(sourceId)}/` +
-      `${encodeURIComponent(stationId)}`;
-
-    const response = await fetch(apiUrl);
-
-    if (!response.ok) {
-      throw new Error(
-        `HTTP ${response.status}`
-      );
-    }
-
-    const data = await response.json();
-
-    console.log(
-      "水利署 Cameras API 回傳：",
-      data
-    );
-
-    const imageUrls = [];
-
-    function collectImageUrls(value) {
-      if (typeof value === "string") {
-        const url = value.trim();
-
-        if (
-          url.startsWith("http://") ||
-          url.startsWith("https://")
-        ) {
-          imageUrls.push(url);
-        }
-
-        return;
-      }
-
-      if (Array.isArray(value)) {
-        value.forEach(item => {
-          collectImageUrls(item);
-        });
-
-        return;
-      }
-
-      if (
-        value &&
-        typeof value === "object"
-      ) {
-        Object.values(value).forEach(item => {
-          collectImageUrls(item);
-        });
-      }
-    }
-
-    collectImageUrls(data);
-
-    const uniqueImageUrls = [
-      ...new Set(imageUrls)
-    ];
-
-    console.log(
-      "找到的影像網址：",
-      uniqueImageUrls
-    );
-
-    if (uniqueImageUrls.length === 0) {
-      throw new Error(
-        "這個站點目前沒有提供即時影像"
-      );
-    }
-
-    const latestImage =
-      uniqueImageUrls[
-        uniqueImageUrls.length - 1
-      ];
-
-    window.open(
-      latestImage,
-      "_blank",
-      "noopener,noreferrer"
-    );
-
-  } catch (error) {
-    console.error(
-      "水利署影像載入失敗：",
-      error
-    );
-
-    alert(
-      `水利署影像載入失敗：${error.message}`
-    );
-
-  } finally {
-    if (button) {
-      button.disabled = false;
-      button.textContent = originalText;
-    }
-  }
-}
+/* =========================================================
+ * 水利署：定時更新的快照視窗
+ * ========================================================= */
 
 let wraLiveTimer = null;
 
@@ -3246,12 +1979,10 @@ function closeWraLiveViewer() {
     wraLiveTimer = null;
   }
 
-  document
-    .querySelector(".wra-live-overlay")
-    ?.remove();
+  document.querySelector(".wra-live-overlay")?.remove();
 }
 
-async function getWraLatestImageUrl(cam) {
+function getWraImageUrl(cam) {
   const imageUrl = String(
     cam.mediaUrl ||
     cam.imageUrl ||
@@ -3260,50 +1991,33 @@ async function getWraLatestImageUrl(cam) {
   ).trim();
 
   if (!imageUrl) {
-    throw new Error(
-      "這支攝影機沒有提供影像網址"
-    );
+    throw new Error("這支攝影機沒有提供影像網址");
   }
 
   return imageUrl;
 }
 
-async function openWraLiveViewer(cam, button) {
+function openWraLiveViewer(cam) {
   closeWraLiveViewer();
 
-  const overlay =
-    document.createElement("div");
+  const overlay = document.createElement("div");
 
-  overlay.className =
-    "wra-live-overlay";
+  overlay.className = "wra-live-overlay";
 
   overlay.innerHTML = `
     <div class="wra-live-box">
       <div class="wra-live-header">
         <div>
-          <strong>
-            ${esc(cam.name)}
-          </strong>
-
-          <div class="wra-live-status">
-            正在取得影像…
-          </div>
+          <strong>${esc(cam.name)}</strong>
+          <div class="wra-live-status">正在取得影像…</div>
         </div>
-
-        <button
-          type="button"
-          class="wra-live-close"
-          aria-label="關閉"
-        >
+        <button type="button" class="wra-live-close" aria-label="關閉">
           ×
         </button>
       </div>
 
       <div class="wra-live-image-wrap">
-        <img
-          class="wra-live-image"
-          alt="${esc(cam.name)}最新影像"
-        >
+        <img class="wra-live-image" alt="${esc(cam.name)}最新影像">
       </div>
 
       <div class="wra-live-footer">
@@ -3314,101 +2028,66 @@ async function openWraLiveViewer(cam, button) {
 
   document.body.appendChild(overlay);
 
-  const image =
-    overlay.querySelector(
-      ".wra-live-image"
-    );
+  const image = overlay.querySelector(".wra-live-image");
+  const status = overlay.querySelector(".wra-live-status");
+  const closeButton = overlay.querySelector(".wra-live-close");
 
-  const status =
-    overlay.querySelector(
-      ".wra-live-status"
-    );
+  closeButton.addEventListener("click", closeWraLiveViewer);
 
-  const closeButton =
-    overlay.querySelector(
-      ".wra-live-close"
-    );
-
-  closeButton.addEventListener(
-    "click",
-    closeWraLiveViewer
-  );
-
-  overlay.addEventListener(
-    "click",
-    event => {
-      if (event.target === overlay) {
-        closeWraLiveViewer();
-      }
+  overlay.addEventListener("click", event => {
+    if (event.target === overlay) {
+      closeWraLiveViewer();
     }
-  );
+  });
 
-  async function refreshImage() {
+  image.onload = () => {
+    status.textContent =
+      `更新時間：${new Date().toLocaleTimeString("zh-TW")}`;
+  };
+
+  image.onerror = () => {
+    status.textContent = "影像載入失敗，稍後重試";
+  };
+
+  function refreshImage() {
     try {
-      status.textContent =
-        "影像更新中…";
+      status.textContent = "影像更新中…";
 
-      const imageUrl =
-        await getWraLatestImageUrl(cam);
-
-      const separator =
-        imageUrl.includes("?")
-          ? "&"
-          : "?";
+      const imageUrl = getWraImageUrl(cam);
+      const separator = imageUrl.includes("?") ? "&" : "?";
 
       // 加上時間參數，避免瀏覽器顯示快取圖片
-      image.src =
-        `${imageUrl}${separator}` +
-        `_t=${Date.now()}`;
+      image.src = `${imageUrl}${separator}_t=${Date.now()}`;
 
-      image.onload = () => {
-        status.textContent =
-          `更新時間：${new Date()
-            .toLocaleTimeString("zh-TW")}`;
-      };
-
-      image.onerror = () => {
-        status.textContent =
-          "影像載入失敗，稍後重試";
-      };
     } catch (error) {
-      console.error(
-        "水利署動態影像更新失敗：",
-        error
-      );
-
-      status.textContent =
-        `更新失敗：${error.message}`;
+      console.error("水利署動態影像更新失敗：", error);
+      status.textContent = `更新失敗：${error.message}`;
     }
   }
 
-  await refreshImage();
+  refreshImage();
 
   // 每 5 秒重新取得一次最新圖片
-  wraLiveTimer = setInterval(
-    refreshImage,
-    2000
-  );
+  wraLiveTimer = setInterval(refreshImage, 5000);
 }
+
+
+/* =========================================================
+ * 側欄互動
+ * ========================================================= */
 
 /* 點選側欄後移動到該攝影機 */
 function focusCam(key) {
-  const marker = markers.find(
-    item => item.camData.key === key
-  );
+  const marker = markers.find(item => item.camData.key === key);
 
   if (!marker) {
     return;
   }
 
-  map.flyTo(
-    marker.getLatLng(),
-    16,
-    {
-      animate: true,
-      duration: 0.8
-    }
-  );
+  map.flyTo(marker.getLatLng(), 16, {
+    animate: true,
+    duration: 0.8
+  });
 
   openInfo(marker);
 }
@@ -3416,9 +2095,7 @@ function focusCam(key) {
 /* 標示目前選取的側欄項目 */
 function highlightSidebar(key) {
   if (activeSidebarItem) {
-    activeSidebarItem.classList.remove(
-      "active"
-    );
+    activeSidebarItem.classList.remove("active");
   }
 
   const element = document.querySelector(
@@ -3440,26 +2117,19 @@ function highlightSidebar(key) {
   activeSidebarItem = element;
 }
 
-/* 計算兩個座標之間的距離 */
-function distanceInMeters(
-  position1,
-  position2
-) {
+
+/* =========================================================
+ * 距離計算
+ * ========================================================= */
+
+/* 計算兩個座標之間的距離（公尺） */
+function distanceInMeters(position1, position2) {
   const earthRadius = 6371000;
 
-  const lat1 =
-    position1.lat * Math.PI / 180;
-
-  const lat2 =
-    position2.lat * Math.PI / 180;
-
-  const deltaLat =
-    (position2.lat - position1.lat) *
-    Math.PI / 180;
-
-  const deltaLng =
-    (position2.lng - position1.lng) *
-    Math.PI / 180;
+  const lat1 = position1.lat * Math.PI / 180;
+  const lat2 = position2.lat * Math.PI / 180;
+  const deltaLat = (position2.lat - position1.lat) * Math.PI / 180;
+  const deltaLng = (position2.lng - position1.lng) * Math.PI / 180;
 
   const a =
     Math.sin(deltaLat / 2) ** 2 +
@@ -3467,47 +2137,51 @@ function distanceInMeters(
     Math.cos(lat2) *
     Math.sin(deltaLng / 2) ** 2;
 
-  const c =
-    2 * Math.atan2(
-      Math.sqrt(a),
-      Math.sqrt(1 - a)
-    );
+  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
 
   return earthRadius * c;
 }
 
 /* 找出距離使用者最近的 CCTV */
 function findNearestCam(userPosition) {
-  if (
-    !userPosition ||
-    allCams.length === 0
-  ) {
+  if (!userPosition || allCams.length === 0) {
     return null;
   }
 
   let nearest = null;
 
   allCams.forEach(cam => {
-    const distance = distanceInMeters(
-      userPosition,
-      {
-        lat: cam.y,
-        lng: cam.x
-      }
-    );
+    const distance = distanceInMeters(userPosition, {
+      lat: cam.y,
+      lng: cam.x
+    });
 
-    if (
-      !nearest ||
-      distance < nearest.distance
-    ) {
-      nearest = {
-        cam,
-        distance
-      };
+    if (!nearest || distance < nearest.distance) {
+      nearest = { cam, distance };
     }
   });
 
   return nearest;
+}
+
+/* 找出搜尋位置 3 公里內的 CCTV */
+function findNearbyCams(searchPosition) {
+  const radiusMeters = 3000;
+
+  return allCams
+    .map(cam => ({
+      ...cam,
+      distance: distanceInMeters(searchPosition, {
+        lat: cam.y,
+        lng: cam.x
+      })
+    }))
+    .filter(cam =>
+      Number.isFinite(cam.distance) &&
+      cam.distance <= radiusMeters
+    )
+    .sort((a, b) => a.distance - b.distance)
+    .slice(0, 50);
 }
 
 /* 顯示距離文字 */
@@ -3519,41 +2193,25 @@ function formatDistance(distance) {
   return `${(distance / 1000).toFixed(1)} 公里`;
 }
 
+
+/* =========================================================
+ * 地點搜尋
+ * ========================================================= */
+
 /* 清除地點搜尋，恢復原本瀏覽模式 */
 function clearPlaceSearch() {
-  if (searchLocationMarker) {
-    map.removeLayer(searchLocationMarker);
-    searchLocationMarker = null;
-  }
+  exitPlaceSearchMode();
 
-  const clearButton =
-    document.getElementById("clearSearchBtn");
-
-  if (clearButton) {
-    clearButton.hidden = true;
-  }
-
-  const container =
-    document.getElementById(
-      "placeAutocomplete"
-    );
-
-  if (container) {
-    container.replaceChildren();
-    initPlaceAutocomplete();
-  }
-
-  const citySelect =
-    document.getElementById("cityFilter");
+  const citySelect = document.getElementById("cityFilter");
 
   if (citySelect) {
     citySelect.value = "全部";
   }
 
+  buildSourceOptions();
   buildDistrictOptions();
 
-  const districtSelect =
-    document.getElementById("districtFilter");
+  const districtSelect = document.getElementById("districtFilter");
 
   if (districtSelect) {
     districtSelect.value = "全部";
@@ -3569,17 +2227,13 @@ function exitPlaceSearchMode() {
     searchLocationMarker = null;
   }
 
-  const clearButton =
-    document.getElementById("clearSearchBtn");
+  const clearButton = document.getElementById("clearSearchBtn");
 
   if (clearButton) {
     clearButton.hidden = true;
   }
 
-  const container =
-    document.getElementById(
-      "placeAutocomplete"
-    );
+  const container = document.getElementById("placeAutocomplete");
 
   if (container) {
     container.replaceChildren();
@@ -3589,56 +2243,102 @@ function exitPlaceSearchMode() {
   map.closePopup();
 }
 
-/* 找出搜尋位置 3 公里內的 CCTV */
-function findNearbyCams(searchPosition) {
-  const radiusMeters = 3000;
+/* 建立 Google 地點搜尋框 */
+async function initPlaceAutocomplete() {
+  const container = document.getElementById("placeAutocomplete");
 
-  return allCams
-    .map(cam => {
-      const distance = distanceInMeters(
-        searchPosition,
-        {
-          lat: cam.y,
-          lng: cam.x
+  if (!container) {
+    console.error("找不到 Google 地點搜尋框容器");
+    return;
+  }
+
+  try {
+    const { PlaceAutocompleteElement } =
+      await google.maps.importLibrary("places");
+
+    const autocomplete = new PlaceAutocompleteElement();
+
+    autocomplete.includedRegionCodes = ["tw"];
+    autocomplete.placeholder = "搜尋地址、車站、地標或店家";
+
+    autocomplete.addEventListener("gmp-select", async event => {
+      try {
+        const place = event.placePrediction.toPlace();
+
+        await place.fetchFields({
+          fields: ["displayName", "formattedAddress", "location"]
+        });
+
+        if (!place.location) {
+          console.error("這個地點沒有座標");
+          return;
         }
-      );
 
-      return {
-        ...cam,
-        distance
-      };
-    })
-    .filter(cam =>
-      Number.isFinite(cam.distance) &&
-      cam.distance <= radiusMeters
-    )
-    .sort((a, b) =>
-      a.distance - b.distance
-    )
-    .slice(0, 50);
+        const lat = place.location.lat();
+        const lng = place.location.lng();
+
+        const nearbyCams = findNearbyCams({ lat, lng });
+
+        const clearButton = document.getElementById("clearSearchBtn");
+
+        if (clearButton) {
+          clearButton.hidden = false;
+        }
+
+        console.log("3 公里內 CCTV：", nearbyCams);
+
+        renderSidebar(nearbyCams);
+        renderMarkers(nearbyCams);
+
+        const bounds = L.latLngBounds([
+          [lat, lng],
+          ...nearbyCams.map(cam => [cam.y, cam.x])
+        ]);
+
+        if (bounds.isValid()) {
+          map.fitBounds(bounds, {
+            padding: [40, 40],
+            maxZoom: 16
+          });
+        }
+
+        if (searchLocationMarker) {
+          map.removeLayer(searchLocationMarker);
+        }
+
+        searchLocationMarker = L.marker([lat, lng])
+          .addTo(map)
+          .bindPopup(
+            `<strong>${esc(place.displayName || "搜尋位置")}</strong>`
+          )
+          .openPopup();
+
+        document.getElementById("status").textContent =
+          `已找到：${place.displayName || "搜尋地點"}`;
+
+      } catch (error) {
+        console.error("取得搜尋地點失敗：", error);
+      }
+    });
+
+    container.replaceChildren(autocomplete);
+
+  } catch (error) {
+    console.error("Google 地點搜尋載入失敗：", error);
+  }
 }
 
-/* 使用者定位 */
-/* 使用者定位 */
+
+/* =========================================================
+ * 使用者定位
+ * ========================================================= */
+
 function locateUser() {
-  const button =
-    document.getElementById("locationBtn");
-
-  const status =
-    document.getElementById("status");
-
-  const citySelect =
-    document.getElementById("cityFilter");
-
-  const districtSelect =
-    document.getElementById(
-      "districtFilter"
-    );
-
-  const sourceSelect =
-    document.getElementById(
-      "sourceFilter"
-    );
+  const button = document.getElementById("locationBtn");
+  const status = document.getElementById("status");
+  const citySelect = document.getElementById("cityFilter");
+  const districtSelect = document.getElementById("districtFilter");
+  const sourceSelect = document.getElementById("sourceFilter");
 
   exitPlaceSearchMode();
 
@@ -3658,21 +2358,16 @@ function locateUser() {
     districtSelect.value = "全部";
   }
 
-  render({
-    autoZoom: false
-  });
+  render({ autoZoom: false });
 
   if (!navigator.geolocation) {
-    status.textContent =
-      "你的瀏覽器不支援定位功能。";
+    status.textContent = "你的瀏覽器不支援定位功能。";
     return;
   }
 
   button.disabled = true;
   button.textContent = "定位中…";
-
-  status.textContent =
-    "正在取得你的位置……";
+  status.textContent = "正在取得你的位置……";
 
   navigator.geolocation.getCurrentPosition(
     position => {
@@ -3682,57 +2377,39 @@ function locateUser() {
       };
 
       if (userLocationMarker) {
-        map.removeLayer(
-          userLocationMarker
-        );
+        map.removeLayer(userLocationMarker);
       }
 
-      userLocationMarker =
-        L.circleMarker(
-          [
-            currentUserPosition.lat,
-            currentUserPosition.lng
-          ],
-          {
-            radius: 9,
-            fillColor: "#ef4444",
-            fillOpacity: 1,
-            color: "#ffffff",
-            weight: 3
-          }
-        );
+      userLocationMarker = L.circleMarker(
+        [currentUserPosition.lat, currentUserPosition.lng],
+        {
+          radius: 9,
+          fillColor: "#ef4444",
+          fillOpacity: 1,
+          color: "#ffffff",
+          weight: 3
+        }
+      );
 
       userLocationMarker
         .bindTooltip("我的位置")
         .addTo(map);
 
       map.stop();
-      
+
       map.setView(
-        [
-          currentUserPosition.lat,
-          currentUserPosition.lng
-        ],
+        [currentUserPosition.lat, currentUserPosition.lng],
         16,
-        {
-          animate: true
-        }
+        { animate: true }
       );
 
       button.disabled = false;
-      button.textContent =
-        "📍 我的位置";
+      button.textContent = "📍 我的位置";
 
-      const nearest =
-        findNearestCam(
-          currentUserPosition
-        );
+      const nearest = findNearestCam(currentUserPosition);
 
       if (nearest) {
-        const typeInfo =
-          getCameraType(
-            nearest.cam.type
-          );
+        const typeInfo = getCameraType(nearest.cam.type);
 
         status.textContent =
           `已完成定位。最近的是` +
@@ -3746,33 +2423,19 @@ function locateUser() {
     },
 
     error => {
-      let message =
-        "無法取得你的位置。";
+      let message = "無法取得你的位置。";
 
-      if (
-        error.code ===
-        error.PERMISSION_DENIED
-      ) {
-        message =
-          "你沒有允許定位權限，請在瀏覽器設定中允許位置存取。";
-      } else if (
-        error.code ===
-        error.POSITION_UNAVAILABLE
-      ) {
-        message =
-          "目前無法取得位置資訊。";
-      } else if (
-        error.code ===
-        error.TIMEOUT
-      ) {
-        message =
-          "定位逾時，請再試一次。";
+      if (error.code === error.PERMISSION_DENIED) {
+        message = "你沒有允許定位權限，請在瀏覽器設定中允許位置存取。";
+      } else if (error.code === error.POSITION_UNAVAILABLE) {
+        message = "目前無法取得位置資訊。";
+      } else if (error.code === error.TIMEOUT) {
+        message = "定位逾時，請再試一次。";
       }
 
       status.textContent = message;
       button.disabled = false;
-      button.textContent =
-        "📍 我的位置";
+      button.textContent = "📍 我的位置";
     },
 
     {
@@ -3783,129 +2446,14 @@ function locateUser() {
   );
 }
 
-/* 建立 Google 地點搜尋框 */
-async function initPlaceAutocomplete() {
-  const container =
-    document.getElementById("placeAutocomplete");
 
-  if (!container) {
-    console.error("找不到 Google 地點搜尋框容器");
-    return;
-  }
+/* =========================================================
+ * 啟動地圖
+ * ========================================================= */
 
-  try {
-    const { PlaceAutocompleteElement } =
-      await google.maps.importLibrary("places");
-
-    const autocomplete =
-      new PlaceAutocompleteElement();
-
-    placeAutocompleteElement = autocomplete;
-
-    autocomplete.includedRegionCodes = ["tw"];
-
-    autocomplete.placeholder =
-      "搜尋地址、車站、地標或店家";
-
-    autocomplete.addEventListener(
-      "gmp-select",
-      async event => {
-        try {
-          const place =
-            event.placePrediction.toPlace();
-
-          await place.fetchFields({
-            fields: [
-              "displayName",
-              "formattedAddress",
-              "location"
-            ]
-          });
-
-          if (!place.location) {
-            console.error("這個地點沒有座標");
-            return;
-          }
-
-          const lat = place.location.lat();
-          const lng = place.location.lng();
-
-          const nearbyCams = findNearbyCams({
-            lat,
-            lng
-          });
-
-          const clearButton =
-            document.getElementById("clearSearchBtn");
-
-          if (clearButton) {
-            clearButton.hidden = false;
-          }
-
-          console.log(
-            "3 公里內 CCTV：",
-            nearbyCams
-          );
-
-          renderSidebar(nearbyCams);
-          renderMarkers(nearbyCams);
-
-          const bounds = L.latLngBounds(
-            [
-              [lat, lng],
-              ...nearbyCams.map(cam => [cam.y, cam.x])
-            ]
-          );
-
-          if (bounds.isValid()) {
-            map.fitBounds(bounds, {
-              padding: [40, 40],
-              maxZoom: 16
-            });
-          }
-
-          if (searchLocationMarker) {
-            map.removeLayer(searchLocationMarker);
-          }
-
-          searchLocationMarker = L.marker(
-            [lat, lng]
-          )
-            .addTo(map)
-            .bindPopup(
-              `<strong>${esc(
-                place.displayName || "搜尋位置"
-              )}</strong>`
-            )
-            .openPopup();
-
-          document.getElementById(
-            "status"
-          ).textContent =
-            `已找到：${place.displayName || "搜尋地點"}`;
-
-        } catch (error) {
-          console.error(
-            "取得搜尋地點失敗：",
-            error
-          );
-        }
-      }
-    );
-
-    container.replaceChildren(autocomplete);
-
-  } catch (error) {
-    console.error(
-      "Google 地點搜尋載入失敗：",
-      error
-    );
-  }
-}
-
-/* 啟動 Leaflet 地圖 */
 async function initMap() {
-  map = L.map("map").setView(
+  // preferCanvas：大量標記時用 Canvas 繪製，效能較好
+  map = L.map("map", { preferCanvas: true }).setView(
     [25.0478, 121.5318],
     12
   );
@@ -3920,22 +2468,15 @@ async function initMap() {
     }
   ).addTo(map);
 
-  /*
-  * 使用者完成拖曳或縮放後，
-  * 重新顯示目前地圖範圍內的 CCTV。
-  */
-  map.on(
-    "moveend zoomend",
-    scheduleVisibleCamerasRender
-  );
+  /* 拖曳或縮放後，重新顯示目前範圍內的 CCTV */
+  map.on("moveend", scheduleVisibleCamerasRender);
 
   try {
     document.getElementById("status").textContent =
       "正在載入行政區邊界……";
 
-    await loadDistrictBoundaries(); 
+    await loadDistrictBoundaries();
     await loadData();
-
 
   } catch (error) {
     console.error(error);
@@ -3946,89 +2487,69 @@ async function initMap() {
 }
 
 
+/* =========================================================
+ * 事件綁定
+ * ========================================================= */
 
-/* CCTV 類型選單 */
+/* 縣市選單 */
 document
-  .getElementById("sourceFilter")
-  .addEventListener(
-    "change",
-    () => {
-      exitPlaceSearchMode();
-      render();
+  .getElementById("cityFilter")
+  ?.addEventListener("change", () => {
+    buildSourceOptions();
+    buildDistrictOptions();
+
+    const districtSelect = document.getElementById("districtFilter");
+
+    if (districtSelect) {
+      districtSelect.value = "全部";
     }
-  );
+
+    exitPlaceSearchMode();
+    render();
+  });
 
 /* 行政區選單 */
 document
   .getElementById("districtFilter")
-  .addEventListener(
-    "change",
-    () => {
-      exitPlaceSearchMode();
-      render();
-    }
-  );
+  ?.addEventListener("change", () => {
+    exitPlaceSearchMode();
+    render();
+  });
 
+/* CCTV 類型選單 */
+document
+  .getElementById("sourceFilter")
+  ?.addEventListener("change", () => {
+    exitPlaceSearchMode();
+    render();
+  });
 
-/* 我的定位按鈕 */
+/* 我的位置按鈕 */
 document
   .getElementById("locationBtn")
-  .addEventListener(
-    "click",
-    locateUser
-  );
-
-
-document
-  .getElementById("cityFilter")
-  ?.addEventListener(
-    "change",
-    () => {
-      const districtSelect =
-        document.getElementById(
-          "districtFilter"
-        );
-
-      buildSourceOptions();
-      buildDistrictOptions();
-
-      if (districtSelect) {
-        districtSelect.value = "全部";
-      }
-
-      exitPlaceSearchMode();
-      render();
-    }
-  );
+  ?.addEventListener("click", locateUser);
 
 /* 清除搜尋按鈕 */
 document
   .getElementById("clearSearchBtn")
-  ?.addEventListener(
-    "click",
-    clearPlaceSearch
-  );
+  ?.addEventListener("click", clearPlaceSearch);
 
-/* 正式啟動 */
+/* 從影像頁按「上一頁」返回時，恢復桃園地圖位置 */
+window.addEventListener("pageshow", event => {
+  if (!event.persisted || !map || allCams.length === 0) {
+    return;
+  }
+
+  setTimeout(() => {
+    restoreTaoyuanMapView();
+    map.invalidateSize();
+  }, 100);
+});
+
+
+/* =========================================================
+ * 正式啟動
+ * ========================================================= */
+
 initPlaceAutocomplete();
 initMap();
-
-window.addEventListener(
-  "pageshow",
-  event => {
-    if (
-      !event.persisted ||
-      !map ||
-      allCams.length === 0
-    ) {
-      return;
-    }
-
-    setTimeout(() => {
-      restoreTaoyuanMapView();
-      map.invalidateSize();
-    }, 100);
-  }
-);
-
-//

@@ -18,7 +18,10 @@ concurrency:
 jobs:
   update:
     runs-on: ubuntu-latest
-
+    defaults:
+      run:
+        working-directory: data
+        
     steps:
       - name: 下載專案
         uses: actions/checkout@v4

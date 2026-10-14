@@ -9,6 +9,9 @@ permissions:
 jobs:
   convert:
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: data
 
     steps:
       - name: 下載專案
@@ -19,23 +22,23 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y libxml-libxml-perl
 
-      - name: 檢查 CCTV.xml
+      - name: 檢查 ../raw/CCTV.xml
         shell: bash
         run: |
           set -euo pipefail
 
-          if [ ! -f CCTV.xml ]; then
-            echo "錯誤：專案根目錄找不到 CCTV.xml。"
+          if [ ! -f ../raw/CCTV.xml ]; then
+            echo "錯誤：專案根目錄找不到 ../raw/CCTV.xml。"
             exit 1
           fi
 
-          if [ ! -s CCTV.xml ]; then
-            echo "錯誤：CCTV.xml 是空檔案。"
+          if [ ! -s ../raw/CCTV.xml ]; then
+            echo "錯誤：../raw/CCTV.xml 是空檔案。"
             exit 1
           fi
 
-          if ! grep -qE '<([[:alnum:]_-]+:)?CCTVList([[:space:]>])' CCTV.xml; then
-            echo "錯誤：CCTV.xml 格式不正確。"
+          if ! grep -qE '<([[:alnum:]_-]+:)?CCTVList([[:space:]>])' ../raw/CCTV.xml; then
+            echo "錯誤：../raw/CCTV.xml 格式不正確。"
             exit 1
           fi
 
@@ -55,7 +58,7 @@ jobs:
           binmode STDOUT, ':encoding(UTF-8)';
           binmode STDERR, ':encoding(UTF-8)';
 
-          my $input_file  = 'CCTV.xml';
+          my $input_file  = '../raw/CCTV.xml';
           my $output_file = 'freeway-cctv.json.tmp';
 
           my $parser = XML::LibXML->new(
@@ -329,7 +332,7 @@ jobs:
           my $result = {
             metadata => {
               source               => '交通部高速公路局',
-              sourceFile           => 'CCTV.xml',
+              sourceFile           => '../raw/CCTV.xml',
               sourceUpdateTime     => $source_update_time,
               sourceUpdateInterval => $update_interval,
               authorityCode        => $authority_code,
