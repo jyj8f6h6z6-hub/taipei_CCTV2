@@ -1,4 +1,16 @@
 /* =========================================================
+ * 網站版本
+ * 每次發布更新時：
+ *   1. 修改這裡的版號與日期
+ *   2. index.html 裡兩個 ?v= 改成相同版號
+ *   3. 在 CHANGELOG.md 記錄這次改了什麼
+ * ========================================================= */
+
+const APP_VERSION = "2.0.0";
+const APP_UPDATED = "2026-10-14";
+
+
+/* =========================================================
  * 資料來源網址
  * ========================================================= */
 
@@ -2550,6 +2562,16 @@ window.addEventListener("pageshow", event => {
 /* =========================================================
  * 正式啟動
  * ========================================================= */
+
+/* 顯示版號 */
+const appVersionElement = document.getElementById("appVersion");
+
+if (appVersionElement) {
+  appVersionElement.textContent = `v${APP_VERSION}`;
+  appVersionElement.title = `更新日期：${APP_UPDATED}`;
+}
+
+console.log(`即時 CCTV 地圖 v${APP_VERSION}（${APP_UPDATED}）`);
 
 initPlaceAutocomplete();
 initMap();
