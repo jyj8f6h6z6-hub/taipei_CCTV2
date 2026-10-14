@@ -3,15 +3,15 @@
     {
       "key": "yilan-road-ila-000001",
       "id": "ila-000001",
-      "officialId": "1140804405",
+      "officialId": "1140804401",
       "name": "國5交流道沿線 頭城鎮頭城交流道(6)-往礁溪方向全景",
       "x": 121.791,
       "y": 24.8384,
       "city": "宜蘭縣",
       "district": "頭城鎮",
       "imageUrl": "https://c01.twipcam.com/cam/snapshot/ila-000001.jpg",
-      "url": "https://ilcpb.ivs.hinet.net/public/hls_player?page=ilcpb&did=1140804405",
-      "streamUrl": "https://ilcpb.ivs.hinet.net/public/hls_player?page=ilcpb&did=1140804405",
+      "url": "https://ilcpb.ivs.hinet.net/public/hls_player?page=ilcpb&did=1140804401",
+      "streamUrl": "https://ilcpb.ivs.hinet.net/public/hls_player?page=ilcpb&did=1140804401",
       "type": "road",
       "source": "宜蘭縣政府警察局公開即時路況；座標與預覽圖由 twipcam 提供"
     },
