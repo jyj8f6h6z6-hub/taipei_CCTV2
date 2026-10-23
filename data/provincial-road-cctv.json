@@ -1,11 +1,11 @@
 {
    "metadata" : {
       "authorityCode" : "THB",
-      "generatedAt" : "2026-10-22T22:21:28Z",
+      "generatedAt" : "2026-10-23T22:12:47Z",
       "skipped" : 0,
       "source" : "交通部公路局",
       "sourceUpdateInterval" : "86400",
-      "sourceUpdateTime" : "2026-10-23T06:10:26+08:00",
+      "sourceUpdateTime" : "2026-10-24T06:10:28+08:00",
       "sourceUrl" : "https://cctv-maintain.thb.gov.tw/opendataCCTVs.xml",
       "total" : 2344
    },
@@ -6139,9 +6139,9 @@
          "locationType" : "6",
          "name" : "省道 CCTV CCTV-14-062A-004-035",
          "source" : "交通部公路局",
-         "streamUrl" : "https://cctv-ss02.thb.gov.tw:443/T62A-4K+440",
+         "streamUrl" : "https://cctv-ss01.thb.gov.tw:443/T62A-4K+440",
          "type" : "provincial",
-         "url" : "https://cctv-ss02.thb.gov.tw:443/T62A-4K+440",
+         "url" : "https://cctv-ss01.thb.gov.tw:443/T62A-4K+440",
          "x" : 121.780303,
          "y" : 25.119898
       },
