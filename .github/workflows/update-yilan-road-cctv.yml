@@ -346,6 +346,93 @@ jobs:
 
           mv yilan-road-cctv.json.tmp yilan-road-cctv.json
 
+      - name: 移除長時間未更新的攝影機
+        shell: bash
+        env:
+          # 快照圖超過幾天沒更新，就視為攝影機已停止運作
+          MAX_AGE_DAYS: "3"
+          # 如果超過這個比例被判定為停止運作，視為檢查本身有問題，不移除任何資料
+          MAX_DROP_PERCENT: "50"
+        run: |
+          set -euo pipefail
+
+          NOW="$(date +%s)"
+          LIMIT=$(( MAX_AGE_DAYS * 86400 ))
+          TOTAL="$(jq '.results | length' yilan-road-cctv.json)"
+
+          check_one() {
+            ID="$1"
+            URL="$2"
+
+            LM="$(
+              curl -sIL \
+                --max-time 20 \
+                --retry 2 --retry-delay 3 \
+                -A "taipei-cctv-updater (+https://github.com/${GITHUB_REPOSITORY:-unknown})" \
+                "$URL" 2>/dev/null \
+                | tr -d '\r' \
+                | grep -i '^last-modified:' \
+                | tail -n 1 \
+                | sed 's/^[^:]*: *//' || true
+            )"
+
+            EPOCH=""
+            if [ -n "$LM" ]; then
+              EPOCH="$(date -d "$LM" +%s 2>/dev/null || true)"
+            fi
+
+            printf '%s\t%s\n' "$ID" "$EPOCH"
+          }
+          export -f check_one
+          export GITHUB_REPOSITORY
+
+          jq -r '.results[] | [.id, .imageUrl] | @tsv' yilan-road-cctv.json \
+            | xargs -P 8 -L 1 bash -c 'check_one "$0" "$1"' \
+            > /tmp/yilan-lastmod.tsv
+
+          KNOWN="$(awk -F'\t' '$2 != ""' /tmp/yilan-lastmod.tsv | wc -l)"
+          STALE_IDS="$(
+            awk -F'\t' -v now="$NOW" -v limit="$LIMIT" \
+              '$2 != "" && (now - $2) > limit {print $1}' \
+              /tmp/yilan-lastmod.tsv
+          )"
+          STALE="$(printf '%s' "$STALE_IDS" | grep -c . || true)"
+
+          echo "共 $TOTAL 支；取得更新時間 $KNOWN 支；超過 ${MAX_AGE_DAYS} 天未更新 $STALE 支"
+
+          if [ "$KNOWN" -gt 0 ]; then
+            awk -F'\t' -v now="$NOW" '$2 != "" {print int((now - $2) / 86400)}' \
+              /tmp/yilan-lastmod.tsv | sort -n | uniq -c \
+              | awk '{print "  " $2 " 天前：" $1 " 支"}' | head -15
+          fi
+
+          if [ "$KNOWN" -eq 0 ]; then
+            echo "::warning::取不到任何快照的更新時間，這次不移除任何攝影機。"
+            exit 0
+          fi
+
+          if [ "$STALE" -eq 0 ]; then
+            echo "沒有需要移除的攝影機。"
+            exit 0
+          fi
+
+          if [ $(( STALE * 100 )) -gt $(( TOTAL * MAX_DROP_PERCENT )) ]; then
+            echo "::warning::要移除的比例超過 ${MAX_DROP_PERCENT}%，可能是檢查有問題，這次不移除。"
+            exit 0
+          fi
+
+          printf '%s\n' "$STALE_IDS" | jq -R . | jq -s . > /tmp/yilan-stale.json
+
+          echo "移除的攝影機：$(jq -r 'join(", ")' /tmp/yilan-stale.json)"
+
+          jq --slurpfile stale /tmp/yilan-stale.json \
+            '.results |= map(select(.id as $id | ($stale[0] | index($id)) | not))' \
+            yilan-road-cctv.json > yilan-road-cctv.json.filtered
+
+          jq -e '.results | length > 0' yilan-road-cctv.json.filtered >/dev/null
+
+          mv yilan-road-cctv.json.filtered yilan-road-cctv.json
+
       - name: 驗證宜蘭 JSON
         shell: bash
         run: |
@@ -379,6 +466,7 @@ jobs:
           rm -f yilan-official-cams.html
           rm -f yilan-official-cams.json
           rm -f /tmp/yilan-existing.json
+          rm -f /tmp/yilan-lastmod.tsv /tmp/yilan-stale.json
 
       - name: 提交更新
         shell: bash
