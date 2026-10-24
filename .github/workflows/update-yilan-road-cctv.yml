@@ -181,9 +181,19 @@ jobs:
         run: |
           set -euo pipefail
 
+          # 官方清單有成功取得時，不在清單內的攝影機不提供播放頁連結（只提供預覽圖）；
+          # 官方網站連不上時，沿用上一次已驗證過的資料
+          if [ "$(jq 'length' yilan-official-cams.json)" -gt 0 ]; then
+            OFFICIAL_LIST_OK=true
+          else
+            OFFICIAL_LIST_OK=false
+          fi
+          echo "官方清單可用：$OFFICIAL_LIST_OK"
+
           jq \
             --slurpfile official yilan-official-cams.json \
             --slurpfile existing /tmp/yilan-existing.json \
+            --argjson official_ok "$OFFICIAL_LIST_OK" \
             '
             def normalize_name:
               tostring
@@ -265,7 +275,7 @@ jobs:
                       (
                         if $match then
                           ($match.did | tostring)
-                        elif $old then
+                        elif $official_ok == false and $old then
                           ($old.officialId // "" | tostring)
                         else
                           ""
@@ -295,6 +305,7 @@ jobs:
                         if $match then
                           ($match.playerUrl | tostring)
                         elif (
+                          $official_ok == false and
                           $old and
                           (($old.officialId // "") | tostring) != "" and
                           (($old.url // "") | tostring) != ""
@@ -310,6 +321,7 @@ jobs:
                         if $match then
                           ($match.playerUrl | tostring)
                         elif (
+                          $official_ok == false and
                           $old and
                           (($old.officialId // "") | tostring) != ""
                         ) then
@@ -327,6 +339,13 @@ jobs:
             }
             ' twipcam-cam-list.json \
             > yilan-road-cctv.json.tmp
+
+          # 只保留官方開放的攝影機；不在官方清單內的點不顯示
+          jq '.results |= map(select((.officialId // "") != ""))' \
+            yilan-road-cctv.json.tmp \
+            > yilan-road-cctv.json.filtered
+
+          mv yilan-road-cctv.json.filtered yilan-road-cctv.json.tmp
 
           jq -e '
             .results | type == "array" and length > 0
