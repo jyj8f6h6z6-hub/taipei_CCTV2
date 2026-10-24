@@ -1,9 +1,18 @@
-name: 由專案內原始檔產生高雄道路 CCTV JSON
+name: 更新高雄道路 CCTV 資料
 
 on:
   workflow_dispatch:
+    inputs:
+      use_local:
+        description: "不下載，直接使用專案內現有的 raw/kaohsiung-original.json"
+        type: boolean
+        default: false
 
-  # 把新的 raw/kaohsiung-original.json 推上來時，自動轉換
+  schedule:
+    # GitHub Actions cron 使用 UTC，因此為前一天 20:40（臺北 04:40）
+    - cron: "40 20 * * *"
+
+  # 手動把新的 raw/kaohsiung-original.json 推上來時，也會自動轉換
   push:
     branches:
       - main
@@ -26,6 +35,61 @@ jobs:
     steps:
       - name: 下載專案
         uses: actions/checkout@v4
+
+      - name: 下載高雄市 CCTV 清單
+        if: ${{ github.event_name == 'schedule' || (github.event_name == 'workflow_dispatch' && !inputs.use_local) }}
+        shell: bash
+        env:
+          # 範圍涵蓋整個高雄市
+          CCTV_API_URL: https://traffic.tbkc.gov.tw/api/cctvs?neLat=23.5&neLng=121.1&swLat=22.3&swLng=120.0&language=zh-TW
+        run: |
+          set -euo pipefail
+
+          TMP="$(mktemp)"
+          OUT="$(mktemp)"
+          FILE="raw/kaohsiung-original.json"
+
+          curl -fsSL \
+            --retry 3 --retry-delay 10 --retry-all-errors \
+            --connect-timeout 30 --max-time 120 \
+            -H "Accept: application/json" \
+            -A "taipei-cctv-updater (+https://github.com/${GITHUB_REPOSITORY})" \
+            -o "$TMP" "$CCTV_API_URL"
+
+          # 清單可能直接是陣列，也可能包在 data / results / cctvs 裡；
+          # 依 id 去重，並只保留有座標的資料
+          jq -c '
+            (if type == "array" then .
+             else (.data // .results // .cctvs // []) end)
+            | map(select(
+                (.id | type == "string" and length > 0) and
+                (.position.lat | type == "number") and
+                (.position.lng | type == "number")
+              ))
+            | unique_by(.id)
+          ' "$TMP" > "$OUT"
+
+          NEW_COUNT="$(jq 'length' "$OUT")"
+          OLD_COUNT=0
+          if [ -s "$FILE" ]; then
+            OLD_COUNT="$(jq 'length' "$FILE")"
+          fi
+
+          echo "下載 $NEW_COUNT 筆；現有檔 $OLD_COUNT 筆"
+
+          if [ "$NEW_COUNT" -le 0 ]; then
+            echo "::error::下載內容裡沒有可用的 CCTV，API 格式可能變了。"
+            head -c 300 "$TMP"
+            exit 1
+          fi
+
+          if [ "$OLD_COUNT" -gt 0 ] && [ $((NEW_COUNT * 100)) -lt $((OLD_COUNT * 70)) ]; then
+            echo "::error::下載筆數比現有檔少超過 30%，不覆蓋。"
+            exit 1
+          fi
+
+          mkdir -p raw
+          mv "$OUT" "$FILE"
 
       - name: 檢查 raw/kaohsiung-original.json
         shell: bash
@@ -126,12 +190,12 @@ jobs:
 
           echo "JSON 驗證成功，共 $TOTAL 支高雄 CCTV。"
 
-      - name: 提交 kaohsiung-road-cctv.json
+      - name: 提交高雄道路 CCTV 資料
         shell: bash
         run: |
           set -euo pipefail
 
-          git add data/kaohsiung-road-cctv.json
+          git add data/kaohsiung-road-cctv.json raw/kaohsiung-original.json
 
           if git diff --cached --quiet; then
             echo "高雄道路 CCTV JSON 沒有變更。"
@@ -141,7 +205,7 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
 
-          git commit -m "chore: 由 raw 原始檔更新高雄道路 CCTV 資料"
+          git commit -m "chore: 更新高雄道路 CCTV 資料"
 
           for ATTEMPT in 1 2 3; do
             echo "推送嘗試：$ATTEMPT"
