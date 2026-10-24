@@ -7,6 +7,27 @@ const root = path.resolve(__dirname, "..");
 const inputFile = path.join(root, "raw", "kaohsiung-original.json");
 const outputFile = path.join(root, "data", "kaohsiung-road-cctv.json");
 
+// 舊網域 cctvN.kctmc.nat.gov.tw 的憑證已不符，瀏覽器會拒絕連線；
+// 同一支攝影機改用 cctvN.itc.tbkc.gov.tw 即可正常開啟（路徑相同）
+function fixHost(value) {
+  return String(value || "")
+    .trim()
+    .replace(
+      /^(https?:\/\/)(cctv\d+)\.kctmc\.nat\.gov\.tw(?=[/:?]|$)/i,
+      "$1$2.itc.tbkc.gov.tw"
+    );
+}
+
+// cctv5 這批「/jpeg/CamXXX.php」預覽圖在新網域只會回傳黑畫面，
+// 留空後地圖視窗不會顯示「查看預覽圖」按鈕，即時影像仍可正常開啟
+function fixImageUrl(value) {
+  const fixed = fixHost(value);
+
+  return /^https?:\/\/cctv\d+\.itc\.tbkc\.gov\.tw\/jpeg\/[^/?]+\.php/i.test(fixed)
+    ? ""
+    : fixed;
+}
+
 const raw = JSON.parse(
   fs.readFileSync(inputFile, "utf8")
 );
@@ -33,9 +54,7 @@ const results = raw
       cam.position?.lat
     );
 
-    const imageUrl = String(
-      cam.imageUrl || ""
-    ).trim();
+    const imageUrl = fixImageUrl(cam.imageUrl);
 
     const videoUrl = String(
       cam.videoUrl ||
