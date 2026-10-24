@@ -312,7 +312,7 @@ jobs:
                         ) then
                           ($old.url | tostring)
                         else
-                          ($camera.cam_url | tostring)
+                          ("https://www.twipcam.com/cam/" + ($camera.id | tostring))
                         end
                       ),
 
@@ -333,19 +333,12 @@ jobs:
 
                     type: "road",
                     source:
-                      "宜蘭縣政府警察局公開即時路況；座標與預覽圖由 twipcam 提供"
+                      "宜蘭縣政府；經 twipcam 台灣即時影像監視器整合（CC BY 3.0 TW）"
                   }
               ]
             }
             ' twipcam-cam-list.json \
             > yilan-road-cctv.json.tmp
-
-          # 只保留官方開放的攝影機；不在官方清單內的點不顯示
-          jq '.results |= map(select((.officialId // "") != ""))' \
-            yilan-road-cctv.json.tmp \
-            > yilan-road-cctv.json.filtered
-
-          mv yilan-road-cctv.json.filtered yilan-road-cctv.json.tmp
 
           jq -e '
             .results | type == "array" and length > 0
