@@ -27,6 +27,10 @@
   <meta name="apple-mobile-web-app-title" content="CCTV 地圖">
   <meta name="apple-mobile-web-app-status-bar-style" content="default">
 
+  <!-- 提早連線到會用到的外部網站 -->
+  <link rel="preconnect" href="https://unpkg.com" crossorigin>
+  <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+
   <!-- Leaflet 地圖樣式 -->
   <link
     rel="stylesheet"
@@ -36,7 +40,7 @@
   >
 
   <!-- 網站樣式 -->
-  <link rel="stylesheet" href="style.css?v=2.2.0">
+  <link rel="stylesheet" href="style.css?v=2.3.0">
 </head>
 
 <body>
@@ -44,7 +48,7 @@
   <header>
     <div class="header-row">
 
-            <h1>🗺 即時 CCTV 地圖 <span id="appVersion" class="app-version"></span></h1>
+      <h1>🗺 即時 CCTV 地圖 <span id="appVersion" class="app-version"></span></h1>
 
       <div class="controls">
 
@@ -101,13 +105,8 @@
     crossorigin=""
   ></script>
 
-  <!-- Google Maps 地點搜尋 -->
-  <script
-    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDHJ18rC0CuG4OGUbF-c4H7xavGoKOrTgw&libraries=places&language=zh-TW&region=TW"
-  ></script>
-
   <!-- 再載入網站程式 -->
-  <script src="script.js?v=2.2.0"></script>
+  <script src="script.js?v=2.3.0"></script>
 
 </body>
 </html>

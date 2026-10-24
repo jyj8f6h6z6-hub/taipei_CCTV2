@@ -1,10 +1,23 @@
-name: 由專案內 XML 產生國道 CCTV JSON
+name: 更新國道 CCTV 資料
 
 on:
   workflow_dispatch:
+    inputs:
+      use_local:
+        description: "不下載，直接使用專案內現有的 raw/CCTV.xml"
+        type: boolean
+        default: false
+
+  schedule:
+    # GitHub Actions cron 使用 UTC，因此為前一天 20:30（臺北 04:30）
+    - cron: "30 20 * * *"
 
 permissions:
   contents: write
+
+concurrency:
+  group: update-freeway-cctv
+  cancel-in-progress: false
 
 jobs:
   convert:
@@ -21,6 +34,54 @@ jobs:
         run: |
           sudo apt-get update
           sudo apt-get install -y libxml-libxml-perl
+
+      - name: 下載國道局 CCTV 靜態資訊 XML
+        if: ${{ github.event_name != 'workflow_dispatch' || !inputs.use_local }}
+        shell: bash
+        env:
+          CCTV_XML_URL: https://tisvcloud.freeway.gov.tw/history/motc20/CCTV.xml
+        run: |
+          set -euo pipefail
+
+          TMP="$(mktemp)"
+
+          curl -fsSL \
+            --retry 3 --retry-delay 10 --retry-all-errors \
+            --connect-timeout 30 --max-time 180 \
+            -A "taipei-cctv-updater (+https://github.com/${GITHUB_REPOSITORY})" \
+            -o "$TMP" "$CCTV_XML_URL"
+
+          if [ ! -s "$TMP" ]; then
+            echo "錯誤：下載的檔案是空的。"
+            exit 1
+          fi
+
+          if ! grep -qE '<([[:alnum:]_-]+:)?CCTVList([[:space:]>])' "$TMP"; then
+            echo "錯誤：下載內容不是 CCTVList XML（可能是錯誤頁面）。"
+            head -c 300 "$TMP"
+            exit 1
+          fi
+
+          NEW_COUNT="$(grep -o '<CCTVID>' "$TMP" | wc -l)"
+          OLD_COUNT=0
+          if [ -f ../raw/CCTV.xml ]; then
+            OLD_COUNT="$(grep -o '<CCTVID>' ../raw/CCTV.xml | wc -l)"
+          fi
+
+          echo "新檔 CCTV 數：$NEW_COUNT；現有檔：$OLD_COUNT"
+
+          if [ "$NEW_COUNT" -le 0 ]; then
+            echo "錯誤：新檔沒有任何 CCTV。"
+            exit 1
+          fi
+
+          if [ "$OLD_COUNT" -gt 0 ] && [ $((NEW_COUNT * 100)) -lt $((OLD_COUNT * 70)) ]; then
+            echo "錯誤：新檔筆數比現有檔少超過 30%，不覆蓋。"
+            exit 1
+          fi
+
+          mkdir -p ../raw
+          mv "$TMP" ../raw/CCTV.xml
 
       - name: 檢查 ../raw/CCTV.xml
         shell: bash
@@ -446,20 +507,30 @@ jobs:
           echo "國道 CCTV：$(jq -r '.metadata.total' freeway-cctv.json)"
           echo "略過資料：$(jq -r '.metadata.skipped' freeway-cctv.json)"
 
-      - name: 提交 freeway-cctv.json
+      - name: 提交國道 CCTV 資料
         shell: bash
         run: |
           set -euo pipefail
 
-          git add freeway-cctv.json
+          git add freeway-cctv.json ../raw/CCTV.xml
 
           if git diff --cached --quiet; then
-            echo "國道 CCTV JSON 沒有變更。"
+            echo "國道 CCTV 資料沒有變更。"
             exit 0
           fi
 
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
 
-          git commit -m "chore: 由本機 XML 更新國道 CCTV 資料"
-          git push
+          git commit -m "chore: 更新國道 CCTV 資料"
+
+          for i in 1 2 3; do
+            if git push origin HEAD:main; then
+              exit 0
+            fi
+            echo "推送失敗，重新同步後重試（$i/3）"
+            git pull --rebase origin main
+          done
+
+          echo "錯誤：推送多次失敗。"
+          exit 1

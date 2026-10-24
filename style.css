@@ -438,9 +438,12 @@ button:focus{
 }
 
 /* Google 地點搜尋框外觀 */
-#placeAutocomplete{
-  width:280px;
-  flex:none;
+/* 只在電腦版固定寬度；手機版由上面的 @media 決定（原本這段會蓋掉手機版 width:100%） */
+@media screen and (min-width:901px){
+  #placeAutocomplete{
+    width:280px;
+    flex:none;
+  }
 }
 
 #placeAutocomplete gmp-place-autocomplete{

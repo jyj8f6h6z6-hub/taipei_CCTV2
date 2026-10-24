@@ -1,0 +1,160 @@
+name: 由專案內原始檔產生高雄道路 CCTV JSON
+
+on:
+  workflow_dispatch:
+
+  # 把新的 raw/kaohsiung-original.json 推上來時，自動轉換
+  push:
+    branches:
+      - main
+    paths:
+      - raw/kaohsiung-original.json
+      - scripts/convert-kaohsiung.js
+
+permissions:
+  contents: write
+
+concurrency:
+  group: convert-kaohsiung-cctv
+  cancel-in-progress: false
+
+jobs:
+  convert:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: 下載專案
+        uses: actions/checkout@v4
+
+      - name: 檢查 raw/kaohsiung-original.json
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          FILE="raw/kaohsiung-original.json"
+
+          if [ ! -s "$FILE" ]; then
+            echo "::error::找不到 $FILE，或檔案是空的。"
+            exit 1
+          fi
+
+          if ! jq -e 'type == "array" and length > 0' "$FILE" >/dev/null; then
+            echo "::error::$FILE 格式不正確，預期是非空的陣列。"
+            exit 1
+          fi
+
+          echo "原始資料：$(jq 'length' "$FILE") 筆"
+
+      - name: 轉換高雄道路 CCTV JSON
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          node scripts/convert-kaohsiung.js
+
+      - name: 驗證 kaohsiung-road-cctv.json
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          FILE="data/kaohsiung-road-cctv.json"
+
+          jq empty "$FILE"
+
+          TOTAL="$(jq '.results | length' "$FILE")"
+          META_TOTAL="$(jq '.metadata.total' "$FILE")"
+
+          if [ "$TOTAL" -le 0 ]; then
+            echo "::error::轉換後沒有任何高雄 CCTV。"
+            exit 1
+          fi
+
+          if [ "$TOTAL" -ne "$META_TOTAL" ]; then
+            echo "::error::metadata.total 與實際數量不同。"
+            exit 1
+          fi
+
+          INVALID_COUNT="$(
+            jq '
+              [
+                .results[]
+                | select(
+                    (.key | type != "string" or length == 0) or
+                    (.id | type != "string" or length == 0) or
+                    (.name | type != "string" or length == 0) or
+                    (.x | type != "number") or
+                    (.y | type != "number") or
+                    (.url | type != "string" or length == 0) or
+                    (.x < 118 or .x > 123.5) or
+                    (.y < 21 or .y > 26.5) or
+                    (.type != "road")
+                  )
+              ]
+              | length
+            ' "$FILE"
+          )"
+
+          if [ "$INVALID_COUNT" -ne 0 ]; then
+            echo "::error::發現 $INVALID_COUNT 筆無效資料。"
+            exit 1
+          fi
+
+          DUPLICATE_COUNT="$(
+            jq '
+              .results
+              | group_by(.key)
+              | map(select(length > 1))
+              | length
+            ' "$FILE"
+          )"
+
+          if [ "$DUPLICATE_COUNT" -ne 0 ]; then
+            echo "::error::發現重複的 CCTV key。"
+            exit 1
+          fi
+
+          # 新資料比目前正式檔少超過三成，多半是原始檔不完整，先停下來
+          if git cat-file -e "HEAD:$FILE" 2>/dev/null; then
+            BEFORE="$(git show "HEAD:$FILE" | jq '.results | length')"
+
+            if [ "$TOTAL" -lt $(( BEFORE * 7 / 10 )) ]; then
+              echo "::error::新資料 $TOTAL 筆，目前正式檔有 $BEFORE 筆，減少超過三成，不覆蓋。"
+              exit 1
+            fi
+          fi
+
+          echo "JSON 驗證成功，共 $TOTAL 支高雄 CCTV。"
+
+      - name: 提交 kaohsiung-road-cctv.json
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          git add data/kaohsiung-road-cctv.json
+
+          if git diff --cached --quiet; then
+            echo "高雄道路 CCTV JSON 沒有變更。"
+            exit 0
+          fi
+
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+          git commit -m "chore: 由 raw 原始檔更新高雄道路 CCTV 資料"
+
+          for ATTEMPT in 1 2 3; do
+            echo "推送嘗試：$ATTEMPT"
+
+            git pull --rebase origin main
+
+            if git push origin HEAD:main; then
+              echo "高雄道路 CCTV 資料推送成功。"
+              exit 0
+            fi
+
+            sleep 10
+          done
+
+          echo "::error::重試三次後仍無法推送。"
+          exit 1

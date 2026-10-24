@@ -184,7 +184,7 @@ def main():
             result,
             file,
             ensure_ascii=False,
-            indent=2,
+            separators=(",", ":"),
         )
 
     print(

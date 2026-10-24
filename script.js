@@ -6,8 +6,8 @@
  *   3. 在 CHANGELOG.md 記錄這次改了什麼
  * ========================================================= */
 
-const APP_VERSION = "2.2.0";
-const APP_UPDATED = "2026-10-14";
+const APP_VERSION = "2.3.0";
+const APP_UPDATED = "2026-10-24";
 
 
 /* =========================================================
@@ -112,7 +112,16 @@ let cameraCounts = {
 };
 
 let map;
-let markers = [];
+/* 地圖上的攝影機標記：key → marker（只增減差異，不整批重建） */
+const markerMap = new Map();
+
+/* 地點搜尋結果（有值＝目前在搜尋模式，render 不會改用畫面範圍） */
+let searchResults = null;
+let searchLabel = "";
+
+/* 水利署資料約 2,500 支，選到才載入 */
+let wraLoaded = false;
+let wraLoading = null;
 let activeSidebarItem = null;
 let userLocationMarker = null;
 let searchLocationMarker = null;
@@ -332,9 +341,32 @@ function normalizeDistrict(value, defaultValue = "") {
     return defaultValue;
   }
 
+  // 「未判定」不是行政區名稱，不要補成「未判定區」
+  if (name === "未判定") {
+    return name;
+  }
+
   return /[區市鎮鄉]$/.test(name)
     ? name
     : `${name}區`;
+}
+
+/* 使用官方提供的行政區；沒有（或是「未判定」）就用座標判斷 */
+function resolveDistrict(supplied, x, y) {
+  const name = String(supplied || "").trim();
+
+  if (name && name !== "未判定") {
+    return normalizeDistrict(name);
+  }
+
+  return districtByCoord(x, y);
+}
+
+/* 只接受 http(s) 網址，避免資料裡混入 javascript: 之類的連結 */
+function safeUrl(value) {
+  const url = String(value || "").trim();
+
+  return /^(https?:)?\/\//i.test(url) ? url : "";
 }
 
 
@@ -363,17 +395,8 @@ async function loadDistrictBoundaries() {
     townsObject
   );
 
-  const features = allTowns.features.filter(feature => {
-    const properties = feature.properties || {};
-
-    const county = String(
-      properties.COUNTYNAME ||
-      properties.COUNTY ||
-      ""
-    ).trim();
-
-    return CITY_ORDER.includes(county);
-  });
+  // 全台鄉鎮都載入：國道、省道、水利署在這 11 縣市以外的點也能判定縣市
+  const features = allTowns.features;
 
   districtGeoJSON = {
     type: "FeatureCollection",
@@ -544,6 +567,37 @@ function districtByCoord(x, y) {
     : "未判定";
 }
 
+/* 預設視野：只框住 CITY_ORDER 的縣市（算一次就存起來） */
+let defaultBoundsCache = null;
+
+function getDefaultBounds() {
+  if (!defaultBoundsCache) {
+    defaultBoundsCache = L.geoJSON({
+      type: "FeatureCollection",
+      features: districtGeoJSON.features.filter(feature =>
+        CITY_ORDER.includes(normalizeCity(getCountyName(feature)))
+      )
+    }).getBounds();
+  }
+
+  return defaultBoundsCache;
+}
+
+/* 用座標找出所在縣市（找不到就用 fallback） */
+function cityByCoord(x, y, fallback = "未判定") {
+  if (!districtGeoJSON || !Number.isFinite(x) || !Number.isFinite(y)) {
+    return fallback;
+  }
+
+  const feature = districtGeoJSON.features.find(item =>
+    pointInFeature([x, y], item)
+  );
+
+  return feature
+    ? normalizeCity(getCountyName(feature))
+    : fallback;
+}
+
 /* 地圖自動縮放到選取的行政區 */
 function zoomToDistrict(districtName, cityName = "全部") {
   if (!map || !districtGeoJSON) {
@@ -551,7 +605,7 @@ function zoomToDistrict(districtName, cityName = "全部") {
   }
 
   if (!districtName || districtName === "全部") {
-    const bounds = L.geoJSON(districtGeoJSON).getBounds();
+    const bounds = getDefaultBounds();
 
     if (bounds.isValid()) {
       map.fitBounds(bounds, {
@@ -598,7 +652,7 @@ function zoomToCity(cityName) {
   }
 
   if (!cityName || cityName === "全部") {
-    const bounds = L.geoJSON(districtGeoJSON).getBounds();
+    const bounds = getDefaultBounds();
 
     if (bounds.isValid()) {
       map.fitBounds(bounds, {
@@ -711,7 +765,7 @@ function normalizeNewTaipeiRoad(data) {
     name: cam.address,
     x: Number(cam.longitude),
     y: Number(cam.latitude),
-    district: normalizeDistrict(cam.district, "未判定"),
+    district: resolveDistrict(cam.district, Number(cam.longitude), Number(cam.latitude)),
     city: "新北市",
     url: `https://atis.ntpc.gov.tw/ATIS/ShowFrame4CCTV/${cam.areacode}`,
     type: "road",
@@ -736,7 +790,7 @@ function normalizeTaoyuanRoad(json) {
       x: Number(cam.x),
       y: Number(cam.y),
       city: normalizeCity(cam.city, "桃園市"),
-      district: normalizeDistrict(cam.district, "未判定"),
+      district: resolveDistrict(cam.district, Number(cam.x), Number(cam.y)),
       url: String(cam.url || "").trim(),
       streamUrl: String(cam.streamUrl || cam.url || "").trim(),
       type: "road",
@@ -828,7 +882,7 @@ function normalizeYilanRoad(json) {
         x,
         y,
         city: "宜蘭縣",
-        district: normalizeDistrict(cam.district, "未判定"),
+        district: resolveDistrict(cam.district, x, y),
         imageUrl: String(cam.imageUrl || "").trim(),
         url: String(cam.url || cam.imageUrl || "").trim(),
         streamUrl: String(cam.streamUrl || "").trim(),
@@ -1055,8 +1109,9 @@ function normalizeKaohsiungRoad(json) {
         name: String(cam.name || id).trim(),
         x,
         y,
-        city: "高雄市",
-        district: normalizeDistrict(cam.district, "未判定"),
+        // 高雄市交通局的資料有幾支實際位在屏東、臺南，縣市也用座標判斷
+        city: cityByCoord(x, y, "高雄市"),
+        district: resolveDistrict(cam.district, x, y),
         imageUrl: String(cam.imageUrl || "").trim(),
         url: String(
           cam.url ||
@@ -1288,8 +1343,8 @@ function normalizeWraStations(data) {
           item.name ||
           `水利署 CCTV ${stationId}`
         ).trim(),
-        city: String(item.Counname || item.city || "未判定").trim(),
-        district: String(item.Town_name || item.district || "未判定").trim(),
+        city: normalizeCity(item.Counname || item.city, "未判定"),
+        district: normalizeDistrict(item.Town_name || item.district, "未判定"),
         basin: String(
           item.Basin_name ||
           item.basinName ||
@@ -1423,7 +1478,7 @@ const DATA_SOURCES = [
   { label: "高雄道路 CCTV",     url: KAOHSIUNG_ROAD_API_URL,     normalize: normalizeKaohsiungRoad,    group: "road" },
   { label: "省道 CCTV",         url: PROVINCIAL_ROAD_API_URL,    normalize: normalizeProvincialRoad,   group: "provincial" },
   { label: "國道 CCTV",         url: FREEWAY_CCTV_API_URL,       normalize: normalizeFreewayCams,      group: "highway" },
-  { label: "水利署 CCTV",       url: WRA_STATION_API_URL,        normalize: normalizeWraStations,      group: "wra" },
+  { label: "水利署 CCTV",       url: WRA_STATION_API_URL,        normalize: normalizeWraStations,      group: "wra", lazy: true },
   { label: "台北水情 CCTV",     url: WATER_API_URL,              normalize: normalizeWaterCams,        group: "water" },
   { label: "台北水情租賃 CCTV", url: WATER_RENTAL_API_URL,       normalize: normalizeWaterRentalCams,  group: "water-rental" }
 ];
@@ -1433,14 +1488,45 @@ const DATA_SOURCES = [
  * 載入所有資料
  * ========================================================= */
 
-async function loadData() {
+/*
+ * 開始下載所有資料（lazy 的來源先跳過）。
+ * 在等行政區邊界的同時就先下載，兩邊並行。
+ */
+function startDataFetch() {
+  return Promise.allSettled(
+    DATA_SOURCES.map(source =>
+      source.lazy ? Promise.resolve(null) : fetchJson(source.url)
+    )
+  );
+}
+
+/* 第一次選到「水利署 CCTV」時才下載、整理 */
+async function ensureWraLoaded() {
+  if (wraLoaded) {
+    return;
+  }
+
+  if (!wraLoading) {
+    wraLoading = (async () => {
+      const source = DATA_SOURCES.find(item => item.group === "wra");
+
+      wraCams = source.normalize(await fetchJson(source.url));
+      cameraCounts.wra = wraCams.length;
+      wraLoaded = true;
+    })().finally(() => {
+      wraLoading = null;
+    });
+  }
+
+  await wraLoading;
+}
+
+async function loadData(fetchPromise) {
   const status = document.getElementById("status");
 
-  status.textContent = "正在載入 CCTV 資料……";
+  status.textContent = "正在整理 CCTV 資料……";
 
-  const results = await Promise.allSettled(
-    DATA_SOURCES.map(source => fetchJson(source.url))
-  );
+  const results = await (fetchPromise || startDataFetch());
 
   const errors = [];
 
@@ -1455,6 +1541,10 @@ async function loadData() {
 
   results.forEach((result, index) => {
     const source = DATA_SOURCES[index];
+
+    if (source.lazy) {
+      return;
+    }
 
     if (result.status === "rejected") {
       errors.push(`${source.label}：${result.reason.message}`);
@@ -1478,7 +1568,7 @@ async function loadData() {
    * 水利署點位很多（約 2,500 支），
    * 單獨存放，只有選「水利署 CCTV」時才顯示。
    */
-  wraCams = camsByGroup.wra;
+  // 水利署資料延後到使用者選取時才載入（見 ensureWraLoaded）
 
   allCams = [
     ...camsByGroup.road,
@@ -1519,6 +1609,31 @@ async function loadData() {
  * 選單
  * ========================================================= */
 
+/* 目前選單要依據哪一批攝影機（水利署是獨立一批） */
+function cameraPool() {
+  const source = document.getElementById("sourceFilter")?.value;
+
+  return source === "wra" ? wraCams : allCams;
+}
+
+/* 重新建立縣市、類型、行政區選單，並盡量保留原本的選擇 */
+function refreshLocationOptions() {
+  const districtSelect = document.getElementById("districtFilter");
+  const previousDistrict = districtSelect?.value || "全部";
+
+  buildCityOptions();
+  buildSourceOptions();
+  buildDistrictOptions();
+
+  if (districtSelect) {
+    const stillThere = [...districtSelect.options].some(
+      option => option.value === previousDistrict
+    );
+
+    districtSelect.value = stillThere ? previousDistrict : "全部";
+  }
+}
+
 /* 建立縣市選單 */
 function buildCityOptions() {
   const citySelect = document.getElementById("cityFilter");
@@ -1529,7 +1644,7 @@ function buildCityOptions() {
 
   const availableCities = [
     ...new Set(
-      allCams
+      cameraPool()
         .map(cam => normalizeCity(cam.city))
         .filter(Boolean)
     )
@@ -1546,12 +1661,18 @@ function buildCityOptions() {
     return a.localeCompare(b, "zh-Hant");
   });
 
+  const previousCity = citySelect.value || "全部";
+
   citySelect.innerHTML = [
     `<option value="全部">全部縣市</option>`,
     ...availableCities.map(city =>
       `<option value="${esc(city)}">${esc(city)}</option>`
     )
   ].join("");
+
+  citySelect.value = availableCities.includes(previousCity)
+    ? previousCity
+    : "全部";
 }
 
 /* 依照縣市建立 CCTV 類型選單 */
@@ -1613,7 +1734,7 @@ function buildDistrictOptions() {
 
   const districts = [
     ...new Set(
-      allCams
+      cameraPool()
         .filter(cam =>
           selectedCity === "全部" ||
           normalizeCity(cam.city) === selectedCity
@@ -1719,17 +1840,19 @@ function scheduleVisibleCamerasRender() {
 function render(options = {}) {
   const { autoZoom = true } = options;
 
-  const matchedCams = filteredCams();
-  const cams = camsInCurrentMapBounds(matchedCams);
+  // 搜尋模式：固定顯示搜尋結果，不隨地圖移動改變
+  const matchedCams = searchResults || filteredCams();
+  const cams = searchResults || camsInCurrentMapBounds(matchedCams);
 
-  document.getElementById("status").textContent =
-    `目前畫面 ${cams.length} 支（篩選後 ${matchedCams.length} 支）；` +
+  document.getElementById("status").textContent = searchResults
+    ? `已找到：${searchLabel}，3 公里內 ${cams.length} 支 CCTV。`
+    : `目前畫面 ${cams.length} 支（篩選後 ${matchedCams.length} 支）；` +
     `道路 ${cameraCounts.road} 支；` +
     `省道 ${cameraCounts.provincial} 支；` +
     `國道 ${cameraCounts.highway} 支；` +
     `水情 ${cameraCounts.water} 支；` +
     `水情租賃 ${cameraCounts["water-rental"]} 支；` +
-    `水利署 ${cameraCounts.wra} 支。`;
+    `水利署 ${wraLoaded ? cameraCounts.wra + " 支" : "（選取後載入）"}。`;
 
   renderSidebar(cams);
   renderMarkers(cams);
@@ -1750,7 +1873,49 @@ function render(options = {}) {
 }
 
 /* 顯示左側 CCTV 清單 */
+function renderSearchSidebar(cams) {
+  const items = cams.map(cam => {
+    const typeInfo = getCameraType(cam.type);
+
+    return `
+      <div
+        class="cam-item"
+        data-key="${esc(cam.key)}"
+        onclick="focusCam('${esc(cam.key)}')"
+      >
+        <div class="cam-name">
+          <span class="cam-type-icon">${typeInfo.icon}</span>
+          ${esc(cam.name)}
+        </div>
+        <div class="cam-id">
+          ${esc(typeInfo.label)}・距離 ${formatDistance(cam.distance)}
+        </div>
+      </div>
+    `;
+  });
+
+  document.getElementById("sidebar").innerHTML = items.length
+    ? `
+      <div class="district-header">
+        ${esc(searchLabel)} 附近
+        <span class="badge">${items.length}</span>
+      </div>
+      ${items.join("")}
+    `
+    : `<div class="empty-msg">3 公里內沒有 CCTV。</div>`;
+}
+
 function renderSidebar(cams) {
+  // 手機版側欄是隱藏的，不必白做
+  if (!document.getElementById("sidebar").offsetParent) {
+    return;
+  }
+
+  if (searchResults) {
+    renderSearchSidebar(cams);
+    return;
+  }
+
   const SIDEBAR_LIMIT = 200;
 
   const limitedCams = cams.slice(0, SIDEBAR_LIMIT);
@@ -1850,14 +2015,22 @@ function renderMarkers(cams) {
   }
 
   const markerRadius = window.innerWidth <= 900 ? 10 : 8;
+  const wantedKeys = new Set(cams.map(cam => cam.key));
 
-  markers.forEach(marker => {
-    map.removeLayer(marker);
+  // 移除已經不在範圍內的標記
+  markerMap.forEach((marker, key) => {
+    if (!wantedKeys.has(key)) {
+      map.removeLayer(marker);
+      markerMap.delete(key);
+    }
   });
 
-  markers = [];
-
+  // 只新增還沒有的標記；已存在的保留，開著的資訊視窗不會被關掉
   cams.forEach(cam => {
+    if (markerMap.has(cam.key)) {
+      return;
+    }
+
     const typeInfo = getCameraType(cam.type);
 
     const marker = L.circleMarker([cam.y, cam.x], {
@@ -1875,7 +2048,7 @@ function renderMarkers(cams) {
     });
 
     marker.addTo(map);
-    markers.push(marker);
+    markerMap.set(cam.key, marker);
   });
 }
 
@@ -1888,12 +2061,14 @@ function openInfo(marker) {
   const cam = marker.camData;
   const typeInfo = getCameraType(cam.type);
 
-  const mediaUrl =
+  const rawMediaUrl =
     cam.type === "water"
       ? (cam.streamUrl || cam.url)
       : cam.type === "water-rental"
         ? (cam.streamUrl || cam.imageUrl)
         : cam.url;
+
+  const mediaUrl = safeUrl(rawMediaUrl);
 
   const isSnapshot =
     /\.(jpg|jpeg|png|webp)(\?|$)/i.test(mediaUrl || "");
@@ -1934,11 +2109,13 @@ function openInfo(marker) {
   `;
 
   // 有另外的預覽圖時，多提供一個備用按鈕
-  if (cam.imageUrl && cam.imageUrl !== mediaUrl) {
+  const previewUrl = safeUrl(cam.imageUrl);
+
+  if (previewUrl && previewUrl !== mediaUrl) {
     actionHtml += `
       <a
         class="iw-btn iw-btn-secondary"
-        href="${esc(cam.imageUrl)}"
+        href="${esc(previewUrl)}"
         target="_blank"
         rel="noopener noreferrer"
       >
@@ -2001,7 +2178,7 @@ let wraLiveTimer = null;
 
 function closeWraLiveViewer() {
   if (wraLiveTimer) {
-    clearInterval(wraLiveTimer);
+    clearTimeout(wraLiveTimer);
     wraLiveTimer = null;
   }
 
@@ -2009,12 +2186,7 @@ function closeWraLiveViewer() {
 }
 
 function getWraImageUrl(cam) {
-  const imageUrl = String(
-    cam.mediaUrl ||
-    cam.imageUrl ||
-    cam.url ||
-    ""
-  ).trim();
+  const imageUrl = safeUrl(cam.mediaUrl || cam.imageUrl || cam.url);
 
   if (!imageUrl) {
     throw new Error("這支攝影機沒有提供影像網址");
@@ -2069,10 +2241,12 @@ function openWraLiveViewer(cam) {
   image.onload = () => {
     status.textContent =
       `更新時間：${new Date().toLocaleTimeString("zh-TW")}`;
+    scheduleNext();
   };
 
   image.onerror = () => {
     status.textContent = "影像載入失敗，稍後重試";
+    scheduleNext();
   };
 
   function refreshImage() {
@@ -2091,10 +2265,28 @@ function openWraLiveViewer(cam) {
     }
   }
 
-  refreshImage();
+  /*
+   * 上一張載入完成（或失敗）後，再等 5 秒抓下一張，
+   * 網路慢時不會堆積請求；分頁在背景時暫停，減輕政府伺服器負擔。
+   */
+  function scheduleNext() {
+    clearTimeout(wraLiveTimer);
 
-  // 每 5 秒重新取得一次最新圖片
-  wraLiveTimer = setInterval(refreshImage, 5000);
+    if (!overlay.isConnected) {
+      return;
+    }
+
+    wraLiveTimer = setTimeout(() => {
+      if (document.hidden) {
+        scheduleNext();
+        return;
+      }
+
+      refreshImage();
+    }, 5000);
+  }
+
+  refreshImage();
 }
 
 
@@ -2104,7 +2296,7 @@ function openWraLiveViewer(cam) {
 
 /* 點選側欄後移動到該攝影機 */
 function focusCam(key) {
-  const marker = markers.find(item => item.camData.key === key);
+  const marker = markerMap.get(key);
 
   if (!marker) {
     return;
@@ -2248,6 +2440,12 @@ function clearPlaceSearch() {
 
 /* 離開地點搜尋模式 */
 function exitPlaceSearchMode() {
+  const wasSearching =
+    searchResults !== null || searchLocationMarker !== null;
+
+  searchResults = null;
+  searchLabel = "";
+
   if (searchLocationMarker) {
     map.removeLayer(searchLocationMarker);
     searchLocationMarker = null;
@@ -2259,14 +2457,93 @@ function exitPlaceSearchMode() {
     clearButton.hidden = true;
   }
 
-  const container = document.getElementById("placeAutocomplete");
+  // 只有真的搜尋過才需要重建搜尋框（清掉輸入的文字）
+  if (wasSearching) {
+    const container = document.getElementById("placeAutocomplete");
 
-  if (container) {
-    container.replaceChildren();
-    initPlaceAutocomplete();
+    if (container) {
+      container.replaceChildren();
+      initPlaceAutocomplete();
+    }
   }
 
   map.closePopup();
+}
+
+/* 套用地點搜尋結果：顯示 3 公里內最近的 CCTV */
+function applyPlaceSearch(lat, lng, name) {
+  const nearbyCams = findNearbyCams({ lat, lng });
+
+  searchResults = nearbyCams;
+  searchLabel = name || "搜尋地點";
+
+  const clearButton = document.getElementById("clearSearchBtn");
+
+  if (clearButton) {
+    clearButton.hidden = false;
+  }
+
+  render({ autoZoom: false });
+
+  const bounds = L.latLngBounds([
+    [lat, lng],
+    ...nearbyCams.map(cam => [cam.y, cam.x])
+  ]);
+
+  if (bounds.isValid()) {
+    map.fitBounds(bounds, {
+      padding: [40, 40],
+      maxZoom: 16
+    });
+  }
+
+  if (searchLocationMarker) {
+    map.removeLayer(searchLocationMarker);
+  }
+
+  searchLocationMarker = L.marker([lat, lng])
+    .addTo(map)
+    .bindPopup(`<strong>${esc(searchLabel)}</strong>`)
+    .openPopup();
+}
+
+/*
+ * Google 地圖程式改成動態載入（原本放在 index.html 是同步載入，
+ * 會讓整個網站等它）。金鑰要在 Google Cloud Console 限制只能由
+ * 本站網址使用，並只開放 Maps JavaScript API 與 Places API。
+ */
+const GOOGLE_MAPS_API_KEY = "AIzaSyDHJ18rC0CuG4OGUbF-c4H7xavGoKOrTgw";
+let googleMapsPromise = null;
+
+function loadGoogleMaps() {
+  if (window.google?.maps?.importLibrary) {
+    return Promise.resolve();
+  }
+
+  if (!googleMapsPromise) {
+    googleMapsPromise = new Promise((resolve, reject) => {
+      window.__onGoogleMapsReady = resolve;
+
+      const script = document.createElement("script");
+
+      script.src =
+        "https://maps.googleapis.com/maps/api/js" +
+        `?key=${encodeURIComponent(GOOGLE_MAPS_API_KEY)}` +
+        "&loading=async&v=weekly&language=zh-TW&region=TW" +
+        "&callback=__onGoogleMapsReady";
+
+      script.async = true;
+
+      script.onerror = () => {
+        googleMapsPromise = null;
+        reject(new Error("無法載入 Google 地圖程式"));
+      };
+
+      document.head.appendChild(script);
+    });
+  }
+
+  return googleMapsPromise;
 }
 
 /* 建立 Google 地點搜尋框 */
@@ -2279,6 +2556,8 @@ async function initPlaceAutocomplete() {
   }
 
   try {
+    await loadGoogleMaps();
+
     const { PlaceAutocompleteElement } =
       await google.maps.importLibrary("places");
 
@@ -2303,44 +2582,7 @@ async function initPlaceAutocomplete() {
         const lat = place.location.lat();
         const lng = place.location.lng();
 
-        const nearbyCams = findNearbyCams({ lat, lng });
-
-        const clearButton = document.getElementById("clearSearchBtn");
-
-        if (clearButton) {
-          clearButton.hidden = false;
-        }
-
-        console.log("3 公里內 CCTV：", nearbyCams);
-
-        renderSidebar(nearbyCams);
-        renderMarkers(nearbyCams);
-
-        const bounds = L.latLngBounds([
-          [lat, lng],
-          ...nearbyCams.map(cam => [cam.y, cam.x])
-        ]);
-
-        if (bounds.isValid()) {
-          map.fitBounds(bounds, {
-            padding: [40, 40],
-            maxZoom: 16
-          });
-        }
-
-        if (searchLocationMarker) {
-          map.removeLayer(searchLocationMarker);
-        }
-
-        searchLocationMarker = L.marker([lat, lng])
-          .addTo(map)
-          .bindPopup(
-            `<strong>${esc(place.displayName || "搜尋位置")}</strong>`
-          )
-          .openPopup();
-
-        document.getElementById("status").textContent =
-          `已找到：${place.displayName || "搜尋地點"}`;
+        applyPlaceSearch(lat, lng, place.displayName);
 
       } catch (error) {
         console.error("取得搜尋地點失敗：", error);
@@ -2497,12 +2739,21 @@ async function initMap() {
   /* 拖曳或縮放後，重新顯示目前範圍內的 CCTV */
   map.on("moveend", scheduleVisibleCamerasRender);
 
+  // 資料和行政區邊界同時下載，兩邊都到了再整理
+  const dataFetch = startDataFetch();
+
   try {
     document.getElementById("status").textContent =
       "正在載入行政區邊界……";
 
-    await loadDistrictBoundaries();
-    await loadData();
+    try {
+      await loadDistrictBoundaries();
+    } catch (error) {
+      // 邊界載入失敗時，地圖與攝影機仍可使用，只是行政區顯示「未判定」
+      console.warn("行政區邊界載入失敗：", error);
+    }
+
+    await loadData(dataFetch);
 
   } catch (error) {
     console.error(error);
@@ -2545,9 +2796,44 @@ document
 /* CCTV 類型選單 */
 document
   .getElementById("sourceFilter")
-  ?.addEventListener("change", () => {
+  ?.addEventListener("change", async event => {
     exitPlaceSearchMode();
+
+    if (event.target.value === "wra") {
+      document.getElementById("status").textContent =
+        "正在載入水利署 CCTV 資料……";
+
+      try {
+        await ensureWraLoaded();
+      } catch (error) {
+        console.error(error);
+
+        document.getElementById("status").textContent =
+          `水利署資料載入失敗：${error.message}`;
+
+        return;
+      }
+    }
+
+    // 水利署與其他 CCTV 涵蓋的縣市、行政區不同，選單要跟著換
+    refreshLocationOptions();
     render();
+  });
+
+/* Esc 關閉水利署影像視窗 */
+document.addEventListener("keydown", event => {
+  if (event.key === "Escape") {
+    closeWraLiveViewer();
+  }
+});
+
+/* 手機／電腦版切換時，側欄顯示狀態改變，補畫一次 */
+window
+  .matchMedia("(max-width:900px)")
+  .addEventListener("change", () => {
+    if (allCams.length > 0) {
+      render({ autoZoom: false });
+    }
   });
 
 /* 我的位置按鈕 */

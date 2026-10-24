@@ -1,7 +1,11 @@
 const fs = require("fs");
+const path = require("path");
 
-const inputFile = "kaohsiung-original.json";
-const outputFile = "kaohsiung-road-cctv.json";
+// 不論從哪裡執行都正確：原始檔在 raw/，輸出到 data/
+const root = path.resolve(__dirname, "..");
+
+const inputFile = path.join(root, "raw", "kaohsiung-original.json");
+const outputFile = path.join(root, "data", "kaohsiung-road-cctv.json");
 
 const raw = JSON.parse(
   fs.readFileSync(inputFile, "utf8")
@@ -61,23 +65,27 @@ const results = raw
     cam.id &&
     Number.isFinite(cam.x) &&
     Number.isFinite(cam.y) &&
+    // 座標超出臺灣範圍的資料直接略過，避免一筆壞資料擋住整批更新
+    cam.x >= 118 && cam.x <= 123.5 &&
+    cam.y >= 21 && cam.y <= 26.5 &&
     cam.url
   );
 
 const output = {
   metadata: {
     source: "高雄市政府交通局",
-    total: results.length
+    total: results.length,
+    skipped: raw.length - results.length
   },
   results
 };
 
 fs.writeFileSync(
   outputFile,
-  JSON.stringify(output, null, 2),
+  JSON.stringify(output),
   "utf8"
 );
 
 console.log(
-  `已產生 ${outputFile}，共 ${results.length} 支 CCTV`
+  `已產生 ${outputFile}，共 ${results.length} 支 CCTV，略過 ${raw.length - results.length} 筆`
 );

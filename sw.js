@@ -216,6 +216,14 @@ function isDataFile(url) {
 
 /* 比對新舊資料，內容不同就通知所有開著的網頁 */
 async function notifyIfChanged(oldResponse, newResponse, url) {
+  // 伺服器給的 ETag 一樣就是沒變，不必把整份資料讀出來比對
+  const oldTag = oldResponse.headers.get("etag");
+  const newTag = newResponse.headers.get("etag");
+
+  if (oldTag && newTag && oldTag === newTag) {
+    return;
+  }
+
   const [oldText, newText] = await Promise.all([
     oldResponse.text(),
     newResponse.text()
