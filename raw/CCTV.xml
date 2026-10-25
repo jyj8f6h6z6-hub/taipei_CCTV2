@@ -1,5 +1,6 @@
+<?xml version='1.0' encoding='utf-8'?>
 <CCTVList xmlns="http://traffic.transportdata.tw/standard/traffic/schema/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://traffic.transportdata.tw/standard/traffic/schema/">
-	<UpdateTime>2026-07-28T10:05:37+08:00</UpdateTime>
+	<UpdateTime>2026-10-25T23:05:37+08:00</UpdateTime>
 	<UpdateInterval>86400</UpdateInterval>
 	<AuthorityCode>NFB</AuthorityCode>
 	<LinkVersion>25.12.1</LinkVersion>
@@ -337,7 +338,7 @@
 			<PositionLon>121.496306410588</PositionLon>
 			<PositionLat>25.0763422414063</PositionLat>
 			<RoadID>00001A</RoadID>
-			<RoadName>國道1號</RoadName>
+			<RoadName>國道1號汐止五股高架道路</RoadName>
 			<RoadClass>0</RoadClass>
 			<RoadDirection>S</RoadDirection>
 			<RoadSection>
@@ -355,7 +356,7 @@
 			<PositionLon>121.440802583818</PositionLon>
 			<PositionLat>25.0695862982939</PositionLat>
 			<RoadID>00001A</RoadID>
-			<RoadName>國道1號</RoadName>
+			<RoadName>國道1號汐止五股高架道路</RoadName>
 			<RoadClass>0</RoadClass>
 			<RoadDirection>S</RoadDirection>
 			<RoadSection>
@@ -427,7 +428,7 @@
 			<PositionLon>121.424454</PositionLon>
 			<PositionLat>25.067447</PositionLat>
 			<RoadID>00001B</RoadID>
-			<RoadName>國道1號</RoadName>
+			<RoadName>國道1號五股楊梅高架道路</RoadName>
 			<RoadClass>0</RoadClass>
 			<RoadDirection>S</RoadDirection>
 			<RoadSection>
@@ -499,7 +500,7 @@
 			<PositionLon>121.368845229661</PositionLon>
 			<PositionLat>25.065645831779</PositionLat>
 			<RoadID>00001B</RoadID>
-			<RoadName>國道1號</RoadName>
+			<RoadName>國道1號五股楊梅高架道路</RoadName>
 			<RoadClass>0</RoadClass>
 			<RoadDirection>S</RoadDirection>
 			<RoadSection>
@@ -535,7 +536,7 @@
 			<PositionLon>121.358518</PositionLon>
 			<PositionLat>25.065115</PositionLat>
 			<RoadID>00001B</RoadID>
-			<RoadName>國道1號</RoadName>
+			<RoadName>國道1號五股楊梅高架道路</RoadName>
 			<RoadClass>0</RoadClass>
 			<RoadDirection>S</RoadDirection>
 			<RoadSection>
@@ -589,7 +590,7 @@
 			<PositionLon>121.282549446476</PositionLon>
 			<PositionLat>25.0268395611117</PositionLat>
 			<RoadID>00001B</RoadID>
-			<RoadName>國道1號</RoadName>
+			<RoadName>國道1號五股楊梅高架道路</RoadName>
 			<RoadClass>0</RoadClass>
 			<RoadDirection>S</RoadDirection>
 			<RoadSection>
@@ -643,7 +644,7 @@
 			<PositionLon>121.252862201723</PositionLon>
 			<PositionLat>25.0028774231904</PositionLat>
 			<RoadID>00001B</RoadID>
-			<RoadName>國道1號</RoadName>
+			<RoadName>國道1號五股楊梅高架道路</RoadName>
 			<RoadClass>0</RoadClass>
 			<RoadDirection>S</RoadDirection>
 			<RoadSection>
@@ -679,7 +680,7 @@
 			<PositionLon>121.232746511581</PositionLon>
 			<PositionLat>24.984081068376</PositionLat>
 			<RoadID>00001B</RoadID>
-			<RoadName>國道1號</RoadName>
+			<RoadName>國道1號五股楊梅高架道路</RoadName>
 			<RoadClass>0</RoadClass>
 			<RoadDirection>S</RoadDirection>
 			<RoadSection>
@@ -751,7 +752,7 @@
 			<PositionLon>121.181858</PositionLon>
 			<PositionLat>24.931447</PositionLat>
 			<RoadID>00001B</RoadID>
-			<RoadName>國道1號</RoadName>
+			<RoadName>國道1號五股楊梅高架道路</RoadName>
 			<RoadClass>0</RoadClass>
 			<RoadDirection>S</RoadDirection>
 			<RoadSection>
@@ -769,7 +770,7 @@
 			<PositionLon>121.170747145405</PositionLon>
 			<PositionLat>24.9249119198569</PositionLat>
 			<RoadID>00001B</RoadID>
-			<RoadName>國道1號</RoadName>
+			<RoadName>國道1號五股楊梅高架道路</RoadName>
 			<RoadClass>0</RoadClass>
 			<RoadDirection>S</RoadDirection>
 			<RoadSection>
@@ -1651,7 +1652,7 @@
 			<PositionLon>121.50886</PositionLon>
 			<PositionLat>25.076563</PositionLat>
 			<RoadID>00001A</RoadID>
-			<RoadName>國道1號</RoadName>
+			<RoadName>國道1號汐止五股高架道路</RoadName>
 			<RoadClass>0</RoadClass>
 			<RoadDirection>N</RoadDirection>
 			<RoadSection>
@@ -1705,7 +1706,7 @@
 			<PositionLon>121.424825</PositionLon>
 			<PositionLat>25.066693</PositionLat>
 			<RoadID>00001B</RoadID>
-			<RoadName>國道1號</RoadName>
+			<RoadName>國道1號五股楊梅高架道路</RoadName>
 			<RoadClass>0</RoadClass>
 			<RoadDirection>N</RoadDirection>
 			<RoadSection>
@@ -1723,7 +1724,7 @@
 			<PositionLon>121.42395825</PositionLon>
 			<PositionLat>25.06624988</PositionLat>
 			<RoadID>00001B</RoadID>
-			<RoadName>國道1號</RoadName>
+			<RoadName>國道1號五股楊梅高架道路</RoadName>
 			<RoadClass>0</RoadClass>
 			<RoadDirection>N</RoadDirection>
 			<RoadSection>
@@ -7465,7 +7466,7 @@
 			<PositionLon>121.613889</PositionLon>
 			<PositionLat>25.065833</PositionLat>
 			<RoadID>00001A</RoadID>
-			<RoadName>國1高架</RoadName>
+			<RoadName>國道1號汐止五股高架道路</RoadName>
 			<RoadClass>0</RoadClass>
 			<RoadDirection>S</RoadDirection>
 			<RoadSection>
@@ -7483,7 +7484,7 @@
 			<PositionLon>121.601819</PositionLon>
 			<PositionLat>25.064306</PositionLat>
 			<RoadID>00001A</RoadID>
-			<RoadName>國1高架</RoadName>
+			<RoadName>國道1號汐止五股高架道路</RoadName>
 			<RoadClass>0</RoadClass>
 			<RoadDirection>S</RoadDirection>
 			<RoadSection>
@@ -7501,7 +7502,7 @@
 			<PositionLon>121.587702863847</PositionLon>
 			<PositionLat>25.0661202830756</PositionLat>
 			<RoadID>00001A</RoadID>
-			<RoadName>國1高架</RoadName>
+			<RoadName>國道1號汐止五股高架道路</RoadName>
 			<RoadClass>0</RoadClass>
 			<RoadDirection>S</RoadDirection>
 			<RoadSection>
@@ -7519,7 +7520,7 @@
 			<PositionLon>121.575141231208</PositionLon>
 			<PositionLat>25.0705222015069</PositionLat>
 			<RoadID>00001A</RoadID>
-			<RoadName>國1高架</RoadName>
+			<RoadName>國道1號汐止五股高架道路</RoadName>
 			<RoadClass>0</RoadClass>
 			<RoadDirection>S</RoadDirection>
 			<RoadSection>
@@ -7537,7 +7538,7 @@
 			<PositionLon>121.570308246831</PositionLon>
 			<PositionLat>25.071192675203</PositionLat>
 			<RoadID>00001A</RoadID>
-			<RoadName>國1高架</RoadName>
+			<RoadName>國道1號汐止五股高架道路</RoadName>
 			<RoadClass>0</RoadClass>
 			<RoadDirection>S</RoadDirection>
 			<RoadSection>
@@ -7555,7 +7556,7 @@
 			<PositionLon>121.559082822097</PositionLon>
 			<PositionLat>25.0722981153529</PositionLat>
 			<RoadID>00001A</RoadID>
-			<RoadName>國1高架</RoadName>
+			<RoadName>國道1號汐止五股高架道路</RoadName>
 			<RoadClass>0</RoadClass>
 			<RoadDirection>S</RoadDirection>
 			<RoadSection>
@@ -7573,7 +7574,7 @@
 			<PositionLon>121.554733795427</PositionLon>
 			<PositionLat>25.0731828069326</PositionLat>
 			<RoadID>00001A</RoadID>
-			<RoadName>國1高架</RoadName>
+			<RoadName>國道1號汐止五股高架道路</RoadName>
 			<RoadClass>0</RoadClass>
 			<RoadDirection>S</RoadDirection>
 			<RoadSection>
@@ -7591,7 +7592,7 @@
 			<PositionLon>121.545257812492</PositionLon>
 			<PositionLat>25.0733599439163</PositionLat>
 			<RoadID>00001A</RoadID>
-			<RoadName>國1高架</RoadName>
+			<RoadName>國道1號汐止五股高架道路</RoadName>
 			<RoadClass>0</RoadClass>
 			<RoadDirection>S</RoadDirection>
 			<RoadSection>
@@ -7609,7 +7610,7 @@
 			<PositionLon>121.530640866534</PositionLon>
 			<PositionLat>25.0737703734647</PositionLat>
 			<RoadID>00001A</RoadID>
-			<RoadName>國1高架</RoadName>
+			<RoadName>國道1號汐止五股高架道路</RoadName>
 			<RoadClass>0</RoadClass>
 			<RoadDirection>S</RoadDirection>
 			<RoadSection>
@@ -7627,7 +7628,7 @@
 			<PositionLon>121.52223077819</PositionLon>
 			<PositionLat>25.0764572127149</PositionLat>
 			<RoadID>00001A</RoadID>
-			<RoadName>國1高架</RoadName>
+			<RoadName>國道1號汐止五股高架道路</RoadName>
 			<RoadClass>0</RoadClass>
 			<RoadDirection>S</RoadDirection>
 			<RoadSection>
@@ -7645,7 +7646,7 @@
 			<PositionLon>121.514089922224</PositionLon>
 			<PositionLat>25.0782158535421</PositionLat>
 			<RoadID>00001A</RoadID>
-			<RoadName>國1高架</RoadName>
+			<RoadName>國道1號汐止五股高架道路</RoadName>
 			<RoadClass>0</RoadClass>
 			<RoadDirection>S</RoadDirection>
 			<RoadSection>
@@ -7663,7 +7664,7 @@
 			<PositionLon>121.508443825146</PositionLon>
 			<PositionLat>25.0783893995417</PositionLat>
 			<RoadID>00001A</RoadID>
-			<RoadName>國1高架</RoadName>
+			<RoadName>國道1號汐止五股高架道路</RoadName>
 			<RoadClass>0</RoadClass>
 			<RoadDirection>S</RoadDirection>
 			<RoadSection>
@@ -7681,7 +7682,7 @@
 			<PositionLon>121.497806276399</PositionLon>
 			<PositionLat>25.0769570412516</PositionLat>
 			<RoadID>00001A</RoadID>
-			<RoadName>國1高架</RoadName>
+			<RoadName>國道1號汐止五股高架道路</RoadName>
 			<RoadClass>0</RoadClass>
 			<RoadDirection>S</RoadDirection>
 			<RoadSection>
@@ -7699,7 +7700,7 @@
 			<PositionLon>121.487441399063</PositionLon>
 			<PositionLat>25.0743433157689</PositionLat>
 			<RoadID>00001A</RoadID>
-			<RoadName>國1高架</RoadName>
+			<RoadName>國道1號汐止五股高架道路</RoadName>
 			<RoadClass>0</RoadClass>
 			<RoadDirection>S</RoadDirection>
 			<RoadSection>
@@ -7717,7 +7718,7 @@
 			<PositionLon>121.478949402055</PositionLon>
 			<PositionLat>25.0736341230219</PositionLat>
 			<RoadID>00001A</RoadID>
-			<RoadName>國1高架</RoadName>
+			<RoadName>國道1號汐止五股高架道路</RoadName>
 			<RoadClass>0</RoadClass>
 			<RoadDirection>S</RoadDirection>
 			<RoadSection>
@@ -7735,7 +7736,7 @@
 			<PositionLon>121.46957</PositionLon>
 			<PositionLat>25.07578</PositionLat>
 			<RoadID>00001A</RoadID>
-			<RoadName>國1高架</RoadName>
+			<RoadName>國道1號汐止五股高架道路</RoadName>
 			<RoadClass>0</RoadClass>
 			<RoadDirection>S</RoadDirection>
 			<RoadSection>
@@ -7753,7 +7754,7 @@
 			<PositionLon>121.460188612891</PositionLon>
 			<PositionLat>25.075426522286</PositionLat>
 			<RoadID>00001A</RoadID>
-			<RoadName>國1高架</RoadName>
+			<RoadName>國道1號汐止五股高架道路</RoadName>
 			<RoadClass>0</RoadClass>
 			<RoadDirection>S</RoadDirection>
 			<RoadSection>
@@ -7771,7 +7772,7 @@
 			<PositionLon>121.450717673912</PositionLon>
 			<PositionLat>25.0727172008332</PositionLat>
 			<RoadID>00001A</RoadID>
-			<RoadName>國1高架</RoadName>
+			<RoadName>國道1號汐止五股高架道路</RoadName>
 			<RoadClass>0</RoadClass>
 			<RoadDirection>S</RoadDirection>
 			<RoadSection>
@@ -7789,7 +7790,7 @@
 			<PositionLon>121.449653414676</PositionLon>
 			<PositionLat>25.0722741505751</PositionLat>
 			<RoadID>00001A</RoadID>
-			<RoadName>國1高架</RoadName>
+			<RoadName>國道1號汐止五股高架道路</RoadName>
 			<RoadClass>0</RoadClass>
 			<RoadDirection>S</RoadDirection>
 			<RoadSection>
@@ -7807,7 +7808,7 @@
 			<PositionLon>121.437738533287</PositionLon>
 			<PositionLat>25.0691656725185</PositionLat>
 			<RoadID>00001B</RoadID>
-			<RoadName>國1高架</RoadName>
+			<RoadName>國道1號五股楊梅高架道路</RoadName>
 			<RoadClass>0</RoadClass>
 			<RoadDirection>S</RoadDirection>
 			<RoadSection>
@@ -7825,7 +7826,7 @@
 			<PositionLon>121.425821</PositionLon>
 			<PositionLat>25.067892</PositionLat>
 			<RoadID>00001B</RoadID>
-			<RoadName>國1高架</RoadName>
+			<RoadName>國道1號五股楊梅高架道路</RoadName>
 			<RoadClass>0</RoadClass>
 			<RoadDirection>S</RoadDirection>
 			<RoadSection>
@@ -7843,7 +7844,7 @@
 			<PositionLon>121.414259608498</PositionLon>
 			<PositionLat>25.0611954821981</PositionLat>
 			<RoadID>00001B</RoadID>
-			<RoadName>國1高架</RoadName>
+			<RoadName>國道1號五股楊梅高架道路</RoadName>
 			<RoadClass>0</RoadClass>
 			<RoadDirection>S</RoadDirection>
 			<RoadSection>
@@ -7861,7 +7862,7 @@
 			<PositionLon>121.414294987653</PositionLon>
 			<PositionLat>25.061221243021</PositionLat>
 			<RoadID>00001B</RoadID>
-			<RoadName>國1高架</RoadName>
+			<RoadName>國道1號五股楊梅高架道路</RoadName>
 			<RoadClass>0</RoadClass>
 			<RoadDirection>S</RoadDirection>
 			<RoadSection>
@@ -7879,7 +7880,7 @@
 			<PositionLon>121.400757121843</PositionLon>
 			<PositionLat>25.0563631458216</PositionLat>
 			<RoadID>00001B</RoadID>
-			<RoadName>國1高架</RoadName>
+			<RoadName>國道1號五股楊梅高架道路</RoadName>
 			<RoadClass>0</RoadClass>
 			<RoadDirection>S</RoadDirection>
 			<RoadSection>
@@ -7897,7 +7898,7 @@
 			<PositionLon>121.391106246215</PositionLon>
 			<PositionLat>25.0648961659326</PositionLat>
 			<RoadID>00001B</RoadID>
-			<RoadName>國1高架</RoadName>
+			<RoadName>國道1號五股楊梅高架道路</RoadName>
 			<RoadClass>0</RoadClass>
 			<RoadDirection>S</RoadDirection>
 			<RoadSection>
@@ -7915,7 +7916,7 @@
 			<PositionLon>121.384221032672</PositionLon>
 			<PositionLat>25.0650325647118</PositionLat>
 			<RoadID>00001B</RoadID>
-			<RoadName>國1高架</RoadName>
+			<RoadName>國道1號五股楊梅高架道路</RoadName>
 			<RoadClass>0</RoadClass>
 			<RoadDirection>S</RoadDirection>
 			<RoadSection>
@@ -7933,7 +7934,7 @@
 			<PositionLon>121.377441</PositionLon>
 			<PositionLat>25.066365</PositionLat>
 			<RoadID>00001B</RoadID>
-			<RoadName>國1高架</RoadName>
+			<RoadName>國道1號五股楊梅高架道路</RoadName>
 			<RoadClass>0</RoadClass>
 			<RoadDirection>S</RoadDirection>
 			<RoadSection>
@@ -7951,7 +7952,7 @@
 			<PositionLon>121.36825923394</PositionLon>
 			<PositionLat>25.0657679848914</PositionLat>
 			<RoadID>00001B</RoadID>
-			<RoadName>國1高架</RoadName>
+			<RoadName>國道1號五股楊梅高架道路</RoadName>
 			<RoadClass>0</RoadClass>
 			<RoadDirection>S</RoadDirection>
 			<RoadSection>
@@ -7969,7 +7970,7 @@
 			<PositionLon>121.367194</PositionLon>
 			<PositionLat>25.065616</PositionLat>
 			<RoadID>00001B</RoadID>
-			<RoadName>國1高架</RoadName>
+			<RoadName>國道1號五股楊梅高架道路</RoadName>
 			<RoadClass>0</RoadClass>
 			<RoadDirection>S</RoadDirection>
 			<RoadSection>
@@ -7987,7 +7988,7 @@
 			<PositionLon>121.354183469157</PositionLon>
 			<PositionLat>25.0656037891717</PositionLat>
 			<RoadID>00001B</RoadID>
-			<RoadName>國1高架</RoadName>
+			<RoadName>國道1號五股楊梅高架道路</RoadName>
 			<RoadClass>0</RoadClass>
 			<RoadDirection>S</RoadDirection>
 			<RoadSection>
@@ -8005,7 +8006,7 @@
 			<PositionLon>121.34330428295</PositionLon>
 			<PositionLat>25.0655781895283</PositionLat>
 			<RoadID>00001B</RoadID>
-			<RoadName>國1高架</RoadName>
+			<RoadName>國道1號五股楊梅高架道路</RoadName>
 			<RoadClass>0</RoadClass>
 			<RoadDirection>S</RoadDirection>
 			<RoadSection>
@@ -8023,7 +8024,7 @@
 			<PositionLon>121.333500222279</PositionLon>
 			<PositionLat>25.0614060424093</PositionLat>
 			<RoadID>00001B</RoadID>
-			<RoadName>國1高架</RoadName>
+			<RoadName>國道1號五股楊梅高架道路</RoadName>
 			<RoadClass>0</RoadClass>
 			<RoadDirection>S</RoadDirection>
 			<RoadSection>
@@ -8041,7 +8042,7 @@
 			<PositionLon>121.330165</PositionLon>
 			<PositionLat>25.058525</PositionLat>
 			<RoadID>00001B</RoadID>
-			<RoadName>國1高架</RoadName>
+			<RoadName>國道1號五股楊梅高架道路</RoadName>
 			<RoadClass>0</RoadClass>
 			<RoadDirection>S</RoadDirection>
 			<RoadSection>
@@ -8059,7 +8060,7 @@
 			<PositionLon>121.320338</PositionLon>
 			<PositionLat>25.048478</PositionLat>
 			<RoadID>00001B</RoadID>
-			<RoadName>國1高架</RoadName>
+			<RoadName>國道1號五股楊梅高架道路</RoadName>
 			<RoadClass>0</RoadClass>
 			<RoadDirection>S</RoadDirection>
 			<RoadSection>
@@ -8077,7 +8078,7 @@
 			<PositionLon>121.308625092549</PositionLon>
 			<PositionLat>25.0438748536823</PositionLat>
 			<RoadID>00001B</RoadID>
-			<RoadName>國1高架</RoadName>
+			<RoadName>國道1號五股楊梅高架道路</RoadName>
 			<RoadClass>0</RoadClass>
 			<RoadDirection>S</RoadDirection>
 			<RoadSection>
@@ -8095,7 +8096,7 @@
 			<PositionLon>121.300821488545</PositionLon>
 			<PositionLat>25.0401041086768</PositionLat>
 			<RoadID>00001B</RoadID>
-			<RoadName>國1高架</RoadName>
+			<RoadName>國道1號五股楊梅高架道路</RoadName>
 			<RoadClass>0</RoadClass>
 			<RoadDirection>S</RoadDirection>
 			<RoadSection>
@@ -8113,7 +8114,7 @@
 			<PositionLon>121.289553301938</PositionLon>
 			<PositionLat>25.032948145601</PositionLat>
 			<RoadID>00001B</RoadID>
-			<RoadName>國1高架</RoadName>
+			<RoadName>國道1號五股楊梅高架道路</RoadName>
 			<RoadClass>0</RoadClass>
 			<RoadDirection>S</RoadDirection>
 			<RoadSection>
@@ -8131,7 +8132,7 @@
 			<PositionLon>121.280893</PositionLon>
 			<PositionLat>25.025794</PositionLat>
 			<RoadID>00001B</RoadID>
-			<RoadName>國1高架</RoadName>
+			<RoadName>國道1號五股楊梅高架道路</RoadName>
 			<RoadClass>0</RoadClass>
 			<RoadDirection>S</RoadDirection>
 			<RoadSection>
@@ -8149,7 +8150,7 @@
 			<PositionLon>121.274360749528</PositionLon>
 			<PositionLat>25.0203697091533</PositionLat>
 			<RoadID>00001B</RoadID>
-			<RoadName>國1高架</RoadName>
+			<RoadName>國道1號五股楊梅高架道路</RoadName>
 			<RoadClass>0</RoadClass>
 			<RoadDirection>S</RoadDirection>
 			<RoadSection>
@@ -8167,7 +8168,7 @@
 			<PositionLon>121.270415072148</PositionLon>
 			<PositionLat>25.0170027616224</PositionLat>
 			<RoadID>00001B</RoadID>
-			<RoadName>國1高架</RoadName>
+			<RoadName>國道1號五股楊梅高架道路</RoadName>
 			<RoadClass>0</RoadClass>
 			<RoadDirection>S</RoadDirection>
 			<RoadSection>
@@ -8185,7 +8186,7 @@
 			<PositionLon>121.262466180474</PositionLon>
 			<PositionLat>25.0105904209109</PositionLat>
 			<RoadID>00001B</RoadID>
-			<RoadName>國1高架</RoadName>
+			<RoadName>國道1號五股楊梅高架道路</RoadName>
 			<RoadClass>0</RoadClass>
 			<RoadDirection>S</RoadDirection>
 			<RoadSection>
@@ -8193,24 +8194,6 @@
 				<End>中壢轉接一</End>
 			</RoadSection>
 			<LocationMile>53K+710</LocationMile>
-		</CCTV>
-		<CCTV>
-			<CCTVID>CCTV-N1H-S-55.010-M-俯瞰中壢服務區</CCTVID>
-			<SubAuthorityCode>NFB-NR</SubAuthorityCode>
-			<LinkID>00001B0005400H</LinkID>
-			<VideoStreamURL>https://cctvn.freeway.gov.tw/abs2mjpg/bmjpg?camera=15503</VideoStreamURL>
-			<LocationType>1</LocationType>
-			<PositionLon>121.252669610603</PositionLon>
-			<PositionLat>25.0030387091486</PositionLat>
-			<RoadID>00001B</RoadID>
-			<RoadName>國1高架</RoadName>
-			<RoadClass>0</RoadClass>
-			<RoadDirection>S</RoadDirection>
-			<RoadSection>
-				<Start>機場系統交流道</Start>
-				<End>中壢轉接一</End>
-			</RoadSection>
-			<LocationMile>55K+010</LocationMile>
 		</CCTV>
 		<CCTV>
 			<CCTVID>CCTV-N1H-S-55.720-M</CCTVID>
@@ -8221,7 +8204,7 @@
 			<PositionLon>121.247377610197</PositionLon>
 			<PositionLat>24.9987870412549</PositionLat>
 			<RoadID>00001B</RoadID>
-			<RoadName>國1高架</RoadName>
+			<RoadName>國道1號五股楊梅高架道路</RoadName>
 			<RoadClass>0</RoadClass>
 			<RoadDirection>S</RoadDirection>
 			<RoadSection>
@@ -8239,7 +8222,7 @@
 			<PositionLon>121.240349780017</PositionLon>
 			<PositionLat>24.9917357477833</PositionLat>
 			<RoadID>00001B</RoadID>
-			<RoadName>國1高架</RoadName>
+			<RoadName>國道1號五股楊梅高架道路</RoadName>
 			<RoadClass>0</RoadClass>
 			<RoadDirection>S</RoadDirection>
 			<RoadSection>
@@ -8257,7 +8240,7 @@
 			<PositionLon>121.233873981408</PositionLon>
 			<PositionLat>24.9853458154887</PositionLat>
 			<RoadID>00001B</RoadID>
-			<RoadName>國1高架</RoadName>
+			<RoadName>國道1號五股楊梅高架道路</RoadName>
 			<RoadClass>0</RoadClass>
 			<RoadDirection>S</RoadDirection>
 			<RoadSection>
@@ -8275,7 +8258,7 @@
 			<PositionLon>121.226285290564</PositionLon>
 			<PositionLat>24.9785708842224</PositionLat>
 			<RoadID>00001B</RoadID>
-			<RoadName>國1高架</RoadName>
+			<RoadName>國道1號五股楊梅高架道路</RoadName>
 			<RoadClass>0</RoadClass>
 			<RoadDirection>S</RoadDirection>
 			<RoadSection>
@@ -8293,7 +8276,7 @@
 			<PositionLon>121.216143859537</PositionLon>
 			<PositionLat>24.9699523562029</PositionLat>
 			<RoadID>00001B</RoadID>
-			<RoadName>國1高架</RoadName>
+			<RoadName>國道1號五股楊梅高架道路</RoadName>
 			<RoadClass>0</RoadClass>
 			<RoadDirection>S</RoadDirection>
 			<RoadSection>
@@ -8311,7 +8294,7 @@
 			<PositionLon>121.208818724769</PositionLon>
 			<PositionLat>24.9645621393224</PositionLat>
 			<RoadID>00001B</RoadID>
-			<RoadName>國1高架</RoadName>
+			<RoadName>國道1號五股楊梅高架道路</RoadName>
 			<RoadClass>0</RoadClass>
 			<RoadDirection>S</RoadDirection>
 			<RoadSection>
@@ -8329,7 +8312,7 @@
 			<PositionLon>121.2011194</PositionLon>
 			<PositionLat>24.9590626</PositionLat>
 			<RoadID>00001B</RoadID>
-			<RoadName>國1高架</RoadName>
+			<RoadName>國道1號五股楊梅高架道路</RoadName>
 			<RoadClass>0</RoadClass>
 			<RoadDirection>S</RoadDirection>
 			<RoadSection>
@@ -8347,7 +8330,7 @@
 			<PositionLon>121.196357441687</PositionLon>
 			<PositionLat>24.9520048800703</PositionLat>
 			<RoadID>00001B</RoadID>
-			<RoadName>國1高架</RoadName>
+			<RoadName>國道1號五股楊梅高架道路</RoadName>
 			<RoadClass>0</RoadClass>
 			<RoadDirection>S</RoadDirection>
 			<RoadSection>
@@ -8365,7 +8348,7 @@
 			<PositionLon>121.188936607445</PositionLon>
 			<PositionLat>24.935966920739</PositionLat>
 			<RoadID>00001B</RoadID>
-			<RoadName>國1高架</RoadName>
+			<RoadName>國道1號五股楊梅高架道路</RoadName>
 			<RoadClass>0</RoadClass>
 			<RoadDirection>S</RoadDirection>
 			<RoadSection>
@@ -8383,7 +8366,7 @@
 			<PositionLon>121.180967492205</PositionLon>
 			<PositionLat>24.931335556466</PositionLat>
 			<RoadID>00001B</RoadID>
-			<RoadName>國1高架</RoadName>
+			<RoadName>國道1號五股楊梅高架道路</RoadName>
 			<RoadClass>0</RoadClass>
 			<RoadDirection>S</RoadDirection>
 			<RoadSection>
@@ -8401,7 +8384,7 @@
 			<PositionLon>121.171993043748</PositionLon>
 			<PositionLat>24.9264459978317</PositionLat>
 			<RoadID>00001B</RoadID>
-			<RoadName>國1高架</RoadName>
+			<RoadName>國道1號五股楊梅高架道路</RoadName>
 			<RoadClass>0</RoadClass>
 			<RoadDirection>S</RoadDirection>
 			<RoadSection>
@@ -8419,7 +8402,7 @@
 			<PositionLon>121.16668857435</PositionLon>
 			<PositionLat>24.9161386099624</PositionLat>
 			<RoadID>00001B</RoadID>
-			<RoadName>國1高架</RoadName>
+			<RoadName>國道1號五股楊梅高架道路</RoadName>
 			<RoadClass>0</RoadClass>
 			<RoadDirection>S</RoadDirection>
 			<RoadSection>
@@ -8437,7 +8420,7 @@
 			<PositionLon>121.163341111311</PositionLon>
 			<PositionLat>24.9072766011522</PositionLat>
 			<RoadID>00001B</RoadID>
-			<RoadName>國1高架</RoadName>
+			<RoadName>國道1號五股楊梅高架道路</RoadName>
 			<RoadClass>0</RoadClass>
 			<RoadDirection>S</RoadDirection>
 			<RoadSection>
@@ -8455,7 +8438,7 @@
 			<PositionLon>121.154554847504</PositionLon>
 			<PositionLat>24.9014341608312</PositionLat>
 			<RoadID>00001B</RoadID>
-			<RoadName>國1高架</RoadName>
+			<RoadName>國道1號五股楊梅高架道路</RoadName>
 			<RoadClass>0</RoadClass>
 			<RoadDirection>S</RoadDirection>
 			<RoadSection>
@@ -8473,7 +8456,7 @@
 			<PositionLon>121.154533208497</PositionLon>
 			<PositionLat>24.9014343354432</PositionLat>
 			<RoadID>00001B</RoadID>
-			<RoadName>國1高架</RoadName>
+			<RoadName>國道1號五股楊梅高架道路</RoadName>
 			<RoadClass>0</RoadClass>
 			<RoadDirection>S</RoadDirection>
 			<RoadSection>
@@ -8491,7 +8474,7 @@
 			<PositionLon>121.146301302019</PositionLon>
 			<PositionLat>24.8993930000157</PositionLat>
 			<RoadID>000010</RoadID>
-			<RoadName>國1高架</RoadName>
+			<RoadName>國道1號</RoadName>
 			<RoadClass>0</RoadClass>
 			<RoadDirection>S</RoadDirection>
 			<RoadSection>
@@ -8509,7 +8492,7 @@
 			<PositionLon>121.607895931101</PositionLon>
 			<PositionLat>25.0647244442791</PositionLat>
 			<RoadID>00001A</RoadID>
-			<RoadName>國1高架</RoadName>
+			<RoadName>國道1號汐止五股高架道路</RoadName>
 			<RoadClass>0</RoadClass>
 			<RoadDirection>N</RoadDirection>
 			<RoadSection>
@@ -8527,7 +8510,7 @@
 			<PositionLon>121.597829694202</PositionLon>
 			<PositionLat>25.0635219428322</PositionLat>
 			<RoadID>00001A</RoadID>
-			<RoadName>國1高架</RoadName>
+			<RoadName>國道1號汐止五股高架道路</RoadName>
 			<RoadClass>0</RoadClass>
 			<RoadDirection>N</RoadDirection>
 			<RoadSection>
@@ -8545,7 +8528,7 @@
 			<PositionLon>121.586307858334</PositionLon>
 			<PositionLat>25.0662585651872</PositionLat>
 			<RoadID>00001A</RoadID>
-			<RoadName>國1高架</RoadName>
+			<RoadName>國道1號汐止五股高架道路</RoadName>
 			<RoadClass>0</RoadClass>
 			<RoadDirection>N</RoadDirection>
 			<RoadSection>
@@ -8563,7 +8546,7 @@
 			<PositionLon>121.579027650961</PositionLon>
 			<PositionLat>25.0691689044765</PositionLat>
 			<RoadID>00001A</RoadID>
-			<RoadName>國1高架</RoadName>
+			<RoadName>國道1號汐止五股高架道路</RoadName>
 			<RoadClass>0</RoadClass>
 			<RoadDirection>N</RoadDirection>
 			<RoadSection>
@@ -8581,7 +8564,7 @@
 			<PositionLon>121.569941324152</PositionLon>
 			<PositionLat>25.070876254918</PositionLat>
 			<RoadID>00001A</RoadID>
-			<RoadName>國1高架</RoadName>
+			<RoadName>國道1號汐止五股高架道路</RoadName>
 			<RoadClass>0</RoadClass>
 			<RoadDirection>N</RoadDirection>
 			<RoadSection>
@@ -8599,7 +8582,7 @@
 			<PositionLon>121.555761568163</PositionLon>
 			<PositionLat>25.0723071889649</PositionLat>
 			<RoadID>00001A</RoadID>
-			<RoadName>國1高架</RoadName>
+			<RoadName>國道1號汐止五股高架道路</RoadName>
 			<RoadClass>0</RoadClass>
 			<RoadDirection>N</RoadDirection>
 			<RoadSection>
@@ -8617,7 +8600,7 @@
 			<PositionLon>121.545853744327</PositionLon>
 			<PositionLat>25.072295750077</PositionLat>
 			<RoadID>00001A</RoadID>
-			<RoadName>國1高架</RoadName>
+			<RoadName>國道1號汐止五股高架道路</RoadName>
 			<RoadClass>0</RoadClass>
 			<RoadDirection>N</RoadDirection>
 			<RoadSection>
@@ -8635,7 +8618,7 @@
 			<PositionLon>121.536987265978</PositionLon>
 			<PositionLat>25.0727425307354</PositionLat>
 			<RoadID>00001A</RoadID>
-			<RoadName>國1高架</RoadName>
+			<RoadName>國道1號汐止五股高架道路</RoadName>
 			<RoadClass>0</RoadClass>
 			<RoadDirection>N</RoadDirection>
 			<RoadSection>
@@ -8653,7 +8636,7 @@
 			<PositionLon>121.525351479885</PositionLon>
 			<PositionLat>25.0747844487359</PositionLat>
 			<RoadID>00001A</RoadID>
-			<RoadName>國1高架</RoadName>
+			<RoadName>國道1號汐止五股高架道路</RoadName>
 			<RoadClass>0</RoadClass>
 			<RoadDirection>N</RoadDirection>
 			<RoadSection>
@@ -8671,7 +8654,7 @@
 			<PositionLon>121.516275597092</PositionLon>
 			<PositionLat>25.0773476571461</PositionLat>
 			<RoadID>00001A</RoadID>
-			<RoadName>國1高架</RoadName>
+			<RoadName>國道1號汐止五股高架道路</RoadName>
 			<RoadClass>0</RoadClass>
 			<RoadDirection>N</RoadDirection>
 			<RoadSection>
@@ -8689,7 +8672,7 @@
 			<PositionLon>121.513953290155</PositionLon>
 			<PositionLat>25.0775838389182</PositionLat>
 			<RoadID>00001A</RoadID>
-			<RoadName>國1高架</RoadName>
+			<RoadName>國道1號汐止五股高架道路</RoadName>
 			<RoadClass>0</RoadClass>
 			<RoadDirection>N</RoadDirection>
 			<RoadSection>
@@ -8707,7 +8690,7 @@
 			<PositionLon>121.505273486659</PositionLon>
 			<PositionLat>25.0777076501405</PositionLat>
 			<RoadID>00001A</RoadID>
-			<RoadName>國1高架</RoadName>
+			<RoadName>國道1號汐止五股高架道路</RoadName>
 			<RoadClass>0</RoadClass>
 			<RoadDirection>N</RoadDirection>
 			<RoadSection>
@@ -8725,7 +8708,7 @@
 			<PositionLon>121.494571251185</PositionLon>
 			<PositionLat>25.0753574611719</PositionLat>
 			<RoadID>00001A</RoadID>
-			<RoadName>國1高架</RoadName>
+			<RoadName>國道1號汐止五股高架道路</RoadName>
 			<RoadClass>0</RoadClass>
 			<RoadDirection>N</RoadDirection>
 			<RoadSection>
@@ -8743,7 +8726,7 @@
 			<PositionLon>121.493274591554</PositionLon>
 			<PositionLat>25.0751350835071</PositionLat>
 			<RoadID>00001A</RoadID>
-			<RoadName>國1高架</RoadName>
+			<RoadName>國道1號汐止五股高架道路</RoadName>
 			<RoadClass>0</RoadClass>
 			<RoadDirection>N</RoadDirection>
 			<RoadSection>
@@ -8761,7 +8744,7 @@
 			<PositionLon>121.484051432937</PositionLon>
 			<PositionLat>25.0731840531744</PositionLat>
 			<RoadID>00001A</RoadID>
-			<RoadName>國1高架</RoadName>
+			<RoadName>國道1號汐止五股高架道路</RoadName>
 			<RoadClass>0</RoadClass>
 			<RoadDirection>N</RoadDirection>
 			<RoadSection>
@@ -8779,7 +8762,7 @@
 			<PositionLon>121.474194798277</PositionLon>
 			<PositionLat>25.0742224501534</PositionLat>
 			<RoadID>00001A</RoadID>
-			<RoadName>國1高架</RoadName>
+			<RoadName>國道1號汐止五股高架道路</RoadName>
 			<RoadClass>0</RoadClass>
 			<RoadDirection>N</RoadDirection>
 			<RoadSection>
@@ -8797,7 +8780,7 @@
 			<PositionLon>121.464080380964</PositionLon>
 			<PositionLat>25.0755388634374</PositionLat>
 			<RoadID>00001A</RoadID>
-			<RoadName>國1高架</RoadName>
+			<RoadName>國道1號汐止五股高架道路</RoadName>
 			<RoadClass>0</RoadClass>
 			<RoadDirection>N</RoadDirection>
 			<RoadSection>
@@ -8815,7 +8798,7 @@
 			<PositionLon>121.459253798906</PositionLon>
 			<PositionLat>25.0745447898807</PositionLat>
 			<RoadID>00001A</RoadID>
-			<RoadName>國1高架</RoadName>
+			<RoadName>國道1號汐止五股高架道路</RoadName>
 			<RoadClass>0</RoadClass>
 			<RoadDirection>N</RoadDirection>
 			<RoadSection>
@@ -8833,7 +8816,7 @@
 			<PositionLon>121.45486342962</PositionLon>
 			<PositionLat>25.0733454391131</PositionLat>
 			<RoadID>00001A</RoadID>
-			<RoadName>國1高架</RoadName>
+			<RoadName>國道1號汐止五股高架道路</RoadName>
 			<RoadClass>0</RoadClass>
 			<RoadDirection>N</RoadDirection>
 			<RoadSection>
@@ -8851,7 +8834,7 @@
 			<PositionLon>121.451484803676</PositionLon>
 			<PositionLat>25.0713340535717</PositionLat>
 			<RoadID>00001B</RoadID>
-			<RoadName>國1高架</RoadName>
+			<RoadName>國道1號五股楊梅高架道路</RoadName>
 			<RoadClass>0</RoadClass>
 			<RoadDirection>N</RoadDirection>
 			<RoadSection>
@@ -8869,7 +8852,7 @@
 			<PositionLon>121.443865140294</PositionLon>
 			<PositionLat>25.0700997102623</PositionLat>
 			<RoadID>00001A</RoadID>
-			<RoadName>國1高架</RoadName>
+			<RoadName>國道1號汐止五股高架道路</RoadName>
 			<RoadClass>0</RoadClass>
 			<RoadDirection>N</RoadDirection>
 			<RoadSection>
@@ -8887,7 +8870,7 @@
 			<PositionLon>121.438453354363</PositionLon>
 			<PositionLat>25.0678898552394</PositionLat>
 			<RoadID>00001A</RoadID>
-			<RoadName>國1高架</RoadName>
+			<RoadName>國道1號汐止五股高架道路</RoadName>
 			<RoadClass>0</RoadClass>
 			<RoadDirection>N</RoadDirection>
 			<RoadSection>
@@ -8905,7 +8888,7 @@
 			<PositionLon>121.427875700285</PositionLon>
 			<PositionLat>25.0677974676608</PositionLat>
 			<RoadID>00001B</RoadID>
-			<RoadName>國1高架</RoadName>
+			<RoadName>國道1號五股楊梅高架道路</RoadName>
 			<RoadClass>0</RoadClass>
 			<RoadDirection>N</RoadDirection>
 			<RoadSection>
@@ -8923,7 +8906,7 @@
 			<PositionLon>121.419147698175</PositionLon>
 			<PositionLat>25.0633665488699</PositionLat>
 			<RoadID>00001B</RoadID>
-			<RoadName>國1高架</RoadName>
+			<RoadName>國道1號五股楊梅高架道路</RoadName>
 			<RoadClass>0</RoadClass>
 			<RoadDirection>N</RoadDirection>
 			<RoadSection>
@@ -8941,7 +8924,7 @@
 			<PositionLon>121.406686130407</PositionLon>
 			<PositionLat>25.0558454505526</PositionLat>
 			<RoadID>00001B</RoadID>
-			<RoadName>國1高架</RoadName>
+			<RoadName>國道1號五股楊梅高架道路</RoadName>
 			<RoadClass>0</RoadClass>
 			<RoadDirection>N</RoadDirection>
 			<RoadSection>
@@ -8959,7 +8942,7 @@
 			<PositionLon>121.396109607635</PositionLon>
 			<PositionLat>25.0604993539036</PositionLat>
 			<RoadID>00001B</RoadID>
-			<RoadName>國1高架</RoadName>
+			<RoadName>國道1號五股楊梅高架道路</RoadName>
 			<RoadClass>0</RoadClass>
 			<RoadDirection>N</RoadDirection>
 			<RoadSection>
@@ -8977,7 +8960,7 @@
 			<PositionLon>121.390476439527</PositionLon>
 			<PositionLat>25.0649010539694</PositionLat>
 			<RoadID>00001B</RoadID>
-			<RoadName>國1高架</RoadName>
+			<RoadName>國道1號五股楊梅高架道路</RoadName>
 			<RoadClass>0</RoadClass>
 			<RoadDirection>N</RoadDirection>
 			<RoadSection>
@@ -8995,7 +8978,7 @@
 			<PositionLon>121.38299838991</PositionLon>
 			<PositionLat>25.0648316244986</PositionLat>
 			<RoadID>00001B</RoadID>
-			<RoadName>國1高架</RoadName>
+			<RoadName>國道1號五股楊梅高架道路</RoadName>
 			<RoadClass>0</RoadClass>
 			<RoadDirection>N</RoadDirection>
 			<RoadSection>
@@ -9013,7 +8996,7 @@
 			<PositionLon>121.371175737355</PositionLon>
 			<PositionLat>25.0650379200616</PositionLat>
 			<RoadID>00001B</RoadID>
-			<RoadName>國1高架</RoadName>
+			<RoadName>國道1號五股楊梅高架道路</RoadName>
 			<RoadClass>0</RoadClass>
 			<RoadDirection>N</RoadDirection>
 			<RoadSection>
@@ -9031,7 +9014,7 @@
 			<PositionLon>121.368225027768</PositionLon>
 			<PositionLat>25.0647464731728</PositionLat>
 			<RoadID>00001B</RoadID>
-			<RoadName>國1高架</RoadName>
+			<RoadName>國道1號五股楊梅高架道路</RoadName>
 			<RoadClass>0</RoadClass>
 			<RoadDirection>N</RoadDirection>
 			<RoadSection>
@@ -9049,7 +9032,7 @@
 			<PositionLon>121.362779156076</PositionLon>
 			<PositionLat>25.0643987000291</PositionLat>
 			<RoadID>00001B</RoadID>
-			<RoadName>國1高架</RoadName>
+			<RoadName>國道1號五股楊梅高架道路</RoadName>
 			<RoadClass>0</RoadClass>
 			<RoadDirection>N</RoadDirection>
 			<RoadSection>
@@ -9067,7 +9050,7 @@
 			<PositionLon>121.35540446188</PositionLon>
 			<PositionLat>25.0646424382778</PositionLat>
 			<RoadID>00001B</RoadID>
-			<RoadName>國1高架</RoadName>
+			<RoadName>國道1號五股楊梅高架道路</RoadName>
 			<RoadClass>0</RoadClass>
 			<RoadDirection>N</RoadDirection>
 			<RoadSection>
@@ -9085,7 +9068,7 @@
 			<PositionLon>121.351308312306</PositionLon>
 			<PositionLat>25.0651363441727</PositionLat>
 			<RoadID>00001B</RoadID>
-			<RoadName>國1高架</RoadName>
+			<RoadName>國道1號五股楊梅高架道路</RoadName>
 			<RoadClass>0</RoadClass>
 			<RoadDirection>N</RoadDirection>
 			<RoadSection>
@@ -9103,7 +9086,7 @@
 			<PositionLon>121.34188715001</PositionLon>
 			<PositionLat>25.0646132872088</PositionLat>
 			<RoadID>00001B</RoadID>
-			<RoadName>國1高架</RoadName>
+			<RoadName>國道1號五股楊梅高架道路</RoadName>
 			<RoadClass>0</RoadClass>
 			<RoadDirection>N</RoadDirection>
 			<RoadSection>
@@ -9121,7 +9104,7 @@
 			<PositionLon>121.332177077276</PositionLon>
 			<PositionLat>25.0593854504124</PositionLat>
 			<RoadID>00001B</RoadID>
-			<RoadName>國1高架</RoadName>
+			<RoadName>國道1號五股楊梅高架道路</RoadName>
 			<RoadClass>0</RoadClass>
 			<RoadDirection>N</RoadDirection>
 			<RoadSection>
@@ -9139,7 +9122,7 @@
 			<PositionLon>121.324644023984</PositionLon>
 			<PositionLat>25.0505342501681</PositionLat>
 			<RoadID>00001B</RoadID>
-			<RoadName>國1高架</RoadName>
+			<RoadName>國道1號五股楊梅高架道路</RoadName>
 			<RoadClass>0</RoadClass>
 			<RoadDirection>N</RoadDirection>
 			<RoadSection>
@@ -9157,7 +9140,7 @@
 			<PositionLon>121.315553525766</PositionLon>
 			<PositionLat>25.0460630957449</PositionLat>
 			<RoadID>00001B</RoadID>
-			<RoadName>國1高架</RoadName>
+			<RoadName>國道1號五股楊梅高架道路</RoadName>
 			<RoadClass>0</RoadClass>
 			<RoadDirection>N</RoadDirection>
 			<RoadSection>
@@ -9175,7 +9158,7 @@
 			<PositionLon>121.306525330578</PositionLon>
 			<PositionLat>25.0422044531739</PositionLat>
 			<RoadID>00001B</RoadID>
-			<RoadName>國1高架</RoadName>
+			<RoadName>國道1號五股楊梅高架道路</RoadName>
 			<RoadClass>0</RoadClass>
 			<RoadDirection>N</RoadDirection>
 			<RoadSection>
@@ -9193,7 +9176,7 @@
 			<PositionLon>121.294226712553</PositionLon>
 			<PositionLat>25.0352555074755</PositionLat>
 			<RoadID>00001B</RoadID>
-			<RoadName>國1高架</RoadName>
+			<RoadName>國道1號五股楊梅高架道路</RoadName>
 			<RoadClass>0</RoadClass>
 			<RoadDirection>N</RoadDirection>
 			<RoadSection>
@@ -9211,7 +9194,7 @@
 			<PositionLon>121.285273543452</PositionLon>
 			<PositionLat>25.0287984974398</PositionLat>
 			<RoadID>00001B</RoadID>
-			<RoadName>國1高架</RoadName>
+			<RoadName>國道1號五股楊梅高架道路</RoadName>
 			<RoadClass>0</RoadClass>
 			<RoadDirection>N</RoadDirection>
 			<RoadSection>
@@ -9229,7 +9212,7 @@
 			<PositionLon>121.277393098253</PositionLon>
 			<PositionLat>25.0217973053596</PositionLat>
 			<RoadID>00001B</RoadID>
-			<RoadName>國1高架</RoadName>
+			<RoadName>國道1號五股楊梅高架道路</RoadName>
 			<RoadClass>0</RoadClass>
 			<RoadDirection>N</RoadDirection>
 			<RoadSection>
@@ -9247,7 +9230,7 @@
 			<PositionLon>121.270955761397</PositionLon>
 			<PositionLat>25.0165146776459</PositionLat>
 			<RoadID>00001B</RoadID>
-			<RoadName>國1高架</RoadName>
+			<RoadName>國道1號五股楊梅高架道路</RoadName>
 			<RoadClass>0</RoadClass>
 			<RoadDirection>N</RoadDirection>
 			<RoadSection>
@@ -9265,7 +9248,7 @@
 			<PositionLon>121.264828262262</PositionLon>
 			<PositionLat>25.0117947889776</PositionLat>
 			<RoadID>00001B</RoadID>
-			<RoadName>國1高架</RoadName>
+			<RoadName>國道1號五股楊梅高架道路</RoadName>
 			<RoadClass>0</RoadClass>
 			<RoadDirection>N</RoadDirection>
 			<RoadSection>
@@ -9283,7 +9266,7 @@
 			<PositionLon>121.258346440082</PositionLon>
 			<PositionLat>25.0066508171917</PositionLat>
 			<RoadID>00001B</RoadID>
-			<RoadName>國1高架</RoadName>
+			<RoadName>國道1號五股楊梅高架道路</RoadName>
 			<RoadClass>0</RoadClass>
 			<RoadDirection>N</RoadDirection>
 			<RoadSection>
@@ -9301,7 +9284,7 @@
 			<PositionLon>121.249054109818</PositionLon>
 			<PositionLat>24.9994574220386</PositionLat>
 			<RoadID>00001B</RoadID>
-			<RoadName>國1高架</RoadName>
+			<RoadName>國道1號五股楊梅高架道路</RoadName>
 			<RoadClass>0</RoadClass>
 			<RoadDirection>N</RoadDirection>
 			<RoadSection>
@@ -9319,7 +9302,7 @@
 			<PositionLon>121.242087867078</PositionLon>
 			<PositionLat>24.9927675170176</PositionLat>
 			<RoadID>00001B</RoadID>
-			<RoadName>國1高架</RoadName>
+			<RoadName>國道1號五股楊梅高架道路</RoadName>
 			<RoadClass>0</RoadClass>
 			<RoadDirection>N</RoadDirection>
 			<RoadSection>
@@ -9337,7 +9320,7 @@
 			<PositionLon>121.238796359961</PositionLon>
 			<PositionLat>24.9894604356642</PositionLat>
 			<RoadID>00001B</RoadID>
-			<RoadName>國1高架</RoadName>
+			<RoadName>國道1號五股楊梅高架道路</RoadName>
 			<RoadClass>0</RoadClass>
 			<RoadDirection>N</RoadDirection>
 			<RoadSection>
@@ -9355,7 +9338,7 @@
 			<PositionLon>121.234307905169</PositionLon>
 			<PositionLat>24.9849647438704</PositionLat>
 			<RoadID>00001B</RoadID>
-			<RoadName>國1高架</RoadName>
+			<RoadName>國道1號五股楊梅高架道路</RoadName>
 			<RoadClass>0</RoadClass>
 			<RoadDirection>N</RoadDirection>
 			<RoadSection>
@@ -9373,7 +9356,7 @@
 			<PositionLon>121.22675454812</PositionLon>
 			<PositionLat>24.9785600673766</PositionLat>
 			<RoadID>00001B</RoadID>
-			<RoadName>國1高架</RoadName>
+			<RoadName>國道1號五股楊梅高架道路</RoadName>
 			<RoadClass>0</RoadClass>
 			<RoadDirection>N</RoadDirection>
 			<RoadSection>
@@ -9391,7 +9374,7 @@
 			<PositionLon>121.221761404135</PositionLon>
 			<PositionLat>24.9743403919762</PositionLat>
 			<RoadID>000010</RoadID>
-			<RoadName>國1高架</RoadName>
+			<RoadName>國道1號</RoadName>
 			<RoadClass>0</RoadClass>
 			<RoadDirection>N</RoadDirection>
 			<RoadSection>
@@ -9409,7 +9392,7 @@
 			<PositionLon>121.2214121</PositionLon>
 			<PositionLat>24.9740592</PositionLat>
 			<RoadID>000010</RoadID>
-			<RoadName>國1高架</RoadName>
+			<RoadName>國道1號</RoadName>
 			<RoadClass>0</RoadClass>
 			<RoadDirection>N</RoadDirection>
 			<RoadSection>
@@ -9427,7 +9410,7 @@
 			<PositionLon>121.216645348784</PositionLon>
 			<PositionLat>24.9699757640548</PositionLat>
 			<RoadID>00001B</RoadID>
-			<RoadName>國1高架</RoadName>
+			<RoadName>國道1號五股楊梅高架道路</RoadName>
 			<RoadClass>0</RoadClass>
 			<RoadDirection>N</RoadDirection>
 			<RoadSection>
@@ -9445,7 +9428,7 @@
 			<PositionLon>121.205347810403</PositionLon>
 			<PositionLat>24.9617614274679</PositionLat>
 			<RoadID>00001B</RoadID>
-			<RoadName>國1高架</RoadName>
+			<RoadName>國道1號五股楊梅高架道路</RoadName>
 			<RoadClass>0</RoadClass>
 			<RoadDirection>N</RoadDirection>
 			<RoadSection>
@@ -9463,7 +9446,7 @@
 			<PositionLon>121.19612014911</PositionLon>
 			<PositionLat>24.9502556516288</PositionLat>
 			<RoadID>00001B</RoadID>
-			<RoadName>國1高架</RoadName>
+			<RoadName>國道1號五股楊梅高架道路</RoadName>
 			<RoadClass>0</RoadClass>
 			<RoadDirection>N</RoadDirection>
 			<RoadSection>
@@ -9481,7 +9464,7 @@
 			<PositionLon>121.186318395188</PositionLon>
 			<PositionLat>24.9328836223261</PositionLat>
 			<RoadID>00001B</RoadID>
-			<RoadName>國1高架</RoadName>
+			<RoadName>國道1號五股楊梅高架道路</RoadName>
 			<RoadClass>0</RoadClass>
 			<RoadDirection>N</RoadDirection>
 			<RoadSection>
@@ -9499,7 +9482,7 @@
 			<PositionLon>121.173668103468</PositionLon>
 			<PositionLat>24.9270314681164</PositionLat>
 			<RoadID>00001B</RoadID>
-			<RoadName>國1高架</RoadName>
+			<RoadName>國道1號五股楊梅高架道路</RoadName>
 			<RoadClass>0</RoadClass>
 			<RoadDirection>N</RoadDirection>
 			<RoadSection>
@@ -9517,7 +9500,7 @@
 			<PositionLon>121.16309866276</PositionLon>
 			<PositionLat>24.9058457236362</PositionLat>
 			<RoadID>00001B</RoadID>
-			<RoadName>國1高架</RoadName>
+			<RoadName>國道1號五股楊梅高架道路</RoadName>
 			<RoadClass>0</RoadClass>
 			<RoadDirection>N</RoadDirection>
 			<RoadSection>
@@ -9535,7 +9518,7 @@
 			<PositionLon>121.152410437186</PositionLon>
 			<PositionLat>24.9003231127675</PositionLat>
 			<RoadID>00001B</RoadID>
-			<RoadName>國1高架</RoadName>
+			<RoadName>國道1號五股楊梅高架道路</RoadName>
 			<RoadClass>0</RoadClass>
 			<RoadDirection>N</RoadDirection>
 			<RoadSection>
@@ -9553,7 +9536,7 @@
 			<PositionLon>121.150389137364</PositionLon>
 			<PositionLat>24.8999394284749</PositionLat>
 			<RoadID>000010</RoadID>
-			<RoadName>國1高架</RoadName>
+			<RoadName>國道1號</RoadName>
 			<RoadClass>0</RoadClass>
 			<RoadDirection>N</RoadDirection>
 			<RoadSection>
@@ -10875,24 +10858,6 @@
 				<End>環東交流道</End>
 			</RoadSection>
 			<LocationMile>0K+822</LocationMile>
-		</CCTV>
-		<CCTV>
-			<CCTVID>CCTV-T64-E-23.750-M</CCTVID>
-			<SubAuthorityCode>NFB-NR</SubAuthorityCode>
-			<LinkID>1006400002300F</LinkID>
-			<VideoStreamURL>https://cctv-ss02.thb.gov.tw:443/T64-23K+750</VideoStreamURL>
-			<LocationType>1</LocationType>
-			<PositionLon>121.48477</PositionLon>
-			<PositionLat>25.000296</PositionLat>
-			<RoadID>100640</RoadID>
-			<RoadName>快速公路64號</RoadName>
-			<RoadClass>1</RoadClass>
-			<RoadDirection>E</RoadDirection>
-			<RoadSection>
-				<Start>中和交流道</Start>
-				<End>中和二交流道</End>
-			</RoadSection>
-			<LocationMile>23K+750</LocationMile>
 		</CCTV>
 		<CCTV>
 			<CCTVID>CCTV-N5-S-I-ES-0.000</CCTVID>
@@ -14369,24 +14334,6 @@
 			<LocationMile>240K+370</LocationMile>
 		</CCTV>
 		<CCTV>
-			<CCTVID>CCTV-N1-S-240-I-ES-1A-南下入口</CCTVID>
-			<SubAuthorityCode>NFB-CR</SubAuthorityCode>
-			<LinkID>0000101051030P</LinkID>
-			<VideoStreamURL>https://cctvc.freeway.gov.tw/abs2mjpg/bmjpg?camera=1673</VideoStreamURL>
-			<LocationType>1</LocationType>
-			<PositionLon>120.470277</PositionLon>
-			<PositionLat>23.693259</PositionLat>
-			<RoadID>000010</RoadID>
-			<RoadName>國道1號</RoadName>
-			<RoadClass>0</RoadClass>
-			<RoadDirection>S</RoadDirection>
-			<RoadSection>
-				<Start>斗南交流道</Start>
-				<End>雲林系統交流道</End>
-			</RoadSection>
-			<LocationMile>240K+600</LocationMile>
-		</CCTV>
-		<CCTV>
 			<CCTVID>CCTV-N1-S-243.500-M</CCTVID>
 			<SubAuthorityCode>NFB-CR</SubAuthorityCode>
 			<LinkID>0000100024300P</LinkID>
@@ -15107,6 +15054,24 @@
 			<LocationMile>154K+015</LocationMile>
 		</CCTV>
 		<CCTV>
+			<CCTVID>CCTV-N1-N-154.995-M</CCTVID>
+			<SubAuthorityCode>NFB-CR</SubAuthorityCode>
+			<LinkID>0000100115400K</LinkID>
+			<VideoStreamURL>https://cctvc.freeway.gov.tw/abs2mjpg/bmjpg?camera=570</VideoStreamURL>
+			<LocationType>1</LocationType>
+			<PositionLon>120.7339</PositionLon>
+			<PositionLat>24.35521</PositionLat>
+			<RoadID>000010</RoadID>
+			<RoadName>國道1號</RoadName>
+			<RoadClass>0</RoadClass>
+			<RoadDirection>N</RoadDirection>
+			<RoadSection>
+				<Start>泰安服務區</Start>
+				<End>三義交流道</End>
+			</RoadSection>
+			<LocationMile>154K+995</LocationMile>
+		</CCTV>
+		<CCTV>
 			<CCTVID>CCTV-N1-N-157.040-M</CCTVID>
 			<SubAuthorityCode>NFB-CR</SubAuthorityCode>
 			<LinkID>0000100115700B</LinkID>
@@ -15177,6 +15142,60 @@
 				<End>后里交流道</End>
 			</RoadSection>
 			<LocationMile>161K+050</LocationMile>
+		</CCTV>
+		<CCTV>
+			<CCTVID>CCTV-N1-N-163.360-M</CCTVID>
+			<SubAuthorityCode>NFB-CR</SubAuthorityCode>
+			<LinkID>0000100116300B</LinkID>
+			<VideoStreamURL>https://cctvc.freeway.gov.tw/abs2mjpg/bmjpg?camera=404</VideoStreamURL>
+			<LocationType>1</LocationType>
+			<PositionLon>120.695265</PositionLon>
+			<PositionLat>24.289954</PositionLat>
+			<RoadID>000010</RoadID>
+			<RoadName>國道1號</RoadName>
+			<RoadClass>0</RoadClass>
+			<RoadDirection>N</RoadDirection>
+			<RoadSection>
+				<Start>台中系統交流道</Start>
+				<End>后里交流道</End>
+			</RoadSection>
+			<LocationMile>163K+360</LocationMile>
+		</CCTV>
+		<CCTV>
+			<CCTVID>CCTV-N1-N-163.400-M-后里北地磅站</CCTVID>
+			<SubAuthorityCode>NFB-CR</SubAuthorityCode>
+			<LinkID>0000100116300B</LinkID>
+			<VideoStreamURL>https://cctvc.freeway.gov.tw/abs2mjpg/bmjpg?camera=405</VideoStreamURL>
+			<LocationType>1</LocationType>
+			<PositionLon>120.69524</PositionLon>
+			<PositionLat>24.289759</PositionLat>
+			<RoadID>000010</RoadID>
+			<RoadName>國道1號</RoadName>
+			<RoadClass>0</RoadClass>
+			<RoadDirection>N</RoadDirection>
+			<RoadSection>
+				<Start>台中系統交流道</Start>
+				<End>后里交流道</End>
+			</RoadSection>
+			<LocationMile>163K+400</LocationMile>
+		</CCTV>
+		<CCTV>
+			<CCTVID>CCTV-N1-N-164.680-M</CCTVID>
+			<SubAuthorityCode>NFB-CR</SubAuthorityCode>
+			<LinkID>0000100116400B</LinkID>
+			<VideoStreamURL>https://cctvc.freeway.gov.tw/abs2mjpg/bmjpg?camera=343</VideoStreamURL>
+			<LocationType>1</LocationType>
+			<PositionLon>120.69387</PositionLon>
+			<PositionLat>24.278259</PositionLat>
+			<RoadID>000010</RoadID>
+			<RoadName>國道1號</RoadName>
+			<RoadClass>0</RoadClass>
+			<RoadDirection>N</RoadDirection>
+			<RoadSection>
+				<Start>台中系統交流道</Start>
+				<End>后里交流道</End>
+			</RoadSection>
+			<LocationMile>164K+680</LocationMile>
 		</CCTV>
 		<CCTV>
 			<CCTVID>CCTV-N1-N-165.350-M</CCTVID>
@@ -15951,24 +15970,6 @@
 				<End>員林交流道</End>
 			</RoadSection>
 			<LocationMile>217K+695</LocationMile>
-		</CCTV>
-		<CCTV>
-			<CCTVID>CCTV-N1-N-220-I-EN-1-北上入口</CCTVID>
-			<SubAuthorityCode>NFB-CR</SubAuthorityCode>
-			<LinkID>0000101148060N</LinkID>
-			<VideoStreamURL>https://cctvc.freeway.gov.tw/abs2mjpg/bmjpg?camera=1666</VideoStreamURL>
-			<LocationType>1</LocationType>
-			<PositionLon>120.490896</PositionLon>
-			<PositionLat>23.877463</PositionLat>
-			<RoadID>000010</RoadID>
-			<RoadName>國道1號</RoadName>
-			<RoadClass>0</RoadClass>
-			<RoadDirection>N</RoadDirection>
-			<RoadSection>
-				<Start>北斗交流道</Start>
-				<End>員林交流道</End>
-			</RoadSection>
-			<LocationMile>220K+000</LocationMile>
 		</CCTV>
 		<CCTV>
 			<CCTVID>CCTV-N1-N-220.050-M</CCTVID>
@@ -17283,24 +17284,6 @@
 				<End>和美交流道</End>
 			</RoadSection>
 			<LocationMile>187K+112</LocationMile>
-		</CCTV>
-		<CCTV>
-			<CCTVID>CCTV-N3-S-190.305-M</CCTVID>
-			<SubAuthorityCode>NFB-CR</SubAuthorityCode>
-			<LinkID>0000300019000N</LinkID>
-			<VideoStreamURL>https://cctvc.freeway.gov.tw/abs2mjpg/bmjpg?camera=593</VideoStreamURL>
-			<LocationType>1</LocationType>
-			<PositionLon>120.51972</PositionLon>
-			<PositionLat>24.15109</PositionLat>
-			<RoadID>000030</RoadID>
-			<RoadName>國道3號</RoadName>
-			<RoadClass>0</RoadClass>
-			<RoadDirection>S</RoadDirection>
-			<RoadSection>
-				<Start>龍井交流道</Start>
-				<End>和美交流道</End>
-			</RoadSection>
-			<LocationMile>190K+305</LocationMile>
 		</CCTV>
 		<CCTV>
 			<CCTVID>CCTV-N3-S-195.330-M</CCTVID>
@@ -19031,78 +19014,6 @@
 			<LocationMile>187K+822</LocationMile>
 		</CCTV>
 		<CCTV>
-			<CCTVID>CCTV-N3-N-188.730-M</CCTVID>
-			<SubAuthorityCode>NFB-CR</SubAuthorityCode>
-			<LinkID>0000300118800B</LinkID>
-			<VideoStreamURL>https://cctvc.freeway.gov.tw/abs2mjpg/bmjpg?camera=423</VideoStreamURL>
-			<LocationType>1</LocationType>
-			<PositionLon>120.529197</PositionLon>
-			<PositionLat>24.161975</PositionLat>
-			<RoadID>000030</RoadID>
-			<RoadName>國道3號</RoadName>
-			<RoadClass>0</RoadClass>
-			<RoadDirection>N</RoadDirection>
-			<RoadSection>
-				<Start>和美交流道</Start>
-				<End>龍井交流道</End>
-			</RoadSection>
-			<LocationMile>188K+730</LocationMile>
-		</CCTV>
-		<CCTV>
-			<CCTVID>CCTV-N3-N-189.737-M</CCTVID>
-			<SubAuthorityCode>NFB-CR</SubAuthorityCode>
-			<LinkID>0000300118900B</LinkID>
-			<VideoStreamURL>https://cctvc.freeway.gov.tw/abs2mjpg/bmjpg?camera=696</VideoStreamURL>
-			<LocationType>1</LocationType>
-			<PositionLon>120.57541</PositionLon>
-			<PositionLat>24.118301</PositionLat>
-			<RoadID>000030</RoadID>
-			<RoadName>國道3號</RoadName>
-			<RoadClass>0</RoadClass>
-			<RoadDirection>N</RoadDirection>
-			<RoadSection>
-				<Start>和美交流道</Start>
-				<End>龍井交流道</End>
-			</RoadSection>
-			<LocationMile>189K+737</LocationMile>
-		</CCTV>
-		<CCTV>
-			<CCTVID>CCTV-N3-N-191.732-M</CCTVID>
-			<SubAuthorityCode>NFB-CR</SubAuthorityCode>
-			<LinkID>0000300119110N</LinkID>
-			<VideoStreamURL>https://cctvc.freeway.gov.tw/abs2mjpg/bmjpg?camera=265</VideoStreamURL>
-			<LocationType>1</LocationType>
-			<PositionLon>120.521873</PositionLon>
-			<PositionLat>24.13856</PositionLat>
-			<RoadID>000030</RoadID>
-			<RoadName>國道3號</RoadName>
-			<RoadClass>0</RoadClass>
-			<RoadDirection>N</RoadDirection>
-			<RoadSection>
-				<Start>彰化系統交流道</Start>
-				<End>和美交流道</End>
-			</RoadSection>
-			<LocationMile>191K+732</LocationMile>
-		</CCTV>
-		<CCTV>
-			<CCTVID>CCTV-N3-N-192.477-M</CCTVID>
-			<SubAuthorityCode>NFB-CR</SubAuthorityCode>
-			<LinkID>0000300119200N</LinkID>
-			<VideoStreamURL>https://cctvc.freeway.gov.tw/abs2mjpg/bmjpg?camera=697</VideoStreamURL>
-			<LocationType>1</LocationType>
-			<PositionLon>120.525618</PositionLon>
-			<PositionLat>24.131687</PositionLat>
-			<RoadID>000030</RoadID>
-			<RoadName>國道3號</RoadName>
-			<RoadClass>0</RoadClass>
-			<RoadDirection>N</RoadDirection>
-			<RoadSection>
-				<Start>彰化系統交流道</Start>
-				<End>和美交流道</End>
-			</RoadSection>
-			<LocationMile>192K+477</LocationMile>
-		</CCTV>
-		<CCTV>
 			<CCTVID>CCTV-N3-N-193.272-M</CCTVID>
 			<SubAuthorityCode>NFB-CR</SubAuthorityCode>
 			<LinkID>0000300119300N</LinkID>
@@ -19335,24 +19246,6 @@
 				<End>中投交流道</End>
 			</RoadSection>
 			<LocationMile>210K+500</LocationMile>
-		</CCTV>
-		<CCTV>
-			<CCTVID>CCTV-N3-N-210.565-M</CCTVID>
-			<SubAuthorityCode>NFB-CR</SubAuthorityCode>
-			<LinkID>0000300121000B</LinkID>
-			<VideoStreamURL>https://cctvc.freeway.gov.tw/abs2mjpg/bmjpg?camera=559</VideoStreamURL>
-			<LocationType>1</LocationType>
-			<PositionLon>120.674298</PositionLon>
-			<PositionLat>24.058154</PositionLat>
-			<RoadID>000030</RoadID>
-			<RoadName>國道3號</RoadName>
-			<RoadClass>0</RoadClass>
-			<RoadDirection>N</RoadDirection>
-			<RoadSection>
-				<Start>霧峰交流道</Start>
-				<End>中投交流道</End>
-			</RoadSection>
-			<LocationMile>210K+565</LocationMile>
 		</CCTV>
 		<CCTV>
 			<CCTVID>CCTV-N3-N-211-L-EN-1-北上入口</CCTVID>
@@ -19686,6 +19579,42 @@
 			<LocationType>1</LocationType>
 			<PositionLon>120.709245</PositionLon>
 			<PositionLat>23.899705</PositionLat>
+			<RoadID>000030</RoadID>
+			<RoadName>國道3號</RoadName>
+			<RoadClass>0</RoadClass>
+			<RoadDirection>N</RoadDirection>
+			<RoadSection>
+				<Start>名間交流道</Start>
+				<End>南投服務區</End>
+			</RoadSection>
+			<LocationMile>231K+598</LocationMile>
+		</CCTV>
+		<CCTV>
+			<CCTVID>CCTV-N3-N-231.598-南投服務區F區1</CCTVID>
+			<SubAuthorityCode>NFB-CR</SubAuthorityCode>
+			<LinkID>0000300123130M</LinkID>
+			<VideoStreamURL>https://cctvc.freeway.gov.tw/abs2mjpg/bmjpg?camera=46</VideoStreamURL>
+			<LocationType>1</LocationType>
+			<PositionLon>120.709009</PositionLon>
+			<PositionLat>23.899386</PositionLat>
+			<RoadID>000030</RoadID>
+			<RoadName>國道3號</RoadName>
+			<RoadClass>0</RoadClass>
+			<RoadDirection>N</RoadDirection>
+			<RoadSection>
+				<Start>名間交流道</Start>
+				<End>南投服務區</End>
+			</RoadSection>
+			<LocationMile>231K+598</LocationMile>
+		</CCTV>
+		<CCTV>
+			<CCTVID>CCTV-N3-N-231.598-南投服務區F區2</CCTVID>
+			<SubAuthorityCode>NFB-CR</SubAuthorityCode>
+			<LinkID>0000301085010M</LinkID>
+			<VideoStreamURL>https://cctvc.freeway.gov.tw/abs2mjpg/bmjpg?camera=47</VideoStreamURL>
+			<LocationType>1</LocationType>
+			<PositionLon>120.708633</PositionLon>
+			<PositionLat>23.899155</PositionLat>
 			<RoadID>000030</RoadID>
 			<RoadName>國道3號</RoadName>
 			<RoadClass>0</RoadClass>
@@ -20109,24 +20038,6 @@
 				<End>古坑(北)交流道</End>
 			</RoadSection>
 			<LocationMile>268K+480</LocationMile>
-		</CCTV>
-		<CCTV>
-			<CCTVID>CCTV-N3-N-269.990-M</CCTVID>
-			<SubAuthorityCode>NFB-CR</SubAuthorityCode>
-			<LinkID>0000300126990P</LinkID>
-			<VideoStreamURL>https://cctvc.freeway.gov.tw/abs2mjpg/bmjpg?camera=480</VideoStreamURL>
-			<LocationType>1</LocationType>
-			<PositionLon>120.572368</PositionLon>
-			<PositionLat>23.657456</PositionLat>
-			<RoadID>000030</RoadID>
-			<RoadName>國道3號</RoadName>
-			<RoadClass>0</RoadClass>
-			<RoadDirection>N</RoadDirection>
-			<RoadSection>
-				<Start>古坑(南)交流道</Start>
-				<End>古坑系統交流道</End>
-			</RoadSection>
-			<LocationMile>269K+990</LocationMile>
 		</CCTV>
 		<CCTV>
 			<CCTVID>CCTV-N4-E-0.108-M</CCTVID>
@@ -20973,6 +20884,24 @@
 				<End>中港系統交流道</End>
 			</RoadSection>
 			<LocationMile>3K+384</LocationMile>
+		</CCTV>
+		<CCTV>
+			<CCTVID>CCTV-N4-W-3.992-M</CCTVID>
+			<SubAuthorityCode>NFB-CR</SubAuthorityCode>
+			<LinkID>0000400100380B</LinkID>
+			<VideoStreamURL>https://cctvc.freeway.gov.tw/abs2mjpg/bmjpg?camera=33</VideoStreamURL>
+			<LocationType>1</LocationType>
+			<PositionLon>120.629684</PositionLon>
+			<PositionLat>24.304354</PositionLat>
+			<RoadID>000040</RoadID>
+			<RoadName>國道4號</RoadName>
+			<RoadClass>0</RoadClass>
+			<RoadDirection>W</RoadDirection>
+			<RoadSection>
+				<Start>神岡交流道</Start>
+				<End>中港系統交流道</End>
+			</RoadSection>
+			<LocationMile>3K+992</LocationMile>
 		</CCTV>
 		<CCTV>
 			<CCTVID>CCTV-N4-W-4.750-M</CCTVID>
@@ -33177,1230 +33106,6 @@
 				<End>里港交流道</End>
 			</RoadSection>
 			<LocationMile>33K+590</LocationMile>
-		</CCTV>
-		<CCTV>
-			<CCTVID>CCTV-T82-E-2.000-M</CCTVID>
-			<SubAuthorityCode>NFB-SR</SubAuthorityCode>
-			<LinkID>1008200000100Q</LinkID>
-			<VideoStreamURL>https://cctvs.freeway.gov.tw/live-view/mjpg/video.cgi?camera=1100</VideoStreamURL>
-			<LocationType>1</LocationType>
-			<PositionLon>120.165054322</PositionLon>
-			<PositionLat>23.459306717</PositionLat>
-			<RoadID>100820</RoadID>
-			<RoadName>快速公路82號</RoadName>
-			<RoadClass>1</RoadClass>
-			<RoadDirection>E</RoadDirection>
-			<RoadSection>
-				<Start>東石交流道</Start>
-				<End>朴子交流道</End>
-			</RoadSection>
-			<LocationMile>2K+000</LocationMile>
-		</CCTV>
-		<CCTV>
-			<CCTVID>CCTV-T82-E-4.600-M</CCTVID>
-			<SubAuthorityCode>NFB-SR</SubAuthorityCode>
-			<LinkID>1008200000400Q</LinkID>
-			<VideoStreamURL>https://cctvs.freeway.gov.tw/live-view/mjpg/video.cgi?camera=1101</VideoStreamURL>
-			<LocationType>1</LocationType>
-			<PositionLon>120.190307618</PositionLon>
-			<PositionLat>23.456649781</PositionLat>
-			<RoadID>100820</RoadID>
-			<RoadName>快速公路82號</RoadName>
-			<RoadClass>1</RoadClass>
-			<RoadDirection>E</RoadDirection>
-			<RoadSection>
-				<Start>東石交流道</Start>
-				<End>朴子交流道</End>
-			</RoadSection>
-			<LocationMile>4K+600</LocationMile>
-		</CCTV>
-		<CCTV>
-			<CCTVID>CCTV-T82-E-7.770-M</CCTVID>
-			<SubAuthorityCode>NFB-SR</SubAuthorityCode>
-			<LinkID>1008200000700Q</LinkID>
-			<VideoStreamURL>https://cctvs.freeway.gov.tw/live-view/mjpg/video.cgi?camera=1102</VideoStreamURL>
-			<LocationType>1</LocationType>
-			<PositionLon>120.217033387</PositionLon>
-			<PositionLat>23.453834534</PositionLat>
-			<RoadID>100820</RoadID>
-			<RoadName>快速公路82號</RoadName>
-			<RoadClass>1</RoadClass>
-			<RoadDirection>E</RoadDirection>
-			<RoadSection>
-				<Start>東石交流道</Start>
-				<End>朴子交流道</End>
-			</RoadSection>
-			<LocationMile>7K+770</LocationMile>
-		</CCTV>
-		<CCTV>
-			<CCTVID>CCTV-T82-E-9.500-M</CCTVID>
-			<SubAuthorityCode>NFB-SR</SubAuthorityCode>
-			<LinkID>1008200000900Q</LinkID>
-			<VideoStreamURL>https://cctvs.freeway.gov.tw/live-view/mjpg/video.cgi?camera=1103</VideoStreamURL>
-			<LocationType>1</LocationType>
-			<PositionLon>120.23777771</PositionLon>
-			<PositionLat>23.452419282</PositionLat>
-			<RoadID>100820</RoadID>
-			<RoadName>快速公路82號</RoadName>
-			<RoadClass>1</RoadClass>
-			<RoadDirection>E</RoadDirection>
-			<RoadSection>
-				<Start>東石交流道</Start>
-				<End>朴子交流道</End>
-			</RoadSection>
-			<LocationMile>9K+500</LocationMile>
-		</CCTV>
-		<CCTV>
-			<CCTVID>CCTV-T82-E-11.000-M</CCTVID>
-			<SubAuthorityCode>NFB-SR</SubAuthorityCode>
-			<LinkID>1008200001000Q</LinkID>
-			<VideoStreamURL>https://cctvs.freeway.gov.tw/live-view/mjpg/video.cgi?camera=1099</VideoStreamURL>
-			<LocationType>1</LocationType>
-			<PositionLon>120.252517701</PositionLon>
-			<PositionLat>23.451700211</PositionLat>
-			<RoadID>100820</RoadID>
-			<RoadName>快速公路82號</RoadName>
-			<RoadClass>1</RoadClass>
-			<RoadDirection>E</RoadDirection>
-			<RoadSection>
-				<Start>朴子交流道</Start>
-				<End>祥和交流道</End>
-			</RoadSection>
-			<LocationMile>11K+000</LocationMile>
-		</CCTV>
-		<CCTV>
-			<CCTVID>CCTV-T82-E-14.814-M</CCTVID>
-			<SubAuthorityCode>NFB-SR</SubAuthorityCode>
-			<LinkID>1008200001400Q</LinkID>
-			<VideoStreamURL>https://cctvs.freeway.gov.tw/live-view/mjpg/video.cgi?camera=16</VideoStreamURL>
-			<LocationType>1</LocationType>
-			<PositionLon>120.285552979</PositionLon>
-			<PositionLat>23.441110611</PositionLat>
-			<RoadID>100820</RoadID>
-			<RoadName>快速公路82號</RoadName>
-			<RoadClass>1</RoadClass>
-			<RoadDirection>E</RoadDirection>
-			<RoadSection>
-				<Start>祥和交流道</Start>
-				<End>鹿草交流道</End>
-			</RoadSection>
-			<LocationMile>14K+814</LocationMile>
-		</CCTV>
-		<CCTV>
-			<CCTVID>CCTV-T82-E-18.040-M</CCTVID>
-			<SubAuthorityCode>NFB-SR</SubAuthorityCode>
-			<LinkID>1008200001800Q</LinkID>
-			<VideoStreamURL>https://cctvs.freeway.gov.tw/live-view/mjpg/video.cgi?camera=17</VideoStreamURL>
-			<LocationType>1</LocationType>
-			<PositionLon>120.313056946</PositionLon>
-			<PositionLat>23.428888321</PositionLat>
-			<RoadID>100820</RoadID>
-			<RoadName>快速公路82號</RoadName>
-			<RoadClass>1</RoadClass>
-			<RoadDirection>E</RoadDirection>
-			<RoadSection>
-				<Start>祥和交流道</Start>
-				<End>鹿草交流道</End>
-			</RoadSection>
-			<LocationMile>18K+040</LocationMile>
-		</CCTV>
-		<CCTV>
-			<CCTVID>CCTV-T82-E-18.869-M</CCTVID>
-			<SubAuthorityCode>NFB-SR</SubAuthorityCode>
-			<LinkID>1008200001830Q</LinkID>
-			<VideoStreamURL>https://cctvs.freeway.gov.tw/live-view/mjpg/video.cgi?camera=18</VideoStreamURL>
-			<LocationType>1</LocationType>
-			<PositionLon>120.326499939</PositionLon>
-			<PositionLat>23.428508759</PositionLat>
-			<RoadID>100820</RoadID>
-			<RoadName>快速公路82號</RoadName>
-			<RoadClass>1</RoadClass>
-			<RoadDirection>E</RoadDirection>
-			<RoadSection>
-				<Start>鹿草交流道</Start>
-				<End>嘉義系統交流道</End>
-			</RoadSection>
-			<LocationMile>18K+869</LocationMile>
-		</CCTV>
-		<CCTV>
-			<CCTVID>CCTV-T82-E-25.340-M</CCTVID>
-			<SubAuthorityCode>NFB-SR</SubAuthorityCode>
-			<LinkID>1008200002500Q</LinkID>
-			<VideoStreamURL>https://cctvs.freeway.gov.tw/live-view/mjpg/video.cgi?camera=19</VideoStreamURL>
-			<LocationType>1</LocationType>
-			<PositionLon>120.383056641</PositionLon>
-			<PositionLat>23.418888093</PositionLat>
-			<RoadID>100820</RoadID>
-			<RoadName>快速公路82號</RoadName>
-			<RoadClass>1</RoadClass>
-			<RoadDirection>E</RoadDirection>
-			<RoadSection>
-				<Start>嘉義系統交流道</Start>
-				<End>水上交流道</End>
-			</RoadSection>
-			<LocationMile>25K+340</LocationMile>
-		</CCTV>
-		<CCTV>
-			<CCTVID>CCTV-T82-E-27.214-M</CCTVID>
-			<SubAuthorityCode>NFB-SR</SubAuthorityCode>
-			<LinkID>1008200002700Q</LinkID>
-			<VideoStreamURL>https://cctvs.freeway.gov.tw/live-view/mjpg/video.cgi?camera=20</VideoStreamURL>
-			<LocationType>1</LocationType>
-			<PositionLon>120.407127381</PositionLon>
-			<PositionLat>23.418785096</PositionLat>
-			<RoadID>100820</RoadID>
-			<RoadName>快速公路82號</RoadName>
-			<RoadClass>1</RoadClass>
-			<RoadDirection>E</RoadDirection>
-			<RoadSection>
-				<Start>水上交流道</Start>
-				<End>中和交流道</End>
-			</RoadSection>
-			<LocationMile>27K+214</LocationMile>
-		</CCTV>
-		<CCTV>
-			<CCTVID>CCTV-T82-E-29.994-M</CCTVID>
-			<SubAuthorityCode>NFB-SR</SubAuthorityCode>
-			<LinkID>1008200002900Q</LinkID>
-			<VideoStreamURL>https://cctvs.freeway.gov.tw/live-view/mjpg/video.cgi?camera=21</VideoStreamURL>
-			<LocationType>1</LocationType>
-			<PositionLon>120.430374146</PositionLon>
-			<PositionLat>23.425661088</PositionLat>
-			<RoadID>100820</RoadID>
-			<RoadName>快速公路82號</RoadName>
-			<RoadClass>1</RoadClass>
-			<RoadDirection>E</RoadDirection>
-			<RoadSection>
-				<Start>水上交流道</Start>
-				<End>中和交流道</End>
-			</RoadSection>
-			<LocationMile>29K+994</LocationMile>
-		</CCTV>
-		<CCTV>
-			<CCTVID>CCTV-T82-E-30.489-M</CCTVID>
-			<SubAuthorityCode>NFB-SR</SubAuthorityCode>
-			<LinkID>1008200003020Q</LinkID>
-			<VideoStreamURL>https://cctvs.freeway.gov.tw/live-view/mjpg/video.cgi?camera=22</VideoStreamURL>
-			<LocationType>1</LocationType>
-			<PositionLon>120.436988831</PositionLon>
-			<PositionLat>23.427101136</PositionLat>
-			<RoadID>100820</RoadID>
-			<RoadName>快速公路82號</RoadName>
-			<RoadClass>1</RoadClass>
-			<RoadDirection>E</RoadDirection>
-			<RoadSection>
-				<Start>水上交流道</Start>
-				<End>中和交流道</End>
-			</RoadSection>
-			<LocationMile>30K+489</LocationMile>
-		</CCTV>
-		<CCTV>
-			<CCTVID>CCTV-T82-E-30.991-M</CCTVID>
-			<SubAuthorityCode>NFB-SR</SubAuthorityCode>
-			<LinkID>1008200003090Q</LinkID>
-			<VideoStreamURL>https://cctvs.freeway.gov.tw/live-view/mjpg/video.cgi?camera=24</VideoStreamURL>
-			<LocationType>1</LocationType>
-			<PositionLon>120.441215516</PositionLon>
-			<PositionLat>23.428195954</PositionLat>
-			<RoadID>100820</RoadID>
-			<RoadName>快速公路82號</RoadName>
-			<RoadClass>1</RoadClass>
-			<RoadDirection>E</RoadDirection>
-			<RoadSection>
-				<Start>中和交流道</Start>
-				<End>嘉義交流道</End>
-			</RoadSection>
-			<LocationMile>30K+991</LocationMile>
-		</CCTV>
-		<CCTV>
-			<CCTVID>CCTV-T82-E-32.909-M</CCTVID>
-			<SubAuthorityCode>NFB-SR</SubAuthorityCode>
-			<LinkID>1008200003290Q</LinkID>
-			<VideoStreamURL>https://cctvs.freeway.gov.tw/live-view/mjpg/video.cgi?camera=23</VideoStreamURL>
-			<LocationType>1</LocationType>
-			<PositionLon>120.459960938</PositionLon>
-			<PositionLat>23.43322754</PositionLat>
-			<RoadID>100820</RoadID>
-			<RoadName>快速公路82號</RoadName>
-			<RoadClass>1</RoadClass>
-			<RoadDirection>E</RoadDirection>
-			<RoadSection>
-				<Start>嘉義交流道</Start>
-				<End>水上系統交流道</End>
-			</RoadSection>
-			<LocationMile>32K+909</LocationMile>
-		</CCTV>
-		<CCTV>
-			<CCTVID>CCTV-T82-W-0.840-M</CCTVID>
-			<SubAuthorityCode>NFB-SR</SubAuthorityCode>
-			<LinkID>1008200100060Q</LinkID>
-			<VideoStreamURL>https://cctvs.freeway.gov.tw/live-view/mjpg/video.cgi?camera=1104</VideoStreamURL>
-			<LocationType>1</LocationType>
-			<PositionLon>120.153900147</PositionLon>
-			<PositionLat>23.458290101</PositionLat>
-			<RoadID>100820</RoadID>
-			<RoadName>快速公路82號</RoadName>
-			<RoadClass>1</RoadClass>
-			<RoadDirection>W</RoadDirection>
-			<RoadSection>
-				<Start>朴子交流道</Start>
-				<End>東石交流道</End>
-			</RoadSection>
-			<LocationMile>0K+840</LocationMile>
-		</CCTV>
-		<CCTV>
-			<CCTVID>CCTV-T82-W-6.300-M</CCTVID>
-			<SubAuthorityCode>NFB-SR</SubAuthorityCode>
-			<LinkID>1008200100630Q</LinkID>
-			<VideoStreamURL>https://cctvs.freeway.gov.tw/live-view/mjpg/video.cgi?camera=1106</VideoStreamURL>
-			<LocationType>1</LocationType>
-			<PositionLon>120.206718445</PositionLon>
-			<PositionLat>23.45486641</PositionLat>
-			<RoadID>100820</RoadID>
-			<RoadName>快速公路82號</RoadName>
-			<RoadClass>1</RoadClass>
-			<RoadDirection>W</RoadDirection>
-			<RoadSection>
-				<Start>朴子交流道</Start>
-				<End>東石交流道</End>
-			</RoadSection>
-			<LocationMile>6K+300</LocationMile>
-		</CCTV>
-		<CCTV>
-			<CCTVID>CCTV-T82-W-13.090-M</CCTVID>
-			<SubAuthorityCode>NFB-SR</SubAuthorityCode>
-			<LinkID>1008200101300Q</LinkID>
-			<VideoStreamURL>https://cctvs.freeway.gov.tw/live-view/mjpg/video.cgi?camera=1105</VideoStreamURL>
-			<LocationType>1</LocationType>
-			<PositionLon>120.272102356</PositionLon>
-			<PositionLat>23.451190949</PositionLat>
-			<RoadID>100820</RoadID>
-			<RoadName>快速公路82號</RoadName>
-			<RoadClass>1</RoadClass>
-			<RoadDirection>W</RoadDirection>
-			<RoadSection>
-				<Start>祥和交流道</Start>
-				<End>朴子交流道</End>
-			</RoadSection>
-			<LocationMile>13K+090</LocationMile>
-		</CCTV>
-		<CCTV>
-			<CCTVID>CCTV-T82-W-16.184-M</CCTVID>
-			<SubAuthorityCode>NFB-SR</SubAuthorityCode>
-			<LinkID>1008200101600Q</LinkID>
-			<VideoStreamURL>https://cctvs.freeway.gov.tw/live-view/mjpg/video.cgi?camera=11</VideoStreamURL>
-			<LocationType>1</LocationType>
-			<PositionLon>120.300247193</PositionLon>
-			<PositionLat>23.430650712</PositionLat>
-			<RoadID>100820</RoadID>
-			<RoadName>快速公路82號</RoadName>
-			<RoadClass>1</RoadClass>
-			<RoadDirection>W</RoadDirection>
-			<RoadSection>
-				<Start>鹿草交流道</Start>
-				<End>祥和交流道</End>
-			</RoadSection>
-			<LocationMile>16K+184</LocationMile>
-		</CCTV>
-		<CCTV>
-			<CCTVID>CCTV-T82-W-19.597-M</CCTVID>
-			<SubAuthorityCode>NFB-SR</SubAuthorityCode>
-			<LinkID>1008200101900Q</LinkID>
-			<VideoStreamURL>https://cctvs.freeway.gov.tw/live-view/mjpg/video.cgi?camera=12</VideoStreamURL>
-			<LocationType>1</LocationType>
-			<PositionLon>120.332824708</PositionLon>
-			<PositionLat>23.428356171</PositionLat>
-			<RoadID>100820</RoadID>
-			<RoadName>快速公路82號</RoadName>
-			<RoadClass>1</RoadClass>
-			<RoadDirection>W</RoadDirection>
-			<RoadSection>
-				<Start>嘉義系統交流道</Start>
-				<End>鹿草交流道</End>
-			</RoadSection>
-			<LocationMile>19K+597</LocationMile>
-		</CCTV>
-		<CCTV>
-			<CCTVID>CCTV-T82-W-22.303-M</CCTVID>
-			<SubAuthorityCode>NFB-SR</SubAuthorityCode>
-			<LinkID>1008200102200Q</LinkID>
-			<VideoStreamURL>https://cctvs.freeway.gov.tw/live-view/mjpg/video.cgi?camera=13</VideoStreamURL>
-			<LocationType>1</LocationType>
-			<PositionLon>120.359794617</PositionLon>
-			<PositionLat>23.423847199</PositionLat>
-			<RoadID>100820</RoadID>
-			<RoadName>快速公路82號</RoadName>
-			<RoadClass>1</RoadClass>
-			<RoadDirection>W</RoadDirection>
-			<RoadSection>
-				<Start>嘉義系統交流道</Start>
-				<End>鹿草交流道</End>
-			</RoadSection>
-			<LocationMile>22K+303</LocationMile>
-		</CCTV>
-		<CCTV>
-			<CCTVID>CCTV-T82-W-29.713-M</CCTVID>
-			<SubAuthorityCode>NFB-SR</SubAuthorityCode>
-			<LinkID>1008200102900Q</LinkID>
-			<VideoStreamURL>https://cctvs.freeway.gov.tw/live-view/mjpg/video.cgi?camera=14</VideoStreamURL>
-			<LocationType>1</LocationType>
-			<PositionLon>120.430274964</PositionLon>
-			<PositionLat>23.425769806</PositionLat>
-			<RoadID>100820</RoadID>
-			<RoadName>快速公路82號</RoadName>
-			<RoadClass>1</RoadClass>
-			<RoadDirection>W</RoadDirection>
-			<RoadSection>
-				<Start>中和交流道</Start>
-				<End>水上交流道</End>
-			</RoadSection>
-			<LocationMile>29K+713</LocationMile>
-		</CCTV>
-		<CCTV>
-			<CCTVID>CCTV-T82-W-33.482-M</CCTVID>
-			<SubAuthorityCode>NFB-SR</SubAuthorityCode>
-			<LinkID>1008200103300Q</LinkID>
-			<VideoStreamURL>https://cctvs.freeway.gov.tw/live-view/mjpg/video.cgi?camera=15</VideoStreamURL>
-			<LocationType>1</LocationType>
-			<PositionLon>120.464965821</PositionLon>
-			<PositionLat>23.430681229</PositionLat>
-			<RoadID>100820</RoadID>
-			<RoadName>快速公路82號</RoadName>
-			<RoadClass>1</RoadClass>
-			<RoadDirection>W</RoadDirection>
-			<RoadSection>
-				<Start>水上系統交流道</Start>
-				<End>嘉義交流道</End>
-			</RoadSection>
-			<LocationMile>33K+482</LocationMile>
-		</CCTV>
-		<CCTV>
-			<CCTVID>CCTV-T84-E-1.300-M</CCTVID>
-			<SubAuthorityCode>NFB-SR</SubAuthorityCode>
-			<LinkID>1008400000100D</LinkID>
-			<VideoStreamURL>https://cctvs.freeway.gov.tw/live-view/mjpg/video.cgi?camera=1107</VideoStreamURL>
-			<LocationType>1</LocationType>
-			<PositionLon>120.137802125</PositionLon>
-			<PositionLat>23.274490357</PositionLat>
-			<RoadID>100840</RoadID>
-			<RoadName>快速公路84號</RoadName>
-			<RoadClass>1</RoadClass>
-			<RoadDirection>E</RoadDirection>
-			<RoadSection>
-				<Start>北門交流道</Start>
-				<End>學甲交流道</End>
-			</RoadSection>
-			<LocationMile>1K+300</LocationMile>
-		</CCTV>
-		<CCTV>
-			<CCTVID>CCTV-T84-E-3.200-M</CCTVID>
-			<SubAuthorityCode>NFB-SR</SubAuthorityCode>
-			<LinkID>1008400000300D</LinkID>
-			<VideoStreamURL>https://cctvs.freeway.gov.tw/live-view/mjpg/video.cgi?camera=1111</VideoStreamURL>
-			<LocationType>1</LocationType>
-			<PositionLon>120.156204224</PositionLon>
-			<PositionLat>23.272541047</PositionLat>
-			<RoadID>100840</RoadID>
-			<RoadName>快速公路84號</RoadName>
-			<RoadClass>1</RoadClass>
-			<RoadDirection>E</RoadDirection>
-			<RoadSection>
-				<Start>北門交流道</Start>
-				<End>學甲交流道</End>
-			</RoadSection>
-			<LocationMile>3K+200</LocationMile>
-		</CCTV>
-		<CCTV>
-			<CCTVID>CCTV-T84-E-11.900-M</CCTVID>
-			<SubAuthorityCode>NFB-SR</SubAuthorityCode>
-			<LinkID>1008400001100D</LinkID>
-			<VideoStreamURL>https://cctvs.freeway.gov.tw/live-view/mjpg/video.cgi?camera=1108</VideoStreamURL>
-			<LocationType>1</LocationType>
-			<PositionLon>120.222045899</PositionLon>
-			<PositionLat>23.227632523</PositionLat>
-			<RoadID>100840</RoadID>
-			<RoadName>快速公路84號</RoadName>
-			<RoadClass>1</RoadClass>
-			<RoadDirection>E</RoadDirection>
-			<RoadSection>
-				<Start>學甲交流道</Start>
-				<End>下營系統交流道</End>
-			</RoadSection>
-			<LocationMile>11K+900</LocationMile>
-		</CCTV>
-		<CCTV>
-			<CCTVID>CCTV-T84-E-13.410-M</CCTVID>
-			<SubAuthorityCode>NFB-SR</SubAuthorityCode>
-			<LinkID>1008400001300D</LinkID>
-			<VideoStreamURL>https://cctvs.freeway.gov.tw/live-view/mjpg/video.cgi?camera=1109</VideoStreamURL>
-			<LocationType>1</LocationType>
-			<PositionLon>120.234825135</PositionLon>
-			<PositionLat>23.220876694</PositionLat>
-			<RoadID>100840</RoadID>
-			<RoadName>快速公路84號</RoadName>
-			<RoadClass>1</RoadClass>
-			<RoadDirection>E</RoadDirection>
-			<RoadSection>
-				<Start>學甲交流道</Start>
-				<End>下營系統交流道</End>
-			</RoadSection>
-			<LocationMile>13K+410</LocationMile>
-		</CCTV>
-		<CCTV>
-			<CCTVID>CCTV-T84-E-16.700-M</CCTVID>
-			<SubAuthorityCode>NFB-SR</SubAuthorityCode>
-			<LinkID>1008400001600D</LinkID>
-			<VideoStreamURL>https://cctvs.freeway.gov.tw/live-view/mjpg/video.cgi?camera=1110</VideoStreamURL>
-			<LocationType>1</LocationType>
-			<PositionLon>120.260604859</PositionLon>
-			<PositionLat>23.203502656</PositionLat>
-			<RoadID>100840</RoadID>
-			<RoadName>快速公路84號</RoadName>
-			<RoadClass>1</RoadClass>
-			<RoadDirection>E</RoadDirection>
-			<RoadSection>
-				<Start>下營系統交流道</Start>
-				<End>麻豆交流道</End>
-			</RoadSection>
-			<LocationMile>16K+700</LocationMile>
-		</CCTV>
-		<CCTV>
-			<CCTVID>CCTV-T84-E-17.554-M</CCTVID>
-			<SubAuthorityCode>NFB-SR</SubAuthorityCode>
-			<LinkID>1008400001700D</LinkID>
-			<VideoStreamURL>https://cctvs.freeway.gov.tw/live-view/mjpg/video.cgi?camera=153</VideoStreamURL>
-			<LocationType>1</LocationType>
-			<PositionLon>120.266036988</PositionLon>
-			<PositionLat>23.198421479</PositionLat>
-			<RoadID>100840</RoadID>
-			<RoadName>快速公路84號</RoadName>
-			<RoadClass>1</RoadClass>
-			<RoadDirection>E</RoadDirection>
-			<RoadSection>
-				<Start>下營系統交流道</Start>
-				<End>麻豆交流道</End>
-			</RoadSection>
-			<LocationMile>17K+554</LocationMile>
-		</CCTV>
-		<CCTV>
-			<CCTVID>CCTV-T84-E-22.060-M</CCTVID>
-			<SubAuthorityCode>NFB-SR</SubAuthorityCode>
-			<LinkID>1008400002100D</LinkID>
-			<VideoStreamURL>https://cctvs.freeway.gov.tw/live-view/mjpg/video.cgi?camera=239</VideoStreamURL>
-			<LocationType>1</LocationType>
-			<PositionLon>120.30305481</PositionLon>
-			<PositionLat>23.180276871</PositionLat>
-			<RoadID>100840</RoadID>
-			<RoadName>快速公路84號</RoadName>
-			<RoadClass>1</RoadClass>
-			<RoadDirection>E</RoadDirection>
-			<RoadSection>
-				<Start>西庄交流道</Start>
-				<End>渡頭交流道</End>
-			</RoadSection>
-			<LocationMile>22K+060</LocationMile>
-		</CCTV>
-		<CCTV>
-			<CCTVID>CCTV-T84-E-27.020-M</CCTVID>
-			<SubAuthorityCode>NFB-SR</SubAuthorityCode>
-			<LinkID>1008400002700D</LinkID>
-			<VideoStreamURL>https://cctvs.freeway.gov.tw/live-view/mjpg/video.cgi?camera=240</VideoStreamURL>
-			<LocationType>1</LocationType>
-			<PositionLon>120.346107483</PositionLon>
-			<PositionLat>23.165277482</PositionLat>
-			<RoadID>100840</RoadID>
-			<RoadName>快速公路84號</RoadName>
-			<RoadClass>1</RoadClass>
-			<RoadDirection>E</RoadDirection>
-			<RoadSection>
-				<Start>渡頭交流道</Start>
-				<End>官田系統交流道</End>
-			</RoadSection>
-			<LocationMile>27K+020</LocationMile>
-		</CCTV>
-		<CCTV>
-			<CCTVID>CCTV-T84-E-32.333-M</CCTVID>
-			<SubAuthorityCode>NFB-SR</SubAuthorityCode>
-			<LinkID>1008400003200D</LinkID>
-			<VideoStreamURL>https://cctvs.freeway.gov.tw/live-view/mjpg/video.cgi?camera=241</VideoStreamURL>
-			<LocationType>1</LocationType>
-			<PositionLon>120.378524781</PositionLon>
-			<PositionLat>23.139579773</PositionLat>
-			<RoadID>100840</RoadID>
-			<RoadName>快速公路84號</RoadName>
-			<RoadClass>1</RoadClass>
-			<RoadDirection>E</RoadDirection>
-			<RoadSection>
-				<Start>官田系統交流道</Start>
-				<End>頭社交流道</End>
-			</RoadSection>
-			<LocationMile>32K+333</LocationMile>
-		</CCTV>
-		<CCTV>
-			<CCTVID>CCTV-T84-E-35.040-M</CCTVID>
-			<SubAuthorityCode>NFB-SR</SubAuthorityCode>
-			<LinkID>1008400003500D</LinkID>
-			<VideoStreamURL>https://cctvs.freeway.gov.tw/live-view/mjpg/video.cgi?camera=242</VideoStreamURL>
-			<LocationType>1</LocationType>
-			<PositionLon>120.404167176</PositionLon>
-			<PositionLat>23.141111374</PositionLat>
-			<RoadID>100840</RoadID>
-			<RoadName>快速公路84號</RoadName>
-			<RoadClass>1</RoadClass>
-			<RoadDirection>E</RoadDirection>
-			<RoadSection>
-				<Start>頭社交流道</Start>
-				<End>二溪交流道</End>
-			</RoadSection>
-			<LocationMile>35K+040</LocationMile>
-		</CCTV>
-		<CCTV>
-			<CCTVID>CCTV-T84-E-37.200-M</CCTVID>
-			<SubAuthorityCode>NFB-SR</SubAuthorityCode>
-			<LinkID>1008400003700D</LinkID>
-			<VideoStreamURL>https://cctvs.freeway.gov.tw/live-view/mjpg/video.cgi?camera=147</VideoStreamURL>
-			<LocationType>1</LocationType>
-			<PositionLon>120.425552369</PositionLon>
-			<PositionLat>23.142648697</PositionLat>
-			<RoadID>100840</RoadID>
-			<RoadName>快速公路84號</RoadName>
-			<RoadClass>1</RoadClass>
-			<RoadDirection>E</RoadDirection>
-			<RoadSection>
-				<Start>二溪交流道</Start>
-				<End>玉井端</End>
-			</RoadSection>
-			<LocationMile>37K+200</LocationMile>
-		</CCTV>
-		<CCTV>
-			<CCTVID>CCTV-T84-E-37.300-M</CCTVID>
-			<SubAuthorityCode>NFB-SR</SubAuthorityCode>
-			<LinkID>1008400003700D</LinkID>
-			<VideoStreamURL>https://cctvs.freeway.gov.tw/live-view/mjpg/video.cgi?camera=148</VideoStreamURL>
-			<LocationType>1</LocationType>
-			<PositionLon>120.426300049</PositionLon>
-			<PositionLat>23.142450333</PositionLat>
-			<RoadID>100840</RoadID>
-			<RoadName>快速公路84號</RoadName>
-			<RoadClass>1</RoadClass>
-			<RoadDirection>E</RoadDirection>
-			<RoadSection>
-				<Start>二溪交流道</Start>
-				<End>玉井端</End>
-			</RoadSection>
-			<LocationMile>37K+300</LocationMile>
-		</CCTV>
-		<CCTV>
-			<CCTVID>CCTV-T84-E-38.330-M</CCTVID>
-			<SubAuthorityCode>NFB-SR</SubAuthorityCode>
-			<LinkID>1008400003830D</LinkID>
-			<VideoStreamURL>https://cctvs.freeway.gov.tw/live-view/mjpg/video.cgi?camera=243</VideoStreamURL>
-			<LocationType>1</LocationType>
-			<PositionLon>120.435127259</PositionLon>
-			<PositionLat>23.137880326</PositionLat>
-			<RoadID>100840</RoadID>
-			<RoadName>快速公路84號</RoadName>
-			<RoadClass>1</RoadClass>
-			<RoadDirection>E</RoadDirection>
-			<RoadSection>
-				<Start>二溪交流道</Start>
-				<End>玉井端</End>
-			</RoadSection>
-			<LocationMile>38K+330</LocationMile>
-		</CCTV>
-		<CCTV>
-			<CCTVID>CCTV-T84-W-4.905-M</CCTVID>
-			<SubAuthorityCode>NFB-SR</SubAuthorityCode>
-			<LinkID>1008400100400D</LinkID>
-			<VideoStreamURL>https://cctvs.freeway.gov.tw/live-view/mjpg/video.cgi?camera=1115</VideoStreamURL>
-			<LocationType>1</LocationType>
-			<PositionLon>120.172599793</PositionLon>
-			<PositionLat>23.271051407</PositionLat>
-			<RoadID>100840</RoadID>
-			<RoadName>快速公路84號</RoadName>
-			<RoadClass>1</RoadClass>
-			<RoadDirection>W</RoadDirection>
-			<RoadSection>
-				<Start>學甲交流道</Start>
-				<End>北門交流道</End>
-			</RoadSection>
-			<LocationMile>4K+905</LocationMile>
-		</CCTV>
-		<CCTV>
-			<CCTVID>CCTV-T84-W-6.600-M</CCTVID>
-			<SubAuthorityCode>NFB-SR</SubAuthorityCode>
-			<LinkID>1008400100600D</LinkID>
-			<VideoStreamURL>https://cctvs.freeway.gov.tw/live-view/mjpg/video.cgi?camera=1116</VideoStreamURL>
-			<LocationType>1</LocationType>
-			<PositionLon>120.184837342</PositionLon>
-			<PositionLat>23.260843277</PositionLat>
-			<RoadID>100840</RoadID>
-			<RoadName>快速公路84號</RoadName>
-			<RoadClass>1</RoadClass>
-			<RoadDirection>W</RoadDirection>
-			<RoadSection>
-				<Start>學甲交流道</Start>
-				<End>北門交流道</End>
-			</RoadSection>
-			<LocationMile>6K+600</LocationMile>
-		</CCTV>
-		<CCTV>
-			<CCTVID>CCTV-T84-W-8.150-M</CCTVID>
-			<SubAuthorityCode>NFB-SR</SubAuthorityCode>
-			<LinkID>1008400100800D</LinkID>
-			<VideoStreamURL>https://cctvs.freeway.gov.tw/live-view/mjpg/video.cgi?camera=1117</VideoStreamURL>
-			<LocationType>1</LocationType>
-			<PositionLon>120.196250916</PositionLon>
-			<PositionLat>23.251651764</PositionLat>
-			<RoadID>100840</RoadID>
-			<RoadName>快速公路84號</RoadName>
-			<RoadClass>1</RoadClass>
-			<RoadDirection>W</RoadDirection>
-			<RoadSection>
-				<Start>學甲交流道</Start>
-				<End>北門交流道</End>
-			</RoadSection>
-			<LocationMile>8K+150</LocationMile>
-		</CCTV>
-		<CCTV>
-			<CCTVID>CCTV-T84-W-9.400-M</CCTVID>
-			<SubAuthorityCode>NFB-SR</SubAuthorityCode>
-			<LinkID>1008400100920D</LinkID>
-			<VideoStreamURL>https://cctvs.freeway.gov.tw/live-view/mjpg/video.cgi?camera=1118</VideoStreamURL>
-			<LocationType>1</LocationType>
-			<PositionLon>120.205413819</PositionLon>
-			<PositionLat>23.244190217</PositionLat>
-			<RoadID>100840</RoadID>
-			<RoadName>快速公路84號</RoadName>
-			<RoadClass>1</RoadClass>
-			<RoadDirection>W</RoadDirection>
-			<RoadSection>
-				<Start>下營系統交流道</Start>
-				<End>學甲交流道</End>
-			</RoadSection>
-			<LocationMile>9K+400</LocationMile>
-		</CCTV>
-		<CCTV>
-			<CCTVID>CCTV-T84-W-10.700-M</CCTVID>
-			<SubAuthorityCode>NFB-SR</SubAuthorityCode>
-			<LinkID>1008400101000D</LinkID>
-			<VideoStreamURL>https://cctvs.freeway.gov.tw/live-view/mjpg/video.cgi?camera=1112</VideoStreamURL>
-			<LocationType>1</LocationType>
-			<PositionLon>120.214065552</PositionLon>
-			<PositionLat>23.235572815</PositionLat>
-			<RoadID>100840</RoadID>
-			<RoadName>快速公路84號</RoadName>
-			<RoadClass>1</RoadClass>
-			<RoadDirection>W</RoadDirection>
-			<RoadSection>
-				<Start>下營系統交流道</Start>
-				<End>學甲交流道</End>
-			</RoadSection>
-			<LocationMile>10K+700</LocationMile>
-		</CCTV>
-		<CCTV>
-			<CCTVID>CCTV-T84-W-14.900-M</CCTVID>
-			<SubAuthorityCode>NFB-SR</SubAuthorityCode>
-			<LinkID>1008400101490D</LinkID>
-			<VideoStreamURL>https://cctvs.freeway.gov.tw/live-view/mjpg/video.cgi?camera=1113</VideoStreamURL>
-			<LocationType>1</LocationType>
-			<PositionLon>120.247650147</PositionLon>
-			<PositionLat>23.214487076</PositionLat>
-			<RoadID>100840</RoadID>
-			<RoadName>快速公路84號</RoadName>
-			<RoadClass>1</RoadClass>
-			<RoadDirection>W</RoadDirection>
-			<RoadSection>
-				<Start>麻豆交流道</Start>
-				<End>下營系統交流道</End>
-			</RoadSection>
-			<LocationMile>14K+900</LocationMile>
-		</CCTV>
-		<CCTV>
-			<CCTVID>CCTV-T84-W-17.553-M</CCTVID>
-			<SubAuthorityCode>NFB-SR</SubAuthorityCode>
-			<LinkID>1008400101700D</LinkID>
-			<VideoStreamURL>https://cctvs.freeway.gov.tw/live-view/mjpg/video.cgi?camera=152</VideoStreamURL>
-			<LocationType>1</LocationType>
-			<PositionLon>120.266166688</PositionLon>
-			<PositionLat>23.198492051</PositionLat>
-			<RoadID>100840</RoadID>
-			<RoadName>快速公路84號</RoadName>
-			<RoadClass>1</RoadClass>
-			<RoadDirection>W</RoadDirection>
-			<RoadSection>
-				<Start>麻豆交流道</Start>
-				<End>下營系統交流道</End>
-			</RoadSection>
-			<LocationMile>17K+553</LocationMile>
-		</CCTV>
-		<CCTV>
-			<CCTVID>CCTV-T84-W-18.260-M</CCTVID>
-			<SubAuthorityCode>NFB-SR</SubAuthorityCode>
-			<LinkID>1008400101800D</LinkID>
-			<VideoStreamURL>https://cctvs.freeway.gov.tw/live-view/mjpg/video.cgi?camera=1114</VideoStreamURL>
-			<LocationType>1</LocationType>
-			<PositionLon>120.27143097</PositionLon>
-			<PositionLat>23.193702698</PositionLat>
-			<RoadID>100840</RoadID>
-			<RoadName>快速公路84號</RoadName>
-			<RoadClass>1</RoadClass>
-			<RoadDirection>W</RoadDirection>
-			<RoadSection>
-				<Start>西庄交流道</Start>
-				<End>麻豆交流道</End>
-			</RoadSection>
-			<LocationMile>18K+260</LocationMile>
-		</CCTV>
-		<CCTV>
-			<CCTVID>CCTV-T84-W-20.680-M</CCTVID>
-			<SubAuthorityCode>NFB-SR</SubAuthorityCode>
-			<LinkID>1008400102000D</LinkID>
-			<VideoStreamURL>https://cctvs.freeway.gov.tw/live-view/mjpg/video.cgi?camera=246</VideoStreamURL>
-			<LocationType>1</LocationType>
-			<PositionLon>120.290275574</PositionLon>
-			<PositionLat>23.183887482</PositionLat>
-			<RoadID>100840</RoadID>
-			<RoadName>快速公路84號</RoadName>
-			<RoadClass>1</RoadClass>
-			<RoadDirection>W</RoadDirection>
-			<RoadSection>
-				<Start>西庄交流道</Start>
-				<End>麻豆交流道</End>
-			</RoadSection>
-			<LocationMile>20K+680</LocationMile>
-		</CCTV>
-		<CCTV>
-			<CCTVID>CCTV-T84-W-21.151-M</CCTVID>
-			<SubAuthorityCode>NFB-SR</SubAuthorityCode>
-			<LinkID>1008400102100D</LinkID>
-			<VideoStreamURL>https://cctvs.freeway.gov.tw/live-view/mjpg/video.cgi?camera=154</VideoStreamURL>
-			<LocationType>1</LocationType>
-			<PositionLon>120.296142579</PositionLon>
-			<PositionLat>23.182941437</PositionLat>
-			<RoadID>100840</RoadID>
-			<RoadName>快速公路84號</RoadName>
-			<RoadClass>1</RoadClass>
-			<RoadDirection>W</RoadDirection>
-			<RoadSection>
-				<Start>西庄交流道</Start>
-				<End>麻豆交流道</End>
-			</RoadSection>
-			<LocationMile>21K+151</LocationMile>
-		</CCTV>
-		<CCTV>
-			<CCTVID>CCTV-T84-W-25.300-M</CCTVID>
-			<SubAuthorityCode>NFB-SR</SubAuthorityCode>
-			<LinkID>1008400102500D</LinkID>
-			<VideoStreamURL>https://cctvs.freeway.gov.tw/live-view/mjpg/video.cgi?camera=247</VideoStreamURL>
-			<LocationType>1</LocationType>
-			<PositionLon>120.334442139</PositionLon>
-			<PositionLat>23.162776948</PositionLat>
-			<RoadID>100840</RoadID>
-			<RoadName>快速公路84號</RoadName>
-			<RoadClass>1</RoadClass>
-			<RoadDirection>W</RoadDirection>
-			<RoadSection>
-				<Start>渡頭交流道</Start>
-				<End>西庄交流道</End>
-			</RoadSection>
-			<LocationMile>25K+300</LocationMile>
-		</CCTV>
-		<CCTV>
-			<CCTVID>CCTV-T84-W-37.200-M</CCTVID>
-			<SubAuthorityCode>NFB-SR</SubAuthorityCode>
-			<LinkID>1008400103700D</LinkID>
-			<VideoStreamURL>https://cctvs.freeway.gov.tw/live-view/mjpg/video.cgi?camera=150</VideoStreamURL>
-			<LocationType>1</LocationType>
-			<PositionLon>120.425567627</PositionLon>
-			<PositionLat>23.142784119</PositionLat>
-			<RoadID>100840</RoadID>
-			<RoadName>快速公路84號</RoadName>
-			<RoadClass>1</RoadClass>
-			<RoadDirection>W</RoadDirection>
-			<RoadSection>
-				<Start>玉井端</Start>
-				<End>二溪交流道</End>
-			</RoadSection>
-			<LocationMile>37K+200</LocationMile>
-		</CCTV>
-		<CCTV>
-			<CCTVID>CCTV-T84-W-37.300-M</CCTVID>
-			<SubAuthorityCode>NFB-SR</SubAuthorityCode>
-			<LinkID>1008400103730D</LinkID>
-			<VideoStreamURL>https://cctvs.freeway.gov.tw/live-view/mjpg/video.cgi?camera=149</VideoStreamURL>
-			<LocationType>1</LocationType>
-			<PositionLon>120.426116944</PositionLon>
-			<PositionLat>23.14261818</PositionLat>
-			<RoadID>100840</RoadID>
-			<RoadName>快速公路84號</RoadName>
-			<RoadClass>1</RoadClass>
-			<RoadDirection>W</RoadDirection>
-			<RoadSection>
-				<Start>玉井端</Start>
-				<End>二溪交流道</End>
-			</RoadSection>
-			<LocationMile>37K+300</LocationMile>
-		</CCTV>
-		<CCTV>
-			<CCTVID>CCTV-T84-W-37.700-M</CCTVID>
-			<SubAuthorityCode>NFB-SR</SubAuthorityCode>
-			<LinkID>1008400103770D</LinkID>
-			<VideoStreamURL>https://cctvs.freeway.gov.tw/live-view/mjpg/video.cgi?camera=151</VideoStreamURL>
-			<LocationType>1</LocationType>
-			<PositionLon>120.430694581</PositionLon>
-			<PositionLat>23.14119339</PositionLat>
-			<RoadID>100840</RoadID>
-			<RoadName>快速公路84號</RoadName>
-			<RoadClass>1</RoadClass>
-			<RoadDirection>W</RoadDirection>
-			<RoadSection>
-				<Start>玉井端</Start>
-				<End>二溪交流道</End>
-			</RoadSection>
-			<LocationMile>37K+700</LocationMile>
-		</CCTV>
-		<CCTV>
-			<CCTVID>CCTV-T84-W-38.910-M</CCTVID>
-			<SubAuthorityCode>NFB-SR</SubAuthorityCode>
-			<LinkID>1008400103830D</LinkID>
-			<VideoStreamURL>https://cctvs.freeway.gov.tw/live-view/mjpg/video.cgi?camera=244</VideoStreamURL>
-			<LocationType>1</LocationType>
-			<PositionLon>120.43914032</PositionLon>
-			<PositionLat>23.134342194</PositionLat>
-			<RoadID>100840</RoadID>
-			<RoadName>快速公路84號</RoadName>
-			<RoadClass>1</RoadClass>
-			<RoadDirection>W</RoadDirection>
-			<RoadSection>
-				<Start>玉井端</Start>
-				<End>二溪交流道</End>
-			</RoadSection>
-			<LocationMile>38K+910</LocationMile>
-		</CCTV>
-		<CCTV>
-			<CCTVID>CCTV-T86-E-3.600-M</CCTVID>
-			<SubAuthorityCode>NFB-SR</SubAuthorityCode>
-			<LinkID>1008600000300D</LinkID>
-			<VideoStreamURL>https://cctvs.freeway.gov.tw/live-view/mjpg/video.cgi?camera=1119</VideoStreamURL>
-			<LocationType>1</LocationType>
-			<PositionLon>120.208862305</PositionLon>
-			<PositionLat>22.927042008</PositionLat>
-			<RoadID>100860</RoadID>
-			<RoadName>快速公路86號</RoadName>
-			<RoadClass>1</RoadClass>
-			<RoadDirection>E</RoadDirection>
-			<RoadSection>
-				<Start>灣裡交流道</Start>
-				<End>台南交流道</End>
-			</RoadSection>
-			<LocationMile>3K+600</LocationMile>
-		</CCTV>
-		<CCTV>
-			<CCTVID>CCTV-T86-E-4.770-M</CCTVID>
-			<SubAuthorityCode>NFB-SR</SubAuthorityCode>
-			<LinkID>1008600000450D</LinkID>
-			<VideoStreamURL>https://cctvs.freeway.gov.tw/live-view/mjpg/video.cgi?camera=82</VideoStreamURL>
-			<LocationType>1</LocationType>
-			<PositionLon>120.219444275</PositionLon>
-			<PositionLat>22.929166794</PositionLat>
-			<RoadID>100860</RoadID>
-			<RoadName>快速公路86號</RoadName>
-			<RoadClass>1</RoadClass>
-			<RoadDirection>E</RoadDirection>
-			<RoadSection>
-				<Start>灣裡交流道</Start>
-				<End>台南交流道</End>
-			</RoadSection>
-			<LocationMile>4K+770</LocationMile>
-		</CCTV>
-		<CCTV>
-			<CCTVID>CCTV-T86-E-5.576-M</CCTVID>
-			<SubAuthorityCode>NFB-SR</SubAuthorityCode>
-			<LinkID>1008600000540D</LinkID>
-			<VideoStreamURL>https://cctvs.freeway.gov.tw/live-view/mjpg/video.cgi?camera=83</VideoStreamURL>
-			<LocationType>1</LocationType>
-			<PositionLon>120.2266922</PositionLon>
-			<PositionLat>22.932916642</PositionLat>
-			<RoadID>100860</RoadID>
-			<RoadName>快速公路86號</RoadName>
-			<RoadClass>1</RoadClass>
-			<RoadDirection>E</RoadDirection>
-			<RoadSection>
-				<Start>台南交流道</Start>
-				<End>仁德系統交流道</End>
-			</RoadSection>
-			<LocationMile>5K+576</LocationMile>
-		</CCTV>
-		<CCTV>
-			<CCTVID>CCTV-T86-E-9.682-M</CCTVID>
-			<SubAuthorityCode>NFB-SR</SubAuthorityCode>
-			<LinkID>1008600000940D</LinkID>
-			<VideoStreamURL>https://cctvs.freeway.gov.tw/live-view/mjpg/video.cgi?camera=84</VideoStreamURL>
-			<LocationType>1</LocationType>
-			<PositionLon>120.259841919</PositionLon>
-			<PositionLat>22.935430527</PositionLat>
-			<RoadID>100860</RoadID>
-			<RoadName>快速公路86號</RoadName>
-			<RoadClass>1</RoadClass>
-			<RoadDirection>E</RoadDirection>
-			<RoadSection>
-				<Start>仁德系統交流道</Start>
-				<End>上崙交流道</End>
-			</RoadSection>
-			<LocationMile>9K+682</LocationMile>
-		</CCTV>
-		<CCTV>
-			<CCTVID>CCTV-T86-E-10.648-M</CCTVID>
-			<SubAuthorityCode>NFB-SR</SubAuthorityCode>
-			<LinkID>1008600001040D</LinkID>
-			<VideoStreamURL>https://cctvs.freeway.gov.tw/live-view/mjpg/video.cgi?camera=85</VideoStreamURL>
-			<LocationType>1</LocationType>
-			<PositionLon>120.268348694</PositionLon>
-			<PositionLat>22.932128907</PositionLat>
-			<RoadID>100860</RoadID>
-			<RoadName>快速公路86號</RoadName>
-			<RoadClass>1</RoadClass>
-			<RoadDirection>E</RoadDirection>
-			<RoadSection>
-				<Start>上崙交流道</Start>
-				<End>大潭交流道</End>
-			</RoadSection>
-			<LocationMile>10K+648</LocationMile>
-		</CCTV>
-		<CCTV>
-			<CCTVID>CCTV-T86-E-11.783-M</CCTVID>
-			<SubAuthorityCode>NFB-SR</SubAuthorityCode>
-			<LinkID>1008600001130D</LinkID>
-			<VideoStreamURL>https://cctvs.freeway.gov.tw/live-view/mjpg/video.cgi?camera=86</VideoStreamURL>
-			<LocationType>1</LocationType>
-			<PositionLon>120.27948761</PositionLon>
-			<PositionLat>22.932281495</PositionLat>
-			<RoadID>100860</RoadID>
-			<RoadName>快速公路86號</RoadName>
-			<RoadClass>1</RoadClass>
-			<RoadDirection>E</RoadDirection>
-			<RoadSection>
-				<Start>上崙交流道</Start>
-				<End>大潭交流道</End>
-			</RoadSection>
-			<LocationMile>11K+783</LocationMile>
-		</CCTV>
-		<CCTV>
-			<CCTVID>CCTV-T86-E-14.007-M</CCTVID>
-			<SubAuthorityCode>NFB-SR</SubAuthorityCode>
-			<LinkID>1008600001400D</LinkID>
-			<VideoStreamURL>https://cctvs.freeway.gov.tw/live-view/mjpg/video.cgi?camera=89</VideoStreamURL>
-			<LocationType>1</LocationType>
-			<PositionLon>120.299545289</PositionLon>
-			<PositionLat>22.93977356</PositionLat>
-			<RoadID>100860</RoadID>
-			<RoadName>快速公路86號</RoadName>
-			<RoadClass>1</RoadClass>
-			<RoadDirection>E</RoadDirection>
-			<RoadSection>
-				<Start>大潭交流道</Start>
-				<End>歸仁交流道</End>
-			</RoadSection>
-			<LocationMile>14K+007</LocationMile>
-		</CCTV>
-		<CCTV>
-			<CCTVID>CCTV-T86-E-14.909-M</CCTVID>
-			<SubAuthorityCode>NFB-SR</SubAuthorityCode>
-			<LinkID>1008600001400D</LinkID>
-			<VideoStreamURL>https://cctvs.freeway.gov.tw/live-view/mjpg/video.cgi?camera=87</VideoStreamURL>
-			<LocationType>1</LocationType>
-			<PositionLon>120.303833008</PositionLon>
-			<PositionLat>22.94667244</PositionLat>
-			<RoadID>100860</RoadID>
-			<RoadName>快速公路86號</RoadName>
-			<RoadClass>1</RoadClass>
-			<RoadDirection>E</RoadDirection>
-			<RoadSection>
-				<Start>大潭交流道</Start>
-				<End>歸仁交流道</End>
-			</RoadSection>
-			<LocationMile>14K+909</LocationMile>
-		</CCTV>
-		<CCTV>
-			<CCTVID>CCTV-T86-E-16.350-M</CCTVID>
-			<SubAuthorityCode>NFB-SR</SubAuthorityCode>
-			<LinkID>1008600001630D</LinkID>
-			<VideoStreamURL>https://cctvs.freeway.gov.tw/live-view/mjpg/video.cgi?camera=88</VideoStreamURL>
-			<LocationType>1</LocationType>
-			<PositionLon>120.308059693</PositionLon>
-			<PositionLat>22.958889008</PositionLat>
-			<RoadID>100860</RoadID>
-			<RoadName>快速公路86號</RoadName>
-			<RoadClass>1</RoadClass>
-			<RoadDirection>E</RoadDirection>
-			<RoadSection>
-				<Start>大潭交流道</Start>
-				<End>歸仁交流道</End>
-			</RoadSection>
-			<LocationMile>16K+350</LocationMile>
-		</CCTV>
-		<CCTV>
-			<CCTVID>CCTV-T86-W-0.035-M</CCTVID>
-			<SubAuthorityCode>NFB-SR</SubAuthorityCode>
-			<LinkID>1008600100000D</LinkID>
-			<VideoStreamURL>https://cctvs.freeway.gov.tw/live-view/mjpg/video.cgi?camera=1120</VideoStreamURL>
-			<LocationType>1</LocationType>
-			<PositionLon>120.176681519</PositionLon>
-			<PositionLat>22.935953141</PositionLat>
-			<RoadID>100860</RoadID>
-			<RoadName>快速公路86號</RoadName>
-			<RoadClass>1</RoadClass>
-			<RoadDirection>W</RoadDirection>
-			<RoadSection>
-				<Start>灣裡交流道</Start>
-				<End>台南端</End>
-			</RoadSection>
-			<LocationMile>0K+035</LocationMile>
-		</CCTV>
-		<CCTV>
-			<CCTVID>CCTV-T86-W-1.980-M</CCTVID>
-			<SubAuthorityCode>NFB-SR</SubAuthorityCode>
-			<LinkID>1008600100170D</LinkID>
-			<VideoStreamURL>https://cctvs.freeway.gov.tw/live-view/mjpg/video.cgi?camera=1121</VideoStreamURL>
-			<LocationType>1</LocationType>
-			<PositionLon>120.195381165</PositionLon>
-			<PositionLat>22.933105469</PositionLat>
-			<RoadID>100860</RoadID>
-			<RoadName>快速公路86號</RoadName>
-			<RoadClass>1</RoadClass>
-			<RoadDirection>W</RoadDirection>
-			<RoadSection>
-				<Start>灣裡交流道</Start>
-				<End>台南端</End>
-			</RoadSection>
-			<LocationMile>1K+980</LocationMile>
-		</CCTV>
-		<CCTV>
-			<CCTVID>CCTV-T86-W-6.319-M</CCTVID>
-			<SubAuthorityCode>NFB-SR</SubAuthorityCode>
-			<LinkID>1008600100610D</LinkID>
-			<VideoStreamURL>https://cctvs.freeway.gov.tw/live-view/mjpg/video.cgi?camera=74</VideoStreamURL>
-			<LocationType>1</LocationType>
-			<PositionLon>120.232643128</PositionLon>
-			<PositionLat>22.936317444</PositionLat>
-			<RoadID>100860</RoadID>
-			<RoadName>快速公路86號</RoadName>
-			<RoadClass>1</RoadClass>
-			<RoadDirection>W</RoadDirection>
-			<RoadSection>
-				<Start>仁德系統交流道</Start>
-				<End>台南交流道</End>
-			</RoadSection>
-			<LocationMile>6K+319</LocationMile>
-		</CCTV>
-		<CCTV>
-			<CCTVID>CCTV-T86-W-7.798-M</CCTVID>
-			<SubAuthorityCode>NFB-SR</SubAuthorityCode>
-			<LinkID>1008600100700D</LinkID>
-			<VideoStreamURL>https://cctvs.freeway.gov.tw/live-view/mjpg/video.cgi?camera=75</VideoStreamURL>
-			<LocationType>1</LocationType>
-			<PositionLon>120.244621277</PositionLon>
-			<PositionLat>22.943752289</PositionLat>
-			<RoadID>100860</RoadID>
-			<RoadName>快速公路86號</RoadName>
-			<RoadClass>1</RoadClass>
-			<RoadDirection>W</RoadDirection>
-			<RoadSection>
-				<Start>仁德系統交流道</Start>
-				<End>台南交流道</End>
-			</RoadSection>
-			<LocationMile>7K+798</LocationMile>
-		</CCTV>
-		<CCTV>
-			<CCTVID>CCTV-T86-W-8.896-M</CCTVID>
-			<SubAuthorityCode>NFB-SR</SubAuthorityCode>
-			<LinkID>1008600100800D</LinkID>
-			<VideoStreamURL>https://cctvs.freeway.gov.tw/live-view/mjpg/video.cgi?camera=76</VideoStreamURL>
-			<LocationType>1</LocationType>
-			<PositionLon>120.254463196</PositionLon>
-			<PositionLat>22.940589905</PositionLat>
-			<RoadID>100860</RoadID>
-			<RoadName>快速公路86號</RoadName>
-			<RoadClass>1</RoadClass>
-			<RoadDirection>W</RoadDirection>
-			<RoadSection>
-				<Start>上崙交流道</Start>
-				<End>仁德系統交流道</End>
-			</RoadSection>
-			<LocationMile>8K+896</LocationMile>
-		</CCTV>
-		<CCTV>
-			<CCTVID>CCTV-T86-W-10.356-M</CCTVID>
-			<SubAuthorityCode>NFB-SR</SubAuthorityCode>
-			<LinkID>1008600101000D</LinkID>
-			<VideoStreamURL>https://cctvs.freeway.gov.tw/live-view/mjpg/video.cgi?camera=77</VideoStreamURL>
-			<LocationType>1</LocationType>
-			<PositionLon>120.265327454</PositionLon>
-			<PositionLat>22.932531357</PositionLat>
-			<RoadID>100860</RoadID>
-			<RoadName>快速公路86號</RoadName>
-			<RoadClass>1</RoadClass>
-			<RoadDirection>W</RoadDirection>
-			<RoadSection>
-				<Start>大潭交流道</Start>
-				<End>上崙交流道</End>
-			</RoadSection>
-			<LocationMile>10K+356</LocationMile>
-		</CCTV>
-		<CCTV>
-			<CCTVID>CCTV-T86-W-10.755-M</CCTVID>
-			<SubAuthorityCode>NFB-SR</SubAuthorityCode>
-			<LinkID>1008600101040D</LinkID>
-			<VideoStreamURL>https://cctvs.freeway.gov.tw/live-view/mjpg/video.cgi?camera=78</VideoStreamURL>
-			<LocationType>1</LocationType>
-			<PositionLon>120.269271851</PositionLon>
-			<PositionLat>22.93206215</PositionLat>
-			<RoadID>100860</RoadID>
-			<RoadName>快速公路86號</RoadName>
-			<RoadClass>1</RoadClass>
-			<RoadDirection>W</RoadDirection>
-			<RoadSection>
-				<Start>大潭交流道</Start>
-				<End>上崙交流道</End>
-			</RoadSection>
-			<LocationMile>10K+755</LocationMile>
-		</CCTV>
-		<CCTV>
-			<CCTVID>CCTV-T86-W-17.617-M</CCTVID>
-			<SubAuthorityCode>NFB-SR</SubAuthorityCode>
-			<LinkID>1008600101700D</LinkID>
-			<VideoStreamURL>https://cctvs.freeway.gov.tw/live-view/mjpg/video.cgi?camera=79</VideoStreamURL>
-			<LocationType>1</LocationType>
-			<PositionLon>120.312278748</PositionLon>
-			<PositionLat>22.96982956</PositionLat>
-			<RoadID>100860</RoadID>
-			<RoadName>快速公路86號</RoadName>
-			<RoadClass>1</RoadClass>
-			<RoadDirection>W</RoadDirection>
-			<RoadSection>
-				<Start>台19甲交流道</Start>
-				<End>歸仁交流道</End>
-			</RoadSection>
-			<LocationMile>17K+617</LocationMile>
-		</CCTV>
-		<CCTV>
-			<CCTVID>CCTV-T86-W-18.027-M</CCTVID>
-			<SubAuthorityCode>NFB-SR</SubAuthorityCode>
-			<LinkID>1008600101800D</LinkID>
-			<VideoStreamURL>https://cctvs.freeway.gov.tw/live-view/mjpg/video.cgi?camera=80</VideoStreamURL>
-			<LocationType>1</LocationType>
-			<PositionLon>120.314376832</PositionLon>
-			<PositionLat>22.97228241</PositionLat>
-			<RoadID>100860</RoadID>
-			<RoadName>快速公路86號</RoadName>
-			<RoadClass>1</RoadClass>
-			<RoadDirection>W</RoadDirection>
-			<RoadSection>
-				<Start>台19甲交流道</Start>
-				<End>歸仁交流道</End>
-			</RoadSection>
-			<LocationMile>18K+027</LocationMile>
 		</CCTV>
 	</CCTVs>
 </CCTVList>
