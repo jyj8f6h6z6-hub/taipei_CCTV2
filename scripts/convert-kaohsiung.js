@@ -36,6 +36,9 @@ if (!Array.isArray(raw)) {
   throw new Error("高雄原始資料不是陣列格式");
 }
 
+// 同一個 id 重複出現時只保留第一筆（避免驗證時發現重複的 key）
+const seenIds = new Set();
+
 const results = raw
   .map(cam => {
     const id = String(
@@ -88,7 +91,12 @@ const results = raw
     cam.x >= 118 && cam.x <= 123.5 &&
     cam.y >= 21 && cam.y <= 26.5 &&
     cam.url
-  );
+  )
+  .filter(cam => {
+    if (seenIds.has(cam.id)) return false;
+    seenIds.add(cam.id);
+    return true;
+  });
 
 const output = {
   metadata: {
