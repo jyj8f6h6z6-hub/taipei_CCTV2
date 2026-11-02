@@ -1,6 +1,6 @@
 {
   "count": 108,
-  "sourceCount": 135,
+  "sourceCount": 143,
   "results": [
     {
       "id": "rental-cc27f1a62bd9e34c",
@@ -1515,8 +1515,22 @@
       "source": "臺北市政府工務局水利工程處（水情租賃 CCTV）"
     }
   ],
-  "unmatchedCount": 9,
+  "unmatchedCount": 17,
   "unmatched": [
+    {
+      "name": "南湖大橋",
+      "category": "基隆河",
+      "streamUrl": "https://stream.nvr.taifo.com.tw/hls/jb36nf1j7fvk/index.m3u8",
+      "imageUrl": "https://stream.nvr.taifo.com.tw/camera/screenshot/N105/8dae4ef3-3561-46a7-9e77-4ef628f1f3fd.jpg",
+      "lookupKey": "南湖大橋"
+    },
+    {
+      "name": "大直橋",
+      "category": "基隆河",
+      "streamUrl": "https://stream.nvr.taifo.com.tw/hls/n9yzml5sjw8i/index.m3u8",
+      "imageUrl": "https://stream.nvr.taifo.com.tw/camera/screenshot/N106/7f1c28ef-579a-4b26-958b-78144a01a86c.jpg",
+      "lookupKey": "大直橋"
+    },
     {
       "name": "大佳10號閘門(科技執法)",
       "category": "基隆河",
@@ -1530,6 +1544,48 @@
       "streamUrl": "https://video.nvr.taifo.com.tw/memfs/1e33f60f-79de-408b-99e5-23d20f46615e.m3u8",
       "imageUrl": "https://video.nvr.taifo.com.tw/memfs/1e33f60f-79de-408b-99e5-23d20f46615e.jpg",
       "lookupKey": "新店1號(外"
+    },
+    {
+      "name": "望星橋",
+      "category": "磺港溪、磺溪及雙溪",
+      "streamUrl": "https://stream.nvr.taifo.com.tw/hls/uv929mt41um2/index.m3u8",
+      "imageUrl": "https://stream.nvr.taifo.com.tw/camera/screenshot/N102/d36da89b-0237-4d95-b928-60d4ecfcd7df.jpg",
+      "lookupKey": "望星橋"
+    },
+    {
+      "name": "雙溪士林橋下游",
+      "category": "磺港溪、磺溪及雙溪",
+      "streamUrl": "https://stream.nvr.taifo.com.tw/hls/23voah845i1n/index.m3u8",
+      "imageUrl": "https://stream.nvr.taifo.com.tw/camera/screenshot/N103/926a20b5-718f-474c-95ac-6bb74d5f013d.jpg",
+      "lookupKey": "雙溪士林橋下游"
+    },
+    {
+      "name": "士林橋",
+      "category": "磺港溪、磺溪及雙溪",
+      "streamUrl": "https://stream.nvr.taifo.com.tw/hls/2vujbzv73k3d/index.m3u8",
+      "imageUrl": "https://stream.nvr.taifo.com.tw/camera/screenshot/N104/94f90719-23b4-4977-a161-84f09be024ea.jpg",
+      "lookupKey": "士林橋"
+    },
+    {
+      "name": "磺港溪(三合橋)",
+      "category": "磺港溪、磺溪及雙溪",
+      "streamUrl": "https://stream.nvr.taifo.com.tw/hls/ewx8yecpt4m3/index.m3u8",
+      "imageUrl": "https://stream.nvr.taifo.com.tw/camera/screenshot/N096/90ee152c-e2fa-457a-9815-b3ccf7f7ec5a.jpg",
+      "lookupKey": "磺港溪(三合橋)"
+    },
+    {
+      "name": "磺港溪分流箱",
+      "category": "磺港溪、磺溪及雙溪",
+      "streamUrl": "https://stream.nvr.taifo.com.tw/hls/3zy325o74l9d/index.m3u8",
+      "imageUrl": "https://stream.nvr.taifo.com.tw/camera/screenshot/N097/f6f90359-96e4-4b2e-afdc-7515a9839edc.jpg",
+      "lookupKey": "磺港溪分流箱"
+    },
+    {
+      "name": "中和橋",
+      "category": "磺港溪、磺溪及雙溪",
+      "streamUrl": "https://stream.nvr.taifo.com.tw/hls/ht2xhqjyr961/index.m3u8",
+      "imageUrl": "https://stream.nvr.taifo.com.tw/camera/screenshot/N107/33313025-480c-4ef8-8186-c556b5cfa6aa.jpg",
+      "lookupKey": "中和橋"
     },
     {
       "name": "磺港溪分流入口",
