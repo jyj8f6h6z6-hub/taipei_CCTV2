@@ -30,10 +30,12 @@ jobs:
           import json
           import os
           import urllib.request
+          import ssl
 
 
           api_url = os.environ["NEWTAIPEI_CCTV_API"].strip()
-
+          context = ssl.create_default_context()
+          context.verify_flags &= ~ssl.VERIFY_X509_STRICT
           request = urllib.request.Request(
               api_url,
               headers={
@@ -50,6 +52,7 @@ jobs:
           with urllib.request.urlopen(
               request,
               timeout=60,
+              context=context,
           ) as response:
               raw = response.read()
 
