@@ -43,6 +43,8 @@ jobs:
 
           import requests
 
+          import ssl
+          from requests.adapters import HTTPAdapter
 
           image_api = os.environ.get("WATER_IMAGE_API", "").strip()
           position_url = os.environ.get("WATER_POSITION_URL", "").strip()
@@ -53,6 +55,15 @@ jobs:
               )
 
           session = requests.Session()
+
+          class RelaxedAdapter(HTTPAdapter):
+              def init_poolmanager(self, *args, **kwargs):
+                  ctx = ssl.create_default_context()
+                  ctx.verify_flags &= ~ssl.VERIFY_X509_STRICT
+                  kwargs["ssl_context"] = ctx
+                  super().init_poolmanager(*args, **kwargs)
+
+          session.mount("https://", RelaxedAdapter())
 
           session.headers.update({
               "User-Agent": "taipei-cctv-map-github-action/1.0"
