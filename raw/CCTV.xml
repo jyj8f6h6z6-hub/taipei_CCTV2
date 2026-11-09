@@ -1,6 +1,6 @@
 <?xml version='1.0' encoding='utf-8'?>
 <CCTVList xmlns="http://traffic.transportdata.tw/standard/traffic/schema/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://traffic.transportdata.tw/standard/traffic/schema/">
-	<UpdateTime>2026-10-30T16:05:34+08:00</UpdateTime>
+	<UpdateTime>2026-11-09T20:05:35+08:00</UpdateTime>
 	<UpdateInterval>86400</UpdateInterval>
 	<AuthorityCode>NFB</AuthorityCode>
 	<LinkVersion>25.12.1</LinkVersion>
@@ -1669,9 +1669,9 @@
 			<LocationType>1</LocationType>
 			<PositionLon>121.26250834</PositionLon>
 			<PositionLat>24.89718761</PositionLat>
-			<RoadID>636045</RoadID>
-			<RoadName>國道1號</RoadName>
-			<RoadClass>0</RoadClass>
+			<RoadID>636045H</RoadID>
+			<RoadName>永昌路</RoadName>
+			<RoadClass>6</RoadClass>
 			<RoadDirection>N</RoadDirection>
 			<RoadSection>
 				<Start>五股交流道</Start>
@@ -4243,9 +4243,9 @@
 			<LocationType>1</LocationType>
 			<PositionLon>121.262508338249</PositionLon>
 			<PositionLat>24.8971876089237</PositionLat>
-			<RoadID>636045</RoadID>
-			<RoadName>國道3號</RoadName>
-			<RoadClass>0</RoadClass>
+			<RoadID>636045H</RoadID>
+			<RoadName>永昌路</RoadName>
+			<RoadClass>6</RoadClass>
 			<RoadDirection>S</RoadDirection>
 			<RoadSection>
 				<Start>鶯歌系統交流道</Start>
@@ -10742,9 +10742,9 @@
 			<PositionLon>121.73704289068</PositionLon>
 			<PositionLat>25.1526814207742</PositionLat>
 			<RoadID>300026</RoadID>
-			<RoadName>港西聯絡道</RoadName>
-			<RoadClass>0</RoadClass>
-			<RoadDirection>N</RoadDirection>
+			<RoadName>台2己線</RoadName>
+			<RoadClass>3</RoadClass>
+			<RoadDirection>W</RoadDirection>
 			<RoadSection>
 				<Start>德安路交流道</Start>
 				<End>基隆港交流道</End>
@@ -10976,9 +10976,9 @@
 			<PositionLon>121.645712</PositionLon>
 			<PositionLat>25.008664</PositionLat>
 			<RoadID>401062</RoadID>
-			<RoadName>國道5號</RoadName>
-			<RoadClass>0</RoadClass>
-			<RoadDirection>S</RoadDirection>
+			<RoadName>106乙</RoadName>
+			<RoadClass>4</RoadClass>
+			<RoadDirection>E</RoadDirection>
 			<RoadSection>
 				<Start>石碇交流道</Start>
 				<End>坪林交控交流道</End>
@@ -13784,8 +13784,8 @@
 			<PositionLon>120.520323</PositionLon>
 			<PositionLat>24.063749</PositionLat>
 			<RoadID>300190</RoadID>
-			<RoadName>國道1號</RoadName>
-			<RoadClass>0</RoadClass>
+			<RoadName>台19線</RoadName>
+			<RoadClass>3</RoadClass>
 			<RoadDirection>S</RoadDirection>
 			<RoadSection>
 				<Start>彰化系統交流道</Start>
@@ -15331,9 +15331,9 @@
 			<LocationType>1</LocationType>
 			<PositionLon>120.65699</PositionLon>
 			<PositionLat>24.201911</PositionLat>
-			<RoadID>609215</RoadID>
-			<RoadName>國道1號</RoadName>
-			<RoadClass>0</RoadClass>
+			<RoadID>609215B</RoadID>
+			<RoadName>清武巷</RoadName>
+			<RoadClass>6</RoadClass>
 			<RoadDirection>N</RoadDirection>
 			<RoadSection>
 				<Start>大雅交流道</Start>
@@ -15349,9 +15349,9 @@
 			<LocationType>1</LocationType>
 			<PositionLon>120.656997</PositionLon>
 			<PositionLat>24.201948</PositionLat>
-			<RoadID>609215</RoadID>
-			<RoadName>國道1號</RoadName>
-			<RoadClass>0</RoadClass>
+			<RoadID>609215B</RoadID>
+			<RoadName>清武巷</RoadName>
+			<RoadClass>6</RoadClass>
 			<RoadDirection>N</RoadDirection>
 			<RoadSection>
 				<Start>大雅交流道</Start>
@@ -15458,9 +15458,9 @@
 			<PositionLon>120.638829</PositionLon>
 			<PositionLat>24.169562</PositionLat>
 			<RoadID>300120</RoadID>
-			<RoadName>國道1號</RoadName>
-			<RoadClass>0</RoadClass>
-			<RoadDirection>N</RoadDirection>
+			<RoadName>台12線</RoadName>
+			<RoadClass>3</RoadClass>
+			<RoadDirection>E</RoadDirection>
 			<RoadSection>
 				<Start>台中交流道</Start>
 				<End>大雅交流道</End>
@@ -24558,6 +24558,24 @@
 			<LocationMile>349K+998</LocationMile>
 		</CCTV>
 		<CCTV>
+			<CCTVID>CCTV-N1-S-353.555-M</CCTVID>
+			<SubAuthorityCode>NFB-SR</SubAuthorityCode>
+			<LinkID>0000100035300E</LinkID>
+			<VideoStreamURL>https://cctvs.freeway.gov.tw/live-view/mjpg/video.cgi?camera=1204</VideoStreamURL>
+			<LocationType>1</LocationType>
+			<PositionLon>120.3338</PositionLon>
+			<PositionLat>22.7529</PositionLat>
+			<RoadID>000010</RoadID>
+			<RoadName>國道1號</RoadName>
+			<RoadClass>0</RoadClass>
+			<RoadDirection>S</RoadDirection>
+			<RoadSection>
+				<Start>岡山交流道</Start>
+				<End>楠梓交流道</End>
+			</RoadSection>
+			<LocationMile>353K+555</LocationMile>
+		</CCTV>
+		<CCTV>
 			<CCTVID>CCTV-N1-S-356.000-M</CCTVID>
 			<SubAuthorityCode>NFB-SR</SubAuthorityCode>
 			<LinkID>0000100035540E</LinkID>
@@ -24889,9 +24907,9 @@
 			<LocationType>1</LocationType>
 			<PositionLon>120.322303772</PositionLon>
 			<PositionLat>22.583374024</PositionLat>
-			<RoadID>620373</RoadID>
-			<RoadName>國道1號</RoadName>
-			<RoadClass>0</RoadClass>
+			<RoadID>620373E</RoadID>
+			<RoadName>草衙一路</RoadName>
+			<RoadClass>6</RoadClass>
 			<RoadDirection>S</RoadDirection>
 			<RoadSection>
 				<Start>漁港路交流道</Start>
@@ -25078,6 +25096,24 @@
 				<End>民雄交流道</End>
 			</RoadSection>
 			<LocationMile>260K+550</LocationMile>
+		</CCTV>
+		<CCTV>
+			<CCTVID>CCTV-N1-N-261.003-M</CCTVID>
+			<SubAuthorityCode>NFB-SR</SubAuthorityCode>
+			<LinkID>0000100126100Q</LinkID>
+			<VideoStreamURL>https://cctvs.freeway.gov.tw/live-view/mjpg/video.cgi?camera=1202</VideoStreamURL>
+			<LocationType>1</LocationType>
+			<PositionLon>120.4041</PositionLon>
+			<PositionLat>23.5206</PositionLat>
+			<RoadID>000010</RoadID>
+			<RoadName>國道1號</RoadName>
+			<RoadClass>0</RoadClass>
+			<RoadDirection>N</RoadDirection>
+			<RoadSection>
+				<Start>嘉義交流道</Start>
+				<End>民雄交流道</End>
+			</RoadSection>
+			<LocationMile>261K+003</LocationMile>
 		</CCTV>
 		<CCTV>
 			<CCTVID>CCTV-N1-N-263.049-M</CCTVID>
@@ -25582,6 +25618,24 @@
 				<End>安定交流道</End>
 			</RoadSection>
 			<LocationMile>312K+008</LocationMile>
+		</CCTV>
+		<CCTV>
+			<CCTVID>CCTV-N1-N-313.071-M</CCTVID>
+			<SubAuthorityCode>NFB-SR</SubAuthorityCode>
+			<LinkID>0000100131300D</LinkID>
+			<VideoStreamURL>https://cctvs.freeway.gov.tw/live-view/mjpg/video.cgi?camera=1203</VideoStreamURL>
+			<LocationType>1</LocationType>
+			<PositionLon>120.249</PositionLon>
+			<PositionLat>23.1</PositionLat>
+			<RoadID>000010</RoadID>
+			<RoadName>國道1號</RoadName>
+			<RoadClass>0</RoadClass>
+			<RoadDirection>N</RoadDirection>
+			<RoadSection>
+				<Start>台南系統交流道</Start>
+				<End>安定交流道</End>
+			</RoadSection>
+			<LocationMile>313K+071</LocationMile>
 		</CCTV>
 		<CCTV>
 			<CCTVID>CCTV-N1-N-315.015-M</CCTVID>
@@ -26520,6 +26574,24 @@
 			<LocationMile>372K+050</LocationMile>
 		</CCTV>
 		<CCTV>
+			<CCTVID>CCTV-N1-N-372-I-EN-1</CCTVID>
+			<SubAuthorityCode>NFB-SR</SubAuthorityCode>
+			<LinkID>0000101175000E</LinkID>
+			<VideoStreamURL>https://cctvs.freeway.gov.tw/live-view/mjpg/video.cgi?camera=1205</VideoStreamURL>
+			<LocationType>1</LocationType>
+			<PositionLon>120.3307</PositionLon>
+			<PositionLat>22.5871</PositionLat>
+			<RoadID>000010</RoadID>
+			<RoadName>國道1號</RoadName>
+			<RoadClass>0</RoadClass>
+			<RoadDirection>N</RoadDirection>
+			<RoadSection>
+				<Start>中山四路交流道</Start>
+				<End>五甲交流道</End>
+			</RoadSection>
+			<LocationMile>372K+614</LocationMile>
+		</CCTV>
+		<CCTV>
 			<CCTVID>CCTV-N1-N-372.615-M</CCTVID>
 			<SubAuthorityCode>NFB-SR</SubAuthorityCode>
 			<LinkID>0000100137240E</LinkID>
@@ -26563,9 +26635,9 @@
 			<LocationType>1</LocationType>
 			<PositionLon>120.322311402</PositionLon>
 			<PositionLat>22.583486558</PositionLat>
-			<RoadID>620373</RoadID>
-			<RoadName>國道1號</RoadName>
-			<RoadClass>0</RoadClass>
+			<RoadID>620373E</RoadID>
+			<RoadName>草衙一路</RoadName>
+			<RoadClass>6</RoadClass>
 			<RoadDirection>N</RoadDirection>
 			<RoadSection>
 				<Start>高雄端</Start>
@@ -26576,15 +26648,15 @@
 		<CCTV>
 			<CCTVID>CCTV-N1K-E-0-L-1-55碼頭</CCTVID>
 			<SubAuthorityCode>NFB-SR</SubAuthorityCode>
-			<LinkID>6226570000000E</LinkID>
+			<LinkID>2001600000000E</LinkID>
 			<VideoStreamURL>https://cctvs.freeway.gov.tw/live-view/mjpg/video.cgi?camera=212</VideoStreamURL>
 			<LocationType>1</LocationType>
 			<PositionLon>120.300338746</PositionLon>
 			<PositionLat>22.585494996</PositionLat>
-			<RoadID>622657</RoadID>
-			<RoadName>高港高架</RoadName>
-			<RoadClass>0</RoadClass>
-			<RoadDirection>E</RoadDirection>
+			<RoadID>200160</RoadID>
+			<RoadName>高雄港聯外高架道路</RoadName>
+			<RoadClass>2</RoadClass>
+			<RoadDirection>S</RoadDirection>
 			<RoadSection>
 				<Start>58管制站交流道</Start>
 				<End>第二貨櫃中心交流道</End>
@@ -26599,10 +26671,10 @@
 			<LocationType>1</LocationType>
 			<PositionLon>120.295646668</PositionLon>
 			<PositionLat>22.588670731</PositionLat>
-			<RoadID>621085</RoadID>
-			<RoadName>高港高架</RoadName>
-			<RoadClass>0</RoadClass>
-			<RoadDirection>E</RoadDirection>
+			<RoadID>621085E</RoadID>
+			<RoadName>環區四路</RoadName>
+			<RoadClass>6</RoadClass>
+			<RoadDirection>SE</RoadDirection>
 			<RoadSection>
 				<Start>58管制站交流道</Start>
 				<End>第二貨櫃中心交流道</End>
@@ -26630,15 +26702,15 @@
 		<CCTV>
 			<CCTVID>CCTV-N1K-E-1-L-新生路</CCTVID>
 			<SubAuthorityCode>NFB-SR</SubAuthorityCode>
-			<LinkID>6206580200000E</LinkID>
+			<LinkID>2001600000140E</LinkID>
 			<VideoStreamURL>https://cctvs.freeway.gov.tw/live-view/mjpg/video.cgi?camera=123</VideoStreamURL>
 			<LocationType>1</LocationType>
 			<PositionLon>120.312423707</PositionLon>
 			<PositionLat>22.580226899</PositionLat>
-			<RoadID>620658</RoadID>
-			<RoadName>高港高架</RoadName>
-			<RoadClass>0</RoadClass>
-			<RoadDirection>E</RoadDirection>
+			<RoadID>200160</RoadID>
+			<RoadName>高雄港聯外高架道路</RoadName>
+			<RoadClass>2</RoadClass>
+			<RoadDirection>S</RoadDirection>
 			<RoadSection>
 				<Start>第二貨櫃中心交流道</Start>
 				<End>高雄端</End>
@@ -26851,10 +26923,10 @@
 			<LocationType>1</LocationType>
 			<PositionLon>120.323224</PositionLon>
 			<PositionLat>22.5691202</PositionLat>
-			<RoadID>622027</RoadID>
-			<RoadName>高港高架</RoadName>
-			<RoadClass>0</RoadClass>
-			<RoadDirection>W</RoadDirection>
+			<RoadID>622027E</RoadID>
+			<RoadName>佛西街</RoadName>
+			<RoadClass>6</RoadClass>
+			<RoadDirection>SE</RoadDirection>
 			<RoadSection>
 				<Start>三、五管制站交流道</Start>
 				<End>過港隧道交流道</End>
@@ -26869,10 +26941,10 @@
 			<LocationType>1</LocationType>
 			<PositionLon>120.323224</PositionLon>
 			<PositionLat>22.5691202</PositionLat>
-			<RoadID>622027</RoadID>
-			<RoadName>高港高架</RoadName>
-			<RoadClass>0</RoadClass>
-			<RoadDirection>W</RoadDirection>
+			<RoadID>622027E</RoadID>
+			<RoadName>佛西街</RoadName>
+			<RoadClass>6</RoadClass>
+			<RoadDirection>SE</RoadDirection>
 			<RoadSection>
 				<Start>三、五管制站交流道</Start>
 				<End>過港隧道交流道</End>
@@ -26887,10 +26959,10 @@
 			<LocationType>1</LocationType>
 			<PositionLon>120.3250906</PositionLon>
 			<PositionLat>22.5691202</PositionLat>
-			<RoadID>620131</RoadID>
-			<RoadName>高港高架</RoadName>
-			<RoadClass>0</RoadClass>
-			<RoadDirection>W</RoadDirection>
+			<RoadID>620131E</RoadID>
+			<RoadName>金福路</RoadName>
+			<RoadClass>6</RoadClass>
+			<RoadDirection>NE</RoadDirection>
 			<RoadSection>
 				<Start>三、五管制站交流道</Start>
 				<End>過港隧道交流道</End>
@@ -26905,10 +26977,10 @@
 			<LocationType>1</LocationType>
 			<PositionLon>120.3250906</PositionLon>
 			<PositionLat>22.5691202</PositionLat>
-			<RoadID>620131</RoadID>
-			<RoadName>高港高架</RoadName>
-			<RoadClass>0</RoadClass>
-			<RoadDirection>W</RoadDirection>
+			<RoadID>620131E</RoadID>
+			<RoadName>金福路</RoadName>
+			<RoadClass>6</RoadClass>
+			<RoadDirection>NE</RoadDirection>
 			<RoadSection>
 				<Start>三、五管制站交流道</Start>
 				<End>過港隧道交流道</End>
@@ -27022,6 +27094,60 @@
 				<End>三、五管制站交流道</End>
 			</RoadSection>
 			<LocationMile>3K+400</LocationMile>
+		</CCTV>
+		<CCTV>
+			<CCTVID>CCTV-N3-S-269-I-WS-2</CCTVID>
+			<SubAuthorityCode>NFB-SR</SubAuthorityCode>
+			<LinkID>0000301051000P</LinkID>
+			<VideoStreamURL>https://cctvs.freeway.gov.tw/live-view/mjpg/video.cgi?camera=1101</VideoStreamURL>
+			<LocationType>1</LocationType>
+			<PositionLon>120.572</PositionLon>
+			<PositionLat>23.6648</PositionLat>
+			<RoadID>000030</RoadID>
+			<RoadName>國道3號</RoadName>
+			<RoadClass>0</RoadClass>
+			<RoadDirection>S</RoadDirection>
+			<RoadSection>
+				<Start>古坑系統交流道</Start>
+				<End>古坑(南)交流道</End>
+			</RoadSection>
+			<LocationMile>269K+200</LocationMile>
+		</CCTV>
+		<CCTV>
+			<CCTVID>CCTV-N3-S-269-I-WS-1</CCTVID>
+			<SubAuthorityCode>NFB-SR</SubAuthorityCode>
+			<LinkID>0000301051010P</LinkID>
+			<VideoStreamURL>https://cctvs.freeway.gov.tw/live-view/mjpg/video.cgi?camera=1102</VideoStreamURL>
+			<LocationType>1</LocationType>
+			<PositionLon>120.5729</PositionLon>
+			<PositionLat>23.6638</PositionLat>
+			<RoadID>000030</RoadID>
+			<RoadName>國道3號</RoadName>
+			<RoadClass>0</RoadClass>
+			<RoadDirection>S</RoadDirection>
+			<RoadSection>
+				<Start>古坑系統交流道</Start>
+				<End>古坑(南)交流道</End>
+			</RoadSection>
+			<LocationMile>269K+280</LocationMile>
+		</CCTV>
+		<CCTV>
+			<CCTVID>CCTV-N3-S-269.321-M</CCTVID>
+			<SubAuthorityCode>NFB-SR</SubAuthorityCode>
+			<LinkID>0000300026900P</LinkID>
+			<VideoStreamURL>https://cctvs.freeway.gov.tw/live-view/mjpg/video.cgi?camera=1103</VideoStreamURL>
+			<LocationType>1</LocationType>
+			<PositionLon>120.5724</PositionLon>
+			<PositionLat>23.6633</PositionLat>
+			<RoadID>000030</RoadID>
+			<RoadName>國道3號</RoadName>
+			<RoadClass>0</RoadClass>
+			<RoadDirection>S</RoadDirection>
+			<RoadSection>
+				<Start>古坑系統交流道</Start>
+				<End>古坑(南)交流道</End>
+			</RoadSection>
+			<LocationMile>269K+321</LocationMile>
 		</CCTV>
 		<CCTV>
 			<CCTVID>CCTV-N3-S-270.160-M</CCTVID>
@@ -27150,6 +27276,24 @@
 			<LocationMile>278K+700</LocationMile>
 		</CCTV>
 		<CCTV>
+			<CCTVID>CCTV-N3-S-279-O-NW-1</CCTVID>
+			<SubAuthorityCode>NFB-SR</SubAuthorityCode>
+			<LinkID>0000301053000Q</LinkID>
+			<VideoStreamURL>https://cctvs.freeway.gov.tw/live-view/mjpg/video.cgi?camera=1107</VideoStreamURL>
+			<LocationType>1</LocationType>
+			<PositionLon>120.5237</PositionLon>
+			<PositionLat>23.5979</PositionLat>
+			<RoadID>000030</RoadID>
+			<RoadName>國道3號</RoadName>
+			<RoadClass>0</RoadClass>
+			<RoadDirection>S</RoadDirection>
+			<RoadSection>
+				<Start>古坑服務區</Start>
+				<End>梅山交流道</End>
+			</RoadSection>
+			<LocationMile>279K+027</LocationMile>
+		</CCTV>
+		<CCTV>
 			<CCTVID>CCTV-N3-S-279-L-E-1</CCTVID>
 			<SubAuthorityCode>NFB-SR</SubAuthorityCode>
 			<LinkID>4016200001403Q</LinkID>
@@ -27158,6 +27302,24 @@
 			<PositionLon>120.520881653</PositionLon>
 			<PositionLat>23.59631157</PositionLat>
 			<RoadID>401620</RoadID>
+			<RoadName>162</RoadName>
+			<RoadClass>4</RoadClass>
+			<RoadDirection>E</RoadDirection>
+			<RoadSection>
+				<Start>梅山交流道</Start>
+				<End>竹崎交流道</End>
+			</RoadSection>
+			<LocationMile>279K+400</LocationMile>
+		</CCTV>
+		<CCTV>
+			<CCTVID>CCTV-N3-S-279-I-WS-1</CCTVID>
+			<SubAuthorityCode>NFB-SR</SubAuthorityCode>
+			<LinkID>0000301053050Q</LinkID>
+			<VideoStreamURL>https://cctvs.freeway.gov.tw/live-view/mjpg/video.cgi?camera=1109</VideoStreamURL>
+			<LocationType>1</LocationType>
+			<PositionLon>120.5211</PositionLon>
+			<PositionLat>23.5929</PositionLat>
+			<RoadID>000030</RoadID>
 			<RoadName>國道3號</RoadName>
 			<RoadClass>0</RoadClass>
 			<RoadDirection>S</RoadDirection>
@@ -27165,7 +27327,7 @@
 				<Start>梅山交流道</Start>
 				<End>竹崎交流道</End>
 			</RoadSection>
-			<LocationMile>279K+400</LocationMile>
+			<LocationMile>279K+463</LocationMile>
 		</CCTV>
 		<CCTV>
 			<CCTVID>CCTV-N3-S-281.850-M</CCTVID>
@@ -27284,9 +27446,9 @@
 			<PositionLon>120.48110199</PositionLon>
 			<PositionLat>23.520429612</PositionLat>
 			<RoadID>401660</RoadID>
-			<RoadName>國道3號</RoadName>
-			<RoadClass>0</RoadClass>
-			<RoadDirection>S</RoadDirection>
+			<RoadName>166</RoadName>
+			<RoadClass>4</RoadClass>
+			<RoadDirection>E</RoadDirection>
 			<RoadSection>
 				<Start>梅山交流道</Start>
 				<End>竹崎交流道</End>
@@ -27310,6 +27472,24 @@
 				<End>竹崎交流道</End>
 			</RoadSection>
 			<LocationMile>289K+805</LocationMile>
+		</CCTV>
+		<CCTV>
+			<CCTVID>CCTV-N3-S-290-O-NW-1</CCTVID>
+			<SubAuthorityCode>NFB-SR</SubAuthorityCode>
+			<LinkID>0000301054000Q</LinkID>
+			<VideoStreamURL>https://cctvs.freeway.gov.tw/live-view/mjpg/video.cgi?camera=1111</VideoStreamURL>
+			<LocationType>1</LocationType>
+			<PositionLon>120.4846</PositionLon>
+			<PositionLat>23.5223</PositionLat>
+			<RoadID>000030</RoadID>
+			<RoadName>國道3號</RoadName>
+			<RoadClass>0</RoadClass>
+			<RoadDirection>S</RoadDirection>
+			<RoadSection>
+				<Start>梅山交流道</Start>
+				<End>竹崎交流道</End>
+			</RoadSection>
+			<LocationMile>290K+000</LocationMile>
 		</CCTV>
 		<CCTV>
 			<CCTVID>CCTV-N3-S-290.9-L-S-1</CCTVID>
@@ -27346,6 +27526,24 @@
 				<End>中埔交流道</End>
 			</RoadSection>
 			<LocationMile>290K+915</LocationMile>
+		</CCTV>
+		<CCTV>
+			<CCTVID>CCTV-N3-S-291.450-M</CCTVID>
+			<SubAuthorityCode>NFB-SR</SubAuthorityCode>
+			<LinkID>0000300029100Q</LinkID>
+			<VideoStreamURL>https://cctvs.freeway.gov.tw/live-view/mjpg/video.cgi?camera=1112</VideoStreamURL>
+			<LocationType>1</LocationType>
+			<PositionLon>120.4929</PositionLon>
+			<PositionLat>23.4996</PositionLat>
+			<RoadID>000030</RoadID>
+			<RoadName>國道3號</RoadName>
+			<RoadClass>0</RoadClass>
+			<RoadDirection>S</RoadDirection>
+			<RoadSection>
+				<Start>竹崎交流道</Start>
+				<End>中埔交流道</End>
+			</RoadSection>
+			<LocationMile>291K+450</LocationMile>
 		</CCTV>
 		<CCTV>
 			<CCTVID>CCTV-N3-S-292.735-M</CCTVID>
@@ -27608,6 +27806,24 @@
 			<PositionLon>120.48210907</PositionLon>
 			<PositionLat>23.450994492</PositionLat>
 			<RoadID>300180</RoadID>
+			<RoadName>台18線</RoadName>
+			<RoadClass>3</RoadClass>
+			<RoadDirection>E</RoadDirection>
+			<RoadSection>
+				<Start>中埔交流道</Start>
+				<End>水上系統交流道</End>
+			</RoadSection>
+			<LocationMile>297K+500</LocationMile>
+		</CCTV>
+		<CCTV>
+			<CCTVID>CCTV-N3-S-300-O-SW-1</CCTVID>
+			<SubAuthorityCode>NFB-SR</SubAuthorityCode>
+			<LinkID>0000301056000Q</LinkID>
+			<VideoStreamURL>https://cctvs.freeway.gov.tw/live-view/mjpg/video.cgi?camera=1116</VideoStreamURL>
+			<LocationType>1</LocationType>
+			<PositionLon>120.469</PositionLon>
+			<PositionLat>23.4299</PositionLat>
+			<RoadID>000030</RoadID>
 			<RoadName>國道3號</RoadName>
 			<RoadClass>0</RoadClass>
 			<RoadDirection>S</RoadDirection>
@@ -27615,7 +27831,43 @@
 				<Start>中埔交流道</Start>
 				<End>水上系統交流道</End>
 			</RoadSection>
-			<LocationMile>297K+500</LocationMile>
+			<LocationMile>300K+400</LocationMile>
+		</CCTV>
+		<CCTV>
+			<CCTVID>CCTV-N3-S-300-I-WS-1</CCTVID>
+			<SubAuthorityCode>NFB-SR</SubAuthorityCode>
+			<LinkID>0000301056010Q</LinkID>
+			<VideoStreamURL>https://cctvs.freeway.gov.tw/live-view/mjpg/video.cgi?camera=1119</VideoStreamURL>
+			<LocationType>1</LocationType>
+			<PositionLon>120.4667</PositionLon>
+			<PositionLat>23.4289</PositionLat>
+			<RoadID>000030</RoadID>
+			<RoadName>國道3號</RoadName>
+			<RoadClass>0</RoadClass>
+			<RoadDirection>S</RoadDirection>
+			<RoadSection>
+				<Start>水上系統交流道</Start>
+				<End>白河交流道</End>
+			</RoadSection>
+			<LocationMile>300K+550</LocationMile>
+		</CCTV>
+		<CCTV>
+			<CCTVID>CCTV-N3-S-300-I-WS-2</CCTVID>
+			<SubAuthorityCode>NFB-SR</SubAuthorityCode>
+			<LinkID>0000301056010Q</LinkID>
+			<VideoStreamURL>https://cctvs.freeway.gov.tw/live-view/mjpg/video.cgi?camera=1120</VideoStreamURL>
+			<LocationType>1</LocationType>
+			<PositionLon>120.4669</PositionLon>
+			<PositionLat>23.4279</PositionLat>
+			<RoadID>000030</RoadID>
+			<RoadName>國道3號</RoadName>
+			<RoadClass>0</RoadClass>
+			<RoadDirection>S</RoadDirection>
+			<RoadSection>
+				<Start>水上系統交流道</Start>
+				<End>白河交流道</End>
+			</RoadSection>
+			<LocationMile>300K+680</LocationMile>
 		</CCTV>
 		<CCTV>
 			<CCTVID>CCTV-N3-S-304.412-M</CCTVID>
@@ -27698,9 +27950,9 @@
 			<PositionLon>120.435127259</PositionLon>
 			<PositionLat>23.34684372</PositionLat>
 			<RoadID>401720</RoadID>
-			<RoadName>國道3號</RoadName>
-			<RoadClass>0</RoadClass>
-			<RoadDirection>S</RoadDirection>
+			<RoadName>172</RoadName>
+			<RoadClass>4</RoadClass>
+			<RoadDirection>E</RoadDirection>
 			<RoadSection>
 				<Start>白河交流道</Start>
 				<End>東山服務區</End>
@@ -27715,6 +27967,24 @@
 			<LocationType>1</LocationType>
 			<PositionLon>120.439315796</PositionLon>
 			<PositionLat>23.349790574</PositionLat>
+			<RoadID>000030</RoadID>
+			<RoadName>國道3號</RoadName>
+			<RoadClass>0</RoadClass>
+			<RoadDirection>S</RoadDirection>
+			<RoadSection>
+				<Start>白河交流道</Start>
+				<End>東山服務區</End>
+			</RoadSection>
+			<LocationMile>311K+744</LocationMile>
+		</CCTV>
+		<CCTV>
+			<CCTVID>CCTV-N3-S-311-O-SW-1</CCTVID>
+			<SubAuthorityCode>NFB-SR</SubAuthorityCode>
+			<LinkID>0000301057000D</LinkID>
+			<VideoStreamURL>https://cctvs.freeway.gov.tw/live-view/mjpg/video.cgi?camera=1121</VideoStreamURL>
+			<LocationType>1</LocationType>
+			<PositionLon>120.439</PositionLon>
+			<PositionLat>23.3487</PositionLat>
 			<RoadID>000030</RoadID>
 			<RoadName>國道3號</RoadName>
 			<RoadClass>0</RoadClass>
@@ -27796,6 +28066,96 @@
 				<End>東山服務區</End>
 			</RoadSection>
 			<LocationMile>319K+840</LocationMile>
+		</CCTV>
+		<CCTV>
+			<CCTVID>CCTV-N3-S-321.819-M</CCTVID>
+			<SubAuthorityCode>NFB-SR</SubAuthorityCode>
+			<LinkID>0000300032120D</LinkID>
+			<VideoStreamURL>https://cctvs.freeway.gov.tw/live-view/mjpg/video.cgi?camera=1125</VideoStreamURL>
+			<LocationType>1</LocationType>
+			<PositionLon>120.3847</PositionLon>
+			<PositionLat>23.276</PositionLat>
+			<RoadID>000030</RoadID>
+			<RoadName>國道3號</RoadName>
+			<RoadClass>0</RoadClass>
+			<RoadDirection>S</RoadDirection>
+			<RoadSection>
+				<Start>東山服務區</Start>
+				<End>柳營交流道</End>
+			</RoadSection>
+			<LocationMile>321K+819</LocationMile>
+		</CCTV>
+		<CCTV>
+			<CCTVID>CCTV-N3-S-322-O-NW-1</CCTVID>
+			<SubAuthorityCode>NFB-SR</SubAuthorityCode>
+			<LinkID>0000301058000D</LinkID>
+			<VideoStreamURL>https://cctvs.freeway.gov.tw/live-view/mjpg/video.cgi?camera=1126</VideoStreamURL>
+			<LocationType>1</LocationType>
+			<PositionLon>120.3815</PositionLon>
+			<PositionLat>23.2743</PositionLat>
+			<RoadID>000030</RoadID>
+			<RoadName>國道3號</RoadName>
+			<RoadClass>0</RoadClass>
+			<RoadDirection>S</RoadDirection>
+			<RoadSection>
+				<Start>東山服務區</Start>
+				<End>柳營交流道</End>
+			</RoadSection>
+			<LocationMile>322K+204</LocationMile>
+		</CCTV>
+		<CCTV>
+			<CCTVID>CCTV-N3-S-322-O-NW-2</CCTVID>
+			<SubAuthorityCode>NFB-SR</SubAuthorityCode>
+			<LinkID>0000301058000D</LinkID>
+			<VideoStreamURL>https://cctvs.freeway.gov.tw/live-view/mjpg/video.cgi?camera=1127</VideoStreamURL>
+			<LocationType>1</LocationType>
+			<PositionLon>120.3787</PositionLon>
+			<PositionLat>23.2719</PositionLat>
+			<RoadID>000030</RoadID>
+			<RoadName>國道3號</RoadName>
+			<RoadClass>0</RoadClass>
+			<RoadDirection>S</RoadDirection>
+			<RoadSection>
+				<Start>柳營交流道</Start>
+				<End>烏山頭交流道</End>
+			</RoadSection>
+			<LocationMile>322K+506</LocationMile>
+		</CCTV>
+		<CCTV>
+			<CCTVID>CCTV-N3-S-323-I-WS-2</CCTVID>
+			<SubAuthorityCode>NFB-SR</SubAuthorityCode>
+			<LinkID>0000301058010D</LinkID>
+			<VideoStreamURL>https://cctvs.freeway.gov.tw/live-view/mjpg/video.cgi?camera=1129</VideoStreamURL>
+			<LocationType>1</LocationType>
+			<PositionLon>120.3781</PositionLon>
+			<PositionLat>23.2711</PositionLat>
+			<RoadID>000030</RoadID>
+			<RoadName>國道3號</RoadName>
+			<RoadClass>0</RoadClass>
+			<RoadDirection>S</RoadDirection>
+			<RoadSection>
+				<Start>柳營交流道</Start>
+				<End>烏山頭交流道</End>
+			</RoadSection>
+			<LocationMile>322K+593</LocationMile>
+		</CCTV>
+		<CCTV>
+			<CCTVID>CCTV-N3-S-323-I-WS-1</CCTVID>
+			<SubAuthorityCode>NFB-SR</SubAuthorityCode>
+			<LinkID>0000301058020D</LinkID>
+			<VideoStreamURL>https://cctvs.freeway.gov.tw/live-view/mjpg/video.cgi?camera=1128</VideoStreamURL>
+			<LocationType>1</LocationType>
+			<PositionLon>120.378</PositionLon>
+			<PositionLat>23.271</PositionLat>
+			<RoadID>000030</RoadID>
+			<RoadName>國道3號</RoadName>
+			<RoadClass>0</RoadClass>
+			<RoadDirection>S</RoadDirection>
+			<RoadSection>
+				<Start>柳營交流道</Start>
+				<End>烏山頭交流道</End>
+			</RoadSection>
+			<LocationMile>322K+678</LocationMile>
 		</CCTV>
 		<CCTV>
 			<CCTVID>CCTV-N3-S-323.050-M</CCTVID>
@@ -27906,6 +28266,60 @@
 			<LocationMile>328K+600</LocationMile>
 		</CCTV>
 		<CCTV>
+			<CCTVID>CCTV-N3-S-329-I-WS-1</CCTVID>
+			<SubAuthorityCode>NFB-SR</SubAuthorityCode>
+			<LinkID>0000301059050D</LinkID>
+			<VideoStreamURL>https://cctvs.freeway.gov.tw/live-view/mjpg/video.cgi?camera=1139</VideoStreamURL>
+			<LocationType>1</LocationType>
+			<PositionLon>120.3554</PositionLon>
+			<PositionLat>23.21</PositionLat>
+			<RoadID>000030</RoadID>
+			<RoadName>國道3號</RoadName>
+			<RoadClass>0</RoadClass>
+			<RoadDirection>S</RoadDirection>
+			<RoadSection>
+				<Start>柳營交流道</Start>
+				<End>烏山頭交流道</End>
+			</RoadSection>
+			<LocationMile>329K+027</LocationMile>
+		</CCTV>
+		<CCTV>
+			<CCTVID>CCTV-N3-S-329-O-NW-1</CCTVID>
+			<SubAuthorityCode>NFB-SR</SubAuthorityCode>
+			<LinkID>0000301059000D</LinkID>
+			<VideoStreamURL>https://cctvs.freeway.gov.tw/live-view/mjpg/video.cgi?camera=1137</VideoStreamURL>
+			<LocationType>1</LocationType>
+			<PositionLon>120.3562</PositionLon>
+			<PositionLat>23.215</PositionLat>
+			<RoadID>000030</RoadID>
+			<RoadName>國道3號</RoadName>
+			<RoadClass>0</RoadClass>
+			<RoadDirection>S</RoadDirection>
+			<RoadSection>
+				<Start>柳營交流道</Start>
+				<End>烏山頭交流道</End>
+			</RoadSection>
+			<LocationMile>329K+475</LocationMile>
+		</CCTV>
+		<CCTV>
+			<CCTVID>CCTV-N3-S-329-O-NW-2</CCTVID>
+			<SubAuthorityCode>NFB-SR</SubAuthorityCode>
+			<LinkID>0000301059000D</LinkID>
+			<VideoStreamURL>https://cctvs.freeway.gov.tw/live-view/mjpg/video.cgi?camera=1138</VideoStreamURL>
+			<LocationType>1</LocationType>
+			<PositionLon>120.3557</PositionLon>
+			<PositionLat>23.213</PositionLat>
+			<RoadID>000030</RoadID>
+			<RoadName>國道3號</RoadName>
+			<RoadClass>0</RoadClass>
+			<RoadDirection>S</RoadDirection>
+			<RoadSection>
+				<Start>柳營交流道</Start>
+				<End>烏山頭交流道</End>
+			</RoadSection>
+			<LocationMile>329K+670</LocationMile>
+		</CCTV>
+		<CCTV>
 			<CCTVID>CCTV-N3-S-329.752-M</CCTVID>
 			<SubAuthorityCode>NFB-SR</SubAuthorityCode>
 			<LinkID>0000300032960D</LinkID>
@@ -27958,6 +28372,60 @@
 				<End>官田系統交流道</End>
 			</RoadSection>
 			<LocationMile>334K+214</LocationMile>
+		</CCTV>
+		<CCTV>
+			<CCTVID>CCTV-N3-S-334-O-NW-1</CCTVID>
+			<SubAuthorityCode>NFB-SR</SubAuthorityCode>
+			<LinkID>0000301060000D</LinkID>
+			<VideoStreamURL>https://cctvs.freeway.gov.tw/live-view/mjpg/video.cgi?camera=1144</VideoStreamURL>
+			<LocationType>1</LocationType>
+			<PositionLon>120.3527</PositionLon>
+			<PositionLat>23.1693</PositionLat>
+			<RoadID>000030</RoadID>
+			<RoadName>國道3號</RoadName>
+			<RoadClass>0</RoadClass>
+			<RoadDirection>S</RoadDirection>
+			<RoadSection>
+				<Start>烏山頭交流道</Start>
+				<End>官田系統交流道</End>
+			</RoadSection>
+			<LocationMile>334K+560</LocationMile>
+		</CCTV>
+		<CCTV>
+			<CCTVID>CCTV-N3-S-334-C</CCTVID>
+			<SubAuthorityCode>NFB-SR</SubAuthorityCode>
+			<LinkID>0000300033500D</LinkID>
+			<VideoStreamURL>https://cctvs.freeway.gov.tw/live-view/mjpg/video.cgi?camera=1145</VideoStreamURL>
+			<LocationType>1</LocationType>
+			<PositionLon>120.3519</PositionLon>
+			<PositionLat>23.1668</PositionLat>
+			<RoadID>000030</RoadID>
+			<RoadName>國道3號</RoadName>
+			<RoadClass>0</RoadClass>
+			<RoadDirection>S</RoadDirection>
+			<RoadSection>
+				<Start>烏山頭交流道</Start>
+				<End>官田系統交流道</End>
+			</RoadSection>
+			<LocationMile>334K+850</LocationMile>
+		</CCTV>
+		<CCTV>
+			<CCTVID>CCTV-N3-S-334-I-ES-1</CCTVID>
+			<SubAuthorityCode>NFB-SR</SubAuthorityCode>
+			<LinkID>0000301060030D</LinkID>
+			<VideoStreamURL>https://cctvs.freeway.gov.tw/live-view/mjpg/video.cgi?camera=1146</VideoStreamURL>
+			<LocationType>1</LocationType>
+			<PositionLon>120.3509</PositionLon>
+			<PositionLat>23.1669</PositionLat>
+			<RoadID>000030</RoadID>
+			<RoadName>國道3號</RoadName>
+			<RoadClass>0</RoadClass>
+			<RoadDirection>S</RoadDirection>
+			<RoadSection>
+				<Start>烏山頭交流道</Start>
+				<End>官田系統交流道</End>
+			</RoadSection>
+			<LocationMile>334K+864</LocationMile>
 		</CCTV>
 		<CCTV>
 			<CCTVID>CCTV-N3-S-334.980-M</CCTVID>
@@ -28014,6 +28482,24 @@
 			<LocationMile>335K+074</LocationMile>
 		</CCTV>
 		<CCTV>
+			<CCTVID>CCTV-N3-S-334-I-WS-1</CCTVID>
+			<SubAuthorityCode>NFB-SR</SubAuthorityCode>
+			<LinkID>0000301060080D</LinkID>
+			<VideoStreamURL>https://cctvs.freeway.gov.tw/live-view/mjpg/video.cgi?camera=1142</VideoStreamURL>
+			<LocationType>1</LocationType>
+			<PositionLon>120.3498</PositionLon>
+			<PositionLat>23.1625</PositionLat>
+			<RoadID>000030</RoadID>
+			<RoadName>國道3號</RoadName>
+			<RoadClass>0</RoadClass>
+			<RoadDirection>S</RoadDirection>
+			<RoadSection>
+				<Start>官田系統交流道</Start>
+				<End>善化交流道</End>
+			</RoadSection>
+			<LocationMile>335K+367</LocationMile>
+		</CCTV>
+		<CCTV>
 			<CCTVID>CCTV-N3-S-337.239-M</CCTVID>
 			<SubAuthorityCode>NFB-SR</SubAuthorityCode>
 			<LinkID>0000300033700D</LinkID>
@@ -28050,6 +28536,42 @@
 			<LocationMile>339K+124</LocationMile>
 		</CCTV>
 		<CCTV>
+			<CCTVID>CCTV-N3-S-340-O-NW-1</CCTVID>
+			<SubAuthorityCode>NFB-SR</SubAuthorityCode>
+			<LinkID>0000301061000D</LinkID>
+			<VideoStreamURL>https://cctvs.freeway.gov.tw/live-view/mjpg/video.cgi?camera=1153</VideoStreamURL>
+			<LocationType>1</LocationType>
+			<PositionLon>120.3321</PositionLon>
+			<PositionLat>23.1261</PositionLat>
+			<RoadID>000030</RoadID>
+			<RoadName>國道3號</RoadName>
+			<RoadClass>0</RoadClass>
+			<RoadDirection>S</RoadDirection>
+			<RoadSection>
+				<Start>官田系統交流道</Start>
+				<End>善化交流道</End>
+			</RoadSection>
+			<LocationMile>339K+887</LocationMile>
+		</CCTV>
+		<CCTV>
+			<CCTVID>CCTV-N3-S-340-O-NW-2</CCTVID>
+			<SubAuthorityCode>NFB-SR</SubAuthorityCode>
+			<LinkID>0000301061000D</LinkID>
+			<VideoStreamURL>https://cctvs.freeway.gov.tw/live-view/mjpg/video.cgi?camera=1152</VideoStreamURL>
+			<LocationType>1</LocationType>
+			<PositionLon>120.3313</PositionLon>
+			<PositionLat>23.1246</PositionLat>
+			<RoadID>000030</RoadID>
+			<RoadName>國道3號</RoadName>
+			<RoadClass>0</RoadClass>
+			<RoadDirection>S</RoadDirection>
+			<RoadSection>
+				<Start>官田系統交流道</Start>
+				<End>善化交流道</End>
+			</RoadSection>
+			<LocationMile>340K+071</LocationMile>
+		</CCTV>
+		<CCTV>
 			<CCTVID>CCTV-N3-S-340.089-M</CCTVID>
 			<SubAuthorityCode>NFB-SR</SubAuthorityCode>
 			<LinkID>0000300033900D</LinkID>
@@ -28066,6 +28588,24 @@
 				<End>善化交流道</End>
 			</RoadSection>
 			<LocationMile>340K+089</LocationMile>
+		</CCTV>
+		<CCTV>
+			<CCTVID>CCTV-N3-S-340-I-WS-1</CCTVID>
+			<SubAuthorityCode>NFB-SR</SubAuthorityCode>
+			<LinkID>0000301061010D</LinkID>
+			<VideoStreamURL>https://cctvs.freeway.gov.tw/live-view/mjpg/video.cgi?camera=1155</VideoStreamURL>
+			<LocationType>1</LocationType>
+			<PositionLon>120.3308</PositionLon>
+			<PositionLat>23.1236</PositionLat>
+			<RoadID>000030</RoadID>
+			<RoadName>國道3號</RoadName>
+			<RoadClass>0</RoadClass>
+			<RoadDirection>S</RoadDirection>
+			<RoadSection>
+				<Start>善化交流道</Start>
+				<End>新化系統交流道</End>
+			</RoadSection>
+			<LocationMile>340K+202</LocationMile>
 		</CCTV>
 		<CCTV>
 			<CCTVID>CCTV-N3-S-341.005-M</CCTVID>
@@ -28104,6 +28644,24 @@
 			<LocationMile>342K+140</LocationMile>
 		</CCTV>
 		<CCTV>
+			<CCTVID>CCTV-N3-S-346-C-S-1</CCTVID>
+			<SubAuthorityCode>NFB-SR</SubAuthorityCode>
+			<LinkID>0000301062020D</LinkID>
+			<VideoStreamURL>https://cctvs.freeway.gov.tw/live-view/mjpg/video.cgi?camera=1158</VideoStreamURL>
+			<LocationType>1</LocationType>
+			<PositionLon>120.3238</PositionLon>
+			<PositionLat>23.0647</PositionLat>
+			<RoadID>000030</RoadID>
+			<RoadName>國道3號</RoadName>
+			<RoadClass>0</RoadClass>
+			<RoadDirection>S</RoadDirection>
+			<RoadSection>
+				<Start>善化交流道</Start>
+				<End>新化系統交流道</End>
+			</RoadSection>
+			<LocationMile>346K+000</LocationMile>
+		</CCTV>
+		<CCTV>
 			<CCTVID>CCTV-N3-S-346.190-M</CCTVID>
 			<SubAuthorityCode>NFB-SR</SubAuthorityCode>
 			<LinkID>0000300034610D</LinkID>
@@ -28120,6 +28678,24 @@
 				<End>新化系統交流道</End>
 			</RoadSection>
 			<LocationMile>346K+190</LocationMile>
+		</CCTV>
+		<CCTV>
+			<CCTVID>CCTV-N3-S-346-I-WS-1</CCTVID>
+			<SubAuthorityCode>NFB-SR</SubAuthorityCode>
+			<LinkID>0000301062090D</LinkID>
+			<VideoStreamURL>https://cctvs.freeway.gov.tw/live-view/mjpg/video.cgi?camera=1156</VideoStreamURL>
+			<LocationType>1</LocationType>
+			<PositionLon>120.3204</PositionLon>
+			<PositionLat>23.0642</PositionLat>
+			<RoadID>000030</RoadID>
+			<RoadName>國道3號</RoadName>
+			<RoadClass>0</RoadClass>
+			<RoadDirection>S</RoadDirection>
+			<RoadSection>
+				<Start>善化交流道</Start>
+				<End>新化系統交流道</End>
+			</RoadSection>
+			<LocationMile>346K+200</LocationMile>
 		</CCTV>
 		<CCTV>
 			<CCTVID>CCTV-N3-S-347.065-M</CCTVID>
@@ -28390,6 +28966,24 @@
 				<End>田寮交流道</End>
 			</RoadSection>
 			<LocationMile>369K+400</LocationMile>
+		</CCTV>
+		<CCTV>
+			<CCTVID>CCTV-N3-S-369-I-WS-1</CCTVID>
+			<SubAuthorityCode>NFB-SR</SubAuthorityCode>
+			<LinkID>0000301064010E</LinkID>
+			<VideoStreamURL>https://cctvs.freeway.gov.tw/live-view/mjpg/video.cgi?camera=1162</VideoStreamURL>
+			<LocationType>1</LocationType>
+			<PositionLon>120.3601</PositionLon>
+			<PositionLat>22.8803</PositionLat>
+			<RoadID>000030</RoadID>
+			<RoadName>國道3號</RoadName>
+			<RoadClass>0</RoadClass>
+			<RoadDirection>S</RoadDirection>
+			<RoadSection>
+				<Start>田寮交流道</Start>
+				<End>燕巢系統交流道</End>
+			</RoadSection>
+			<LocationMile>369K+535</LocationMile>
 		</CCTV>
 		<CCTV>
 			<CCTVID>CCTV-N3-S-370.258-M</CCTVID>
@@ -28680,6 +29274,42 @@
 			<LocationMile>382K+012</LocationMile>
 		</CCTV>
 		<CCTV>
+			<CCTVID>CCTV-N3-S-383-I-ES-1</CCTVID>
+			<SubAuthorityCode>NFB-SR</SubAuthorityCode>
+			<LinkID>0000301065000E</LinkID>
+			<VideoStreamURL>https://cctvs.freeway.gov.tw/live-view/mjpg/video.cgi?camera=1170</VideoStreamURL>
+			<LocationType>1</LocationType>
+			<PositionLon>120.4261</PositionLon>
+			<PositionLat>22.7875</PositionLat>
+			<RoadID>000030</RoadID>
+			<RoadName>國道3號</RoadName>
+			<RoadClass>0</RoadClass>
+			<RoadDirection>S</RoadDirection>
+			<RoadSection>
+				<Start>田寮交流道</Start>
+				<End>燕巢系統交流道</End>
+			</RoadSection>
+			<LocationMile>382K+700</LocationMile>
+		</CCTV>
+		<CCTV>
+			<CCTVID>CCTV-N3-S-383-I-WS-1</CCTVID>
+			<SubAuthorityCode>NFB-SR</SubAuthorityCode>
+			<LinkID>0000301065040E</LinkID>
+			<VideoStreamURL>https://cctvs.freeway.gov.tw/live-view/mjpg/video.cgi?camera=1168</VideoStreamURL>
+			<LocationType>1</LocationType>
+			<PositionLon>120.4247</PositionLon>
+			<PositionLat>22.7812</PositionLat>
+			<RoadID>000030</RoadID>
+			<RoadName>國道3號</RoadName>
+			<RoadClass>0</RoadClass>
+			<RoadDirection>S</RoadDirection>
+			<RoadSection>
+				<Start>燕巢系統交流道</Start>
+				<End>九如交流道</End>
+			</RoadSection>
+			<LocationMile>383K+000</LocationMile>
+		</CCTV>
+		<CCTV>
 			<CCTVID>CCTV-N3-S-383.070-M</CCTVID>
 			<SubAuthorityCode>NFB-SR</SubAuthorityCode>
 			<LinkID>0000300038300E</LinkID>
@@ -28788,6 +29418,42 @@
 			<LocationMile>388K+706</LocationMile>
 		</CCTV>
 		<CCTV>
+			<CCTVID>CCTV-N3-S-391-I-WS-1</CCTVID>
+			<SubAuthorityCode>NFB-SR</SubAuthorityCode>
+			<LinkID>0000301066000T</LinkID>
+			<VideoStreamURL>https://cctvs.freeway.gov.tw/live-view/mjpg/video.cgi?camera=1174</VideoStreamURL>
+			<LocationType>1</LocationType>
+			<PositionLon>120.4906</PositionLon>
+			<PositionLat>22.751</PositionLat>
+			<RoadID>000030</RoadID>
+			<RoadName>國道3號</RoadName>
+			<RoadClass>0</RoadClass>
+			<RoadDirection>S</RoadDirection>
+			<RoadSection>
+				<Start>燕巢系統交流道</Start>
+				<End>九如交流道</End>
+			</RoadSection>
+			<LocationMile>391K+000</LocationMile>
+		</CCTV>
+		<CCTV>
+			<CCTVID>CCTV-N3-S-391-I-WS-2</CCTVID>
+			<SubAuthorityCode>NFB-SR</SubAuthorityCode>
+			<LinkID>0000301066050T</LinkID>
+			<VideoStreamURL>https://cctvs.freeway.gov.tw/live-view/mjpg/video.cgi?camera=1176</VideoStreamURL>
+			<LocationType>1</LocationType>
+			<PositionLon>120.4902</PositionLon>
+			<PositionLat>22.754</PositionLat>
+			<RoadID>000030</RoadID>
+			<RoadName>國道3號</RoadName>
+			<RoadClass>0</RoadClass>
+			<RoadDirection>S</RoadDirection>
+			<RoadSection>
+				<Start>燕巢系統交流道</Start>
+				<End>九如交流道</End>
+			</RoadSection>
+			<LocationMile>391K+000</LocationMile>
+		</CCTV>
+		<CCTV>
 			<CCTVID>CCTV-N3-S-393.660-M</CCTVID>
 			<SubAuthorityCode>NFB-SR</SubAuthorityCode>
 			<LinkID>0000300039300T</LinkID>
@@ -28840,6 +29506,24 @@
 				<End>屏東交流道</End>
 			</RoadSection>
 			<LocationMile>396K+141</LocationMile>
+		</CCTV>
+		<CCTV>
+			<CCTVID>CCTV-N3-S-396.639-L</CCTVID>
+			<SubAuthorityCode>NFB-SR</SubAuthorityCode>
+			<LinkID>0000300039700T</LinkID>
+			<VideoStreamURL>https://cctvs.freeway.gov.tw/live-view/mjpg/video.cgi?camera=1177</VideoStreamURL>
+			<LocationType>1</LocationType>
+			<PositionLon>120.5286</PositionLon>
+			<PositionLat>22.7156</PositionLat>
+			<RoadID>000030</RoadID>
+			<RoadName>國道3號</RoadName>
+			<RoadClass>0</RoadClass>
+			<RoadDirection>S</RoadDirection>
+			<RoadSection>
+				<Start>屏東交流道</Start>
+				<End>長治交流道</End>
+			</RoadSection>
+			<LocationMile>396K+639</LocationMile>
 		</CCTV>
 		<CCTV>
 			<CCTVID>CCTV-N3-S-397.563-M</CCTVID>
@@ -28914,6 +29598,24 @@
 			<LocationMile>405K+836</LocationMile>
 		</CCTV>
 		<CCTV>
+			<CCTVID>CCTV-N3-S-407-O-NE-1</CCTVID>
+			<SubAuthorityCode>NFB-SR</SubAuthorityCode>
+			<LinkID>0000301069000T</LinkID>
+			<VideoStreamURL>https://cctvs.freeway.gov.tw/live-view/mjpg/video.cgi?camera=1179</VideoStreamURL>
+			<LocationType>1</LocationType>
+			<PositionLon>120.5429</PositionLon>
+			<PositionLat>22.6473</PositionLat>
+			<RoadID>000030</RoadID>
+			<RoadName>國道3號</RoadName>
+			<RoadClass>0</RoadClass>
+			<RoadDirection>S</RoadDirection>
+			<RoadSection>
+				<Start>長治交流道</Start>
+				<End>麟洛交流道</End>
+			</RoadSection>
+			<LocationMile>406K+433</LocationMile>
+		</CCTV>
+		<CCTV>
 			<CCTVID>CCTV-N3-S-407.286-M</CCTVID>
 			<SubAuthorityCode>NFB-SR</SubAuthorityCode>
 			<LinkID>0000300040700T</LinkID>
@@ -28968,6 +29670,24 @@
 			<LocationMile>413K+747</LocationMile>
 		</CCTV>
 		<CCTV>
+			<CCTVID>CCTV-N3-S-414.567-M</CCTVID>
+			<SubAuthorityCode>NFB-SR</SubAuthorityCode>
+			<LinkID>0000300041400T</LinkID>
+			<VideoStreamURL>https://cctvs.freeway.gov.tw/live-view/mjpg/video.cgi?camera=1183</VideoStreamURL>
+			<LocationType>1</LocationType>
+			<PositionLon>120.5265</PositionLon>
+			<PositionLat>22.5773</PositionLat>
+			<RoadID>000030</RoadID>
+			<RoadName>國道3號</RoadName>
+			<RoadClass>0</RoadClass>
+			<RoadDirection>S</RoadDirection>
+			<RoadSection>
+				<Start>麟洛交流道</Start>
+				<End>竹田系統交流道</End>
+			</RoadSection>
+			<LocationMile>414K+567</LocationMile>
+		</CCTV>
+		<CCTV>
 			<CCTVID>CCTV-N3-S-414.971-M</CCTVID>
 			<SubAuthorityCode>NFB-SR</SubAuthorityCode>
 			<LinkID>0000300041400T</LinkID>
@@ -28984,6 +29704,78 @@
 				<End>竹田系統交流道</End>
 			</RoadSection>
 			<LocationMile>414K+971</LocationMile>
+		</CCTV>
+		<CCTV>
+			<CCTVID>CCTV-N3-S-415-I-ES-1</CCTVID>
+			<SubAuthorityCode>NFB-SR</SubAuthorityCode>
+			<LinkID>0000301070020T</LinkID>
+			<VideoStreamURL>https://cctvs.freeway.gov.tw/live-view/mjpg/video.cgi?camera=1189</VideoStreamURL>
+			<LocationType>1</LocationType>
+			<PositionLon>120.528</PositionLon>
+			<PositionLat>22.5718</PositionLat>
+			<RoadID>000030</RoadID>
+			<RoadName>國道3號</RoadName>
+			<RoadClass>0</RoadClass>
+			<RoadDirection>S</RoadDirection>
+			<RoadSection>
+				<Start>竹田系統交流道</Start>
+				<End>崁頂交流道</End>
+			</RoadSection>
+			<LocationMile>415K+200</LocationMile>
+		</CCTV>
+		<CCTV>
+			<CCTVID>CCTV-N3-S-415-O-NE-1</CCTVID>
+			<SubAuthorityCode>NFB-SR</SubAuthorityCode>
+			<LinkID>0000301070020T</LinkID>
+			<VideoStreamURL>https://cctvs.freeway.gov.tw/live-view/mjpg/video.cgi?camera=1191</VideoStreamURL>
+			<LocationType>1</LocationType>
+			<PositionLon>120.5297</PositionLon>
+			<PositionLat>22.5712</PositionLat>
+			<RoadID>000030</RoadID>
+			<RoadName>國道3號</RoadName>
+			<RoadClass>0</RoadClass>
+			<RoadDirection>S</RoadDirection>
+			<RoadSection>
+				<Start>竹田系統交流道</Start>
+				<End>崁頂交流道</End>
+			</RoadSection>
+			<LocationMile>415K+260</LocationMile>
+		</CCTV>
+		<CCTV>
+			<CCTVID>CCTV-N3-S-415-I-ES-2</CCTVID>
+			<SubAuthorityCode>NFB-SR</SubAuthorityCode>
+			<LinkID>0000301070050T</LinkID>
+			<VideoStreamURL>https://cctvs.freeway.gov.tw/live-view/mjpg/video.cgi?camera=1192</VideoStreamURL>
+			<LocationType>1</LocationType>
+			<PositionLon>120.5277</PositionLon>
+			<PositionLat>22.5705</PositionLat>
+			<RoadID>000030</RoadID>
+			<RoadName>國道3號</RoadName>
+			<RoadClass>0</RoadClass>
+			<RoadDirection>S</RoadDirection>
+			<RoadSection>
+				<Start>竹田系統交流道</Start>
+				<End>崁頂交流道</End>
+			</RoadSection>
+			<LocationMile>415K+300</LocationMile>
+		</CCTV>
+		<CCTV>
+			<CCTVID>CCTV-N3-S-415-I-WS-1</CCTVID>
+			<SubAuthorityCode>NFB-SR</SubAuthorityCode>
+			<LinkID>0000301070040T</LinkID>
+			<VideoStreamURL>https://cctvs.freeway.gov.tw/live-view/mjpg/video.cgi?camera=1194</VideoStreamURL>
+			<LocationType>1</LocationType>
+			<PositionLon>120.5255</PositionLon>
+			<PositionLat>22.5706</PositionLat>
+			<RoadID>000030</RoadID>
+			<RoadName>國道3號</RoadName>
+			<RoadClass>0</RoadClass>
+			<RoadDirection>S</RoadDirection>
+			<RoadSection>
+				<Start>竹田系統交流道</Start>
+				<End>崁頂交流道</End>
+			</RoadSection>
+			<LocationMile>415K+300</LocationMile>
 		</CCTV>
 		<CCTV>
 			<CCTVID>CCTV-N3-S-415.550-M</CCTVID>
@@ -29074,6 +29866,24 @@
 				<End>崁頂交流道</End>
 			</RoadSection>
 			<LocationMile>420K+920</LocationMile>
+		</CCTV>
+		<CCTV>
+			<CCTVID>CCTV-N3-S-421.568-M</CCTVID>
+			<SubAuthorityCode>NFB-SR</SubAuthorityCode>
+			<LinkID>0000300042100T</LinkID>
+			<VideoStreamURL>https://cctvs.freeway.gov.tw/live-view/mjpg/video.cgi?camera=1195</VideoStreamURL>
+			<LocationType>1</LocationType>
+			<PositionLon>120.5244</PositionLon>
+			<PositionLat>22.5164</PositionLat>
+			<RoadID>000030</RoadID>
+			<RoadName>國道3號</RoadName>
+			<RoadClass>0</RoadClass>
+			<RoadDirection>S</RoadDirection>
+			<RoadSection>
+				<Start>崁頂交流道</Start>
+				<End>南州交流道</End>
+			</RoadSection>
+			<LocationMile>421K+568</LocationMile>
 		</CCTV>
 		<CCTV>
 			<CCTVID>CCTV-N3-S-422.703-M</CCTVID>
@@ -29202,6 +30012,24 @@
 			<LocationMile>269K+315</LocationMile>
 		</CCTV>
 		<CCTV>
+			<CCTVID>CCTV-N3-N-271-O-SE-1</CCTVID>
+			<SubAuthorityCode>NFB-SR</SubAuthorityCode>
+			<LinkID>0000301152040P</LinkID>
+			<VideoStreamURL>https://cctvs.freeway.gov.tw/live-view/mjpg/video.cgi?camera=1104</VideoStreamURL>
+			<LocationType>1</LocationType>
+			<PositionLon>120.5734</PositionLon>
+			<PositionLat>23.646</PositionLat>
+			<RoadID>000030</RoadID>
+			<RoadName>國道3號</RoadName>
+			<RoadClass>0</RoadClass>
+			<RoadDirection>N</RoadDirection>
+			<RoadSection>
+				<Start>古坑服務區</Start>
+				<End>古坑(南)交流道</End>
+			</RoadSection>
+			<LocationMile>271K+276</LocationMile>
+		</CCTV>
+		<CCTV>
 			<CCTVID>CCTV-N3-N-271.280-M</CCTVID>
 			<SubAuthorityCode>NFB-SR</SubAuthorityCode>
 			<LinkID>0000300127100P</LinkID>
@@ -29274,6 +30102,24 @@
 			<LocationMile>276K+630</LocationMile>
 		</CCTV>
 		<CCTV>
+			<CCTVID>CCTV-N3-N-279-I-SE-1</CCTVID>
+			<SubAuthorityCode>NFB-SR</SubAuthorityCode>
+			<LinkID>0000301153000Q</LinkID>
+			<VideoStreamURL>https://cctvs.freeway.gov.tw/live-view/mjpg/video.cgi?camera=1106</VideoStreamURL>
+			<LocationType>1</LocationType>
+			<PositionLon>120.5224</PositionLon>
+			<PositionLat>23.5934</PositionLat>
+			<RoadID>000030</RoadID>
+			<RoadName>國道3號</RoadName>
+			<RoadClass>0</RoadClass>
+			<RoadDirection>N</RoadDirection>
+			<RoadSection>
+				<Start>梅山交流道</Start>
+				<End>古坑服務區</End>
+			</RoadSection>
+			<LocationMile>279K+000</LocationMile>
+		</CCTV>
+		<CCTV>
 			<CCTVID>CCTV-N3-N-279.255-M</CCTVID>
 			<SubAuthorityCode>NFB-SR</SubAuthorityCode>
 			<LinkID>0000300127910Q</LinkID>
@@ -29299,9 +30145,9 @@
 			<LocationType>1</LocationType>
 			<PositionLon>120.525184632</PositionLon>
 			<PositionLat>23.594810486</PositionLat>
-			<RoadID>670613</RoadID>
-			<RoadName>國道3號</RoadName>
-			<RoadClass>0</RoadClass>
+			<RoadID>670613Q</RoadID>
+			<RoadName>大埔美園區七路</RoadName>
+			<RoadClass>6</RoadClass>
 			<RoadDirection>N</RoadDirection>
 			<RoadSection>
 				<Start>竹崎交流道</Start>
@@ -29444,6 +30290,24 @@
 			<PositionLon>120.488456727</PositionLon>
 			<PositionLat>23.519361496</PositionLat>
 			<RoadID>401660</RoadID>
+			<RoadName>166</RoadName>
+			<RoadClass>4</RoadClass>
+			<RoadDirection>E</RoadDirection>
+			<RoadSection>
+				<Start>竹崎交流道</Start>
+				<End>梅山交流道</End>
+			</RoadSection>
+			<LocationMile>289K+100</LocationMile>
+		</CCTV>
+		<CCTV>
+			<CCTVID>CCTV-N3-N-290-I-EN-1</CCTVID>
+			<SubAuthorityCode>NFB-SR</SubAuthorityCode>
+			<LinkID>0000301154000Q</LinkID>
+			<VideoStreamURL>https://cctvs.freeway.gov.tw/live-view/mjpg/video.cgi?camera=1110</VideoStreamURL>
+			<LocationType>1</LocationType>
+			<PositionLon>120.4852</PositionLon>
+			<PositionLat>23.5229</PositionLat>
+			<RoadID>000030</RoadID>
 			<RoadName>國道3號</RoadName>
 			<RoadClass>0</RoadClass>
 			<RoadDirection>N</RoadDirection>
@@ -29451,7 +30315,7 @@
 				<Start>竹崎交流道</Start>
 				<End>梅山交流道</End>
 			</RoadSection>
-			<LocationMile>289K+100</LocationMile>
+			<LocationMile>290K+000</LocationMile>
 		</CCTV>
 		<CCTV>
 			<CCTVID>CCTV-N3-N-291.3-L-N-1</CCTVID>
@@ -29750,9 +30614,9 @@
 			<PositionLon>120.48954773</PositionLon>
 			<PositionLat>23.449522019</PositionLat>
 			<RoadID>300180</RoadID>
-			<RoadName>國道3號</RoadName>
-			<RoadClass>0</RoadClass>
-			<RoadDirection>N</RoadDirection>
+			<RoadName>台18線</RoadName>
+			<RoadClass>3</RoadClass>
+			<RoadDirection>E</RoadDirection>
 			<RoadSection>
 				<Start>水上系統交流道</Start>
 				<End>中埔交流道</End>
@@ -29830,6 +30694,96 @@
 				<End>中埔交流道</End>
 			</RoadSection>
 			<LocationMile>299K+654</LocationMile>
+		</CCTV>
+		<CCTV>
+			<CCTVID>CCTV-N3-N-300-I-WN-3</CCTVID>
+			<SubAuthorityCode>NFB-SR</SubAuthorityCode>
+			<LinkID>0000301156010Q</LinkID>
+			<VideoStreamURL>https://cctvs.freeway.gov.tw/live-view/mjpg/video.cgi?camera=1115</VideoStreamURL>
+			<LocationType>1</LocationType>
+			<PositionLon>120.4714</PositionLon>
+			<PositionLat>23.4311</PositionLat>
+			<RoadID>000030</RoadID>
+			<RoadName>國道3號</RoadName>
+			<RoadClass>0</RoadClass>
+			<RoadDirection>N</RoadDirection>
+			<RoadSection>
+				<Start>水上系統交流道</Start>
+				<End>中埔交流道</End>
+			</RoadSection>
+			<LocationMile>300K+000</LocationMile>
+		</CCTV>
+		<CCTV>
+			<CCTVID>CCTV-N3-N-300.945-M</CCTVID>
+			<SubAuthorityCode>NFB-SR</SubAuthorityCode>
+			<LinkID>0000300130000Q</LinkID>
+			<VideoStreamURL>https://cctvs.freeway.gov.tw/live-view/mjpg/video.cgi?camera=1117</VideoStreamURL>
+			<LocationType>1</LocationType>
+			<PositionLon>120.4661</PositionLon>
+			<PositionLat>23.4257</PositionLat>
+			<RoadID>000030</RoadID>
+			<RoadName>國道3號</RoadName>
+			<RoadClass>0</RoadClass>
+			<RoadDirection>N</RoadDirection>
+			<RoadSection>
+				<Start>水上系統交流道</Start>
+				<End>中埔交流道</End>
+			</RoadSection>
+			<LocationMile>300K+000</LocationMile>
+		</CCTV>
+		<CCTV>
+			<CCTVID>CCTV-N3-N-300-O-SW-1</CCTVID>
+			<SubAuthorityCode>NFB-SR</SubAuthorityCode>
+			<LinkID>0000301156000Q</LinkID>
+			<VideoStreamURL>https://cctvs.freeway.gov.tw/live-view/mjpg/video.cgi?camera=1118</VideoStreamURL>
+			<LocationType>1</LocationType>
+			<PositionLon>120.4688</PositionLon>
+			<PositionLat>23.4296</PositionLat>
+			<RoadID>000030</RoadID>
+			<RoadName>國道3號</RoadName>
+			<RoadClass>0</RoadClass>
+			<RoadDirection>N</RoadDirection>
+			<RoadSection>
+				<Start>水上系統交流道</Start>
+				<End>中埔交流道</End>
+			</RoadSection>
+			<LocationMile>300K+400</LocationMile>
+		</CCTV>
+		<CCTV>
+			<CCTVID>CCTV-N3-N-300-I-WN-2</CCTVID>
+			<SubAuthorityCode>NFB-SR</SubAuthorityCode>
+			<LinkID>0000301156000Q</LinkID>
+			<VideoStreamURL>https://cctvs.freeway.gov.tw/live-view/mjpg/video.cgi?camera=1114</VideoStreamURL>
+			<LocationType>1</LocationType>
+			<PositionLon>120.4695</PositionLon>
+			<PositionLat>23.4295</PositionLat>
+			<RoadID>000030</RoadID>
+			<RoadName>國道3號</RoadName>
+			<RoadClass>0</RoadClass>
+			<RoadDirection>N</RoadDirection>
+			<RoadSection>
+				<Start>水上系統交流道</Start>
+				<End>中埔交流道</End>
+			</RoadSection>
+			<LocationMile>300K+430</LocationMile>
+		</CCTV>
+		<CCTV>
+			<CCTVID>CCTV-N3-N-300-I-WN-1</CCTVID>
+			<SubAuthorityCode>NFB-SR</SubAuthorityCode>
+			<LinkID>0000301156010Q</LinkID>
+			<VideoStreamURL>https://cctvs.freeway.gov.tw/live-view/mjpg/video.cgi?camera=1113</VideoStreamURL>
+			<LocationType>1</LocationType>
+			<PositionLon>120.4671</PositionLon>
+			<PositionLat>23.4293</PositionLat>
+			<RoadID>000030</RoadID>
+			<RoadName>國道3號</RoadName>
+			<RoadClass>0</RoadClass>
+			<RoadDirection>N</RoadDirection>
+			<RoadSection>
+				<Start>水上系統交流道</Start>
+				<End>中埔交流道</End>
+			</RoadSection>
+			<LocationMile>300K+460</LocationMile>
 		</CCTV>
 		<CCTV>
 			<CCTVID>CCTV-N3-N-300.605-M</CCTVID>
@@ -29922,6 +30876,24 @@
 			<LocationMile>310K+310</LocationMile>
 		</CCTV>
 		<CCTV>
+			<CCTVID>CCTV-N3-N-311-I-EN-1</CCTVID>
+			<SubAuthorityCode>NFB-SR</SubAuthorityCode>
+			<LinkID>0000301157050D</LinkID>
+			<VideoStreamURL>https://cctvs.freeway.gov.tw/live-view/mjpg/video.cgi?camera=1124</VideoStreamURL>
+			<LocationType>1</LocationType>
+			<PositionLon>120.4397</PositionLon>
+			<PositionLat>23.3498</PositionLat>
+			<RoadID>000030</RoadID>
+			<RoadName>國道3號</RoadName>
+			<RoadClass>0</RoadClass>
+			<RoadDirection>N</RoadDirection>
+			<RoadSection>
+				<Start>白河交流道</Start>
+				<End>水上系統交流道</End>
+			</RoadSection>
+			<LocationMile>311K+425</LocationMile>
+		</CCTV>
+		<CCTV>
 			<CCTVID>CCTV-N3-N-311.7-L-W-1</CCTVID>
 			<SubAuthorityCode>NFB-SR</SubAuthorityCode>
 			<LinkID>4017200003493D</LinkID>
@@ -29930,6 +30902,24 @@
 			<PositionLon>120.442649842</PositionLon>
 			<PositionLat>23.347400666</PositionLat>
 			<RoadID>401720</RoadID>
+			<RoadName>172</RoadName>
+			<RoadClass>4</RoadClass>
+			<RoadDirection>E</RoadDirection>
+			<RoadSection>
+				<Start>東山服務區</Start>
+				<End>白河交流道</End>
+			</RoadSection>
+			<LocationMile>311K+700</LocationMile>
+		</CCTV>
+		<CCTV>
+			<CCTVID>CCTV-N3-N-311-O-SE-1</CCTVID>
+			<SubAuthorityCode>NFB-SR</SubAuthorityCode>
+			<LinkID>0000301157000D</LinkID>
+			<VideoStreamURL>https://cctvs.freeway.gov.tw/live-view/mjpg/video.cgi?camera=1123</VideoStreamURL>
+			<LocationType>1</LocationType>
+			<PositionLon>120.4396</PositionLon>
+			<PositionLat>23.3453</PositionLat>
+			<RoadID>000030</RoadID>
 			<RoadName>國道3號</RoadName>
 			<RoadClass>0</RoadClass>
 			<RoadDirection>N</RoadDirection>
@@ -29937,7 +30927,7 @@
 				<Start>東山服務區</Start>
 				<End>白河交流道</End>
 			</RoadSection>
-			<LocationMile>311K+700</LocationMile>
+			<LocationMile>311K+910</LocationMile>
 		</CCTV>
 		<CCTV>
 			<CCTVID>CCTV-N3-N-312.732-M</CCTVID>
@@ -30048,6 +31038,24 @@
 			<LocationMile>321K+105</LocationMile>
 		</CCTV>
 		<CCTV>
+			<CCTVID>CCTV-N3-N-321.649-M</CCTVID>
+			<SubAuthorityCode>NFB-SR</SubAuthorityCode>
+			<LinkID>0000300132120D</LinkID>
+			<VideoStreamURL>https://cctvs.freeway.gov.tw/live-view/mjpg/video.cgi?camera=1133</VideoStreamURL>
+			<LocationType>1</LocationType>
+			<PositionLon>120.3863</PositionLon>
+			<PositionLat>23.2765</PositionLat>
+			<RoadID>000030</RoadID>
+			<RoadName>國道3號</RoadName>
+			<RoadClass>0</RoadClass>
+			<RoadDirection>N</RoadDirection>
+			<RoadSection>
+				<Start>柳營交流道</Start>
+				<End>東山服務區</End>
+			</RoadSection>
+			<LocationMile>321K+649</LocationMile>
+		</CCTV>
+		<CCTV>
 			<CCTVID>CCTV-N3-N-322.360-M</CCTVID>
 			<SubAuthorityCode>NFB-SR</SubAuthorityCode>
 			<LinkID>0000300132200D</LinkID>
@@ -30064,6 +31072,42 @@
 				<End>東山服務區</End>
 			</RoadSection>
 			<LocationMile>322K+360</LocationMile>
+		</CCTV>
+		<CCTV>
+			<CCTVID>CCTV-N3-N-323.288-M</CCTVID>
+			<SubAuthorityCode>NFB-SR</SubAuthorityCode>
+			<LinkID>0000300132300D</LinkID>
+			<VideoStreamURL>https://cctvs.freeway.gov.tw/live-view/mjpg/video.cgi?camera=1131</VideoStreamURL>
+			<LocationType>1</LocationType>
+			<PositionLon>120.3766</PositionLon>
+			<PositionLat>23.2656</PositionLat>
+			<RoadID>000030</RoadID>
+			<RoadName>國道3號</RoadName>
+			<RoadClass>0</RoadClass>
+			<RoadDirection>N</RoadDirection>
+			<RoadSection>
+				<Start>烏山頭交流道</Start>
+				<End>柳營交流道</End>
+			</RoadSection>
+			<LocationMile>323K+288</LocationMile>
+		</CCTV>
+		<CCTV>
+			<CCTVID>CCTV-N3-N-323.996-M</CCTVID>
+			<SubAuthorityCode>NFB-SR</SubAuthorityCode>
+			<LinkID>0000300132300D</LinkID>
+			<VideoStreamURL>https://cctvs.freeway.gov.tw/live-view/mjpg/video.cgi?camera=1130</VideoStreamURL>
+			<LocationType>1</LocationType>
+			<PositionLon>120.3763</PositionLon>
+			<PositionLat>23.2594</PositionLat>
+			<RoadID>000030</RoadID>
+			<RoadName>國道3號</RoadName>
+			<RoadClass>0</RoadClass>
+			<RoadDirection>N</RoadDirection>
+			<RoadSection>
+				<Start>烏山頭交流道</Start>
+				<End>柳營交流道</End>
+			</RoadSection>
+			<LocationMile>323K+996</LocationMile>
 		</CCTV>
 		<CCTV>
 			<CCTVID>CCTV-N3-N-324.680-M</CCTVID>
@@ -30100,6 +31144,60 @@
 				<End>柳營交流道</End>
 			</RoadSection>
 			<LocationMile>328K+040</LocationMile>
+		</CCTV>
+		<CCTV>
+			<CCTVID>CCTV-N3-N-329.566-M</CCTVID>
+			<SubAuthorityCode>NFB-SR</SubAuthorityCode>
+			<LinkID>0000300132900D</LinkID>
+			<VideoStreamURL>https://cctvs.freeway.gov.tw/live-view/mjpg/video.cgi?camera=1136</VideoStreamURL>
+			<LocationType>1</LocationType>
+			<PositionLon>120.3563</PositionLon>
+			<PositionLat>23.2138</PositionLat>
+			<RoadID>000030</RoadID>
+			<RoadName>國道3號</RoadName>
+			<RoadClass>0</RoadClass>
+			<RoadDirection>N</RoadDirection>
+			<RoadSection>
+				<Start>烏山頭交流道</Start>
+				<End>柳營交流道</End>
+			</RoadSection>
+			<LocationMile>329K+566</LocationMile>
+		</CCTV>
+		<CCTV>
+			<CCTVID>CCTV-N3-N-329-O-SE-2</CCTVID>
+			<SubAuthorityCode>NFB-SR</SubAuthorityCode>
+			<LinkID>0000301159000D</LinkID>
+			<VideoStreamURL>https://cctvs.freeway.gov.tw/live-view/mjpg/video.cgi?camera=1135</VideoStreamURL>
+			<LocationType>1</LocationType>
+			<PositionLon>120.3561</PositionLon>
+			<PositionLat>23.2117</PositionLat>
+			<RoadID>000030</RoadID>
+			<RoadName>國道3號</RoadName>
+			<RoadClass>0</RoadClass>
+			<RoadDirection>N</RoadDirection>
+			<RoadSection>
+				<Start>官田系統交流道</Start>
+				<End>烏山頭交流道</End>
+			</RoadSection>
+			<LocationMile>329K+832</LocationMile>
+		</CCTV>
+		<CCTV>
+			<CCTVID>CCTV-N3-N-329-O-SE-1</CCTVID>
+			<SubAuthorityCode>NFB-SR</SubAuthorityCode>
+			<LinkID>0000301159000D</LinkID>
+			<VideoStreamURL>https://cctvs.freeway.gov.tw/live-view/mjpg/video.cgi?camera=1134</VideoStreamURL>
+			<LocationType>1</LocationType>
+			<PositionLon>120.3559</PositionLon>
+			<PositionLat>23.2101</PositionLat>
+			<RoadID>000030</RoadID>
+			<RoadName>國道3號</RoadName>
+			<RoadClass>0</RoadClass>
+			<RoadDirection>N</RoadDirection>
+			<RoadSection>
+				<Start>官田系統交流道</Start>
+				<End>烏山頭交流道</End>
+			</RoadSection>
+			<LocationMile>329K+892</LocationMile>
 		</CCTV>
 		<CCTV>
 			<CCTVID>CCTV-N3-N-330.764-M</CCTVID>
@@ -30174,6 +31272,78 @@
 			<LocationMile>334K+674</LocationMile>
 		</CCTV>
 		<CCTV>
+			<CCTVID>CCTV-N3-N-334-C</CCTVID>
+			<SubAuthorityCode>NFB-SR</SubAuthorityCode>
+			<LinkID>0000300133500D</LinkID>
+			<VideoStreamURL>https://cctvs.freeway.gov.tw/live-view/mjpg/video.cgi?camera=1141</VideoStreamURL>
+			<LocationType>1</LocationType>
+			<PositionLon>120.3523</PositionLon>
+			<PositionLat>23.1659</PositionLat>
+			<RoadID>000030</RoadID>
+			<RoadName>國道3號</RoadName>
+			<RoadClass>0</RoadClass>
+			<RoadDirection>N</RoadDirection>
+			<RoadSection>
+				<Start>善化交流道</Start>
+				<End>官田系統交流道</End>
+			</RoadSection>
+			<LocationMile>334K+929</LocationMile>
+		</CCTV>
+		<CCTV>
+			<CCTVID>CCTV-N3-N-334-I-EN-1</CCTVID>
+			<SubAuthorityCode>NFB-SR</SubAuthorityCode>
+			<LinkID>0000301160080D</LinkID>
+			<VideoStreamURL>https://cctvs.freeway.gov.tw/live-view/mjpg/video.cgi?camera=1143</VideoStreamURL>
+			<LocationType>1</LocationType>
+			<PositionLon>120.3537</PositionLon>
+			<PositionLat>23.1694</PositionLat>
+			<RoadID>000030</RoadID>
+			<RoadName>國道3號</RoadName>
+			<RoadClass>0</RoadClass>
+			<RoadDirection>N</RoadDirection>
+			<RoadSection>
+				<Start>善化交流道</Start>
+				<End>官田系統交流道</End>
+			</RoadSection>
+			<LocationMile>334K+929</LocationMile>
+		</CCTV>
+		<CCTV>
+			<CCTVID>CCTV-N3-N-334-I-WN-1</CCTVID>
+			<SubAuthorityCode>NFB-SR</SubAuthorityCode>
+			<LinkID>0000301160080D</LinkID>
+			<VideoStreamURL>https://cctvs.freeway.gov.tw/live-view/mjpg/video.cgi?camera=1147</VideoStreamURL>
+			<LocationType>1</LocationType>
+			<PositionLon>120.3538</PositionLon>
+			<PositionLat>23.1694</PositionLat>
+			<RoadID>000030</RoadID>
+			<RoadName>國道3號</RoadName>
+			<RoadClass>0</RoadClass>
+			<RoadDirection>N</RoadDirection>
+			<RoadSection>
+				<Start>善化交流道</Start>
+				<End>官田系統交流道</End>
+			</RoadSection>
+			<LocationMile>334K+954</LocationMile>
+		</CCTV>
+		<CCTV>
+			<CCTVID>CCTV-N3-N-334-O-SE-1</CCTVID>
+			<SubAuthorityCode>NFB-SR</SubAuthorityCode>
+			<LinkID>0000301160000D</LinkID>
+			<VideoStreamURL>https://cctvs.freeway.gov.tw/live-view/mjpg/video.cgi?camera=1140</VideoStreamURL>
+			<LocationType>1</LocationType>
+			<PositionLon>120.3516</PositionLon>
+			<PositionLat>23.1637</PositionLat>
+			<RoadID>000030</RoadID>
+			<RoadName>國道3號</RoadName>
+			<RoadClass>0</RoadClass>
+			<RoadDirection>N</RoadDirection>
+			<RoadSection>
+				<Start>善化交流道</Start>
+				<End>官田系統交流道</End>
+			</RoadSection>
+			<LocationMile>335K+194</LocationMile>
+		</CCTV>
+		<CCTV>
 			<CCTVID>CCTV-N3-N-335.200-M</CCTVID>
 			<SubAuthorityCode>NFB-SR</SubAuthorityCode>
 			<LinkID>0000300133500D</LinkID>
@@ -30228,6 +31398,78 @@
 			<LocationMile>338K+274</LocationMile>
 		</CCTV>
 		<CCTV>
+			<CCTVID>CCTV-N3-N-340-I-EN-2</CCTVID>
+			<SubAuthorityCode>NFB-SR</SubAuthorityCode>
+			<LinkID>0000301161050D</LinkID>
+			<VideoStreamURL>https://cctvs.freeway.gov.tw/live-view/mjpg/video.cgi?camera=1151</VideoStreamURL>
+			<LocationType>1</LocationType>
+			<PositionLon>120.3328</PositionLon>
+			<PositionLat>23.1264</PositionLat>
+			<RoadID>000030</RoadID>
+			<RoadName>國道3號</RoadName>
+			<RoadClass>0</RoadClass>
+			<RoadDirection>N</RoadDirection>
+			<RoadSection>
+				<Start>善化交流道</Start>
+				<End>官田系統交流道</End>
+			</RoadSection>
+			<LocationMile>339K+832</LocationMile>
+		</CCTV>
+		<CCTV>
+			<CCTVID>CCTV-N3-N-340-I-EN-1</CCTVID>
+			<SubAuthorityCode>NFB-SR</SubAuthorityCode>
+			<LinkID>0000301161010D</LinkID>
+			<VideoStreamURL>https://cctvs.freeway.gov.tw/live-view/mjpg/video.cgi?camera=1150</VideoStreamURL>
+			<LocationType>1</LocationType>
+			<PositionLon>120.3324</PositionLon>
+			<PositionLat>23.1239</PositionLat>
+			<RoadID>000030</RoadID>
+			<RoadName>國道3號</RoadName>
+			<RoadClass>0</RoadClass>
+			<RoadDirection>N</RoadDirection>
+			<RoadSection>
+				<Start>善化交流道</Start>
+				<End>官田系統交流道</End>
+			</RoadSection>
+			<LocationMile>340K+091</LocationMile>
+		</CCTV>
+		<CCTV>
+			<CCTVID>CCTV-N3-N-340-O-SE-2</CCTVID>
+			<SubAuthorityCode>NFB-SR</SubAuthorityCode>
+			<LinkID>0000301161000D</LinkID>
+			<VideoStreamURL>https://cctvs.freeway.gov.tw/live-view/mjpg/video.cgi?camera=1149</VideoStreamURL>
+			<LocationType>1</LocationType>
+			<PositionLon>120.3324</PositionLon>
+			<PositionLat>23.1233</PositionLat>
+			<RoadID>000030</RoadID>
+			<RoadName>國道3號</RoadName>
+			<RoadClass>0</RoadClass>
+			<RoadDirection>N</RoadDirection>
+			<RoadSection>
+				<Start>善化交流道</Start>
+				<End>官田系統交流道</End>
+			</RoadSection>
+			<LocationMile>340K+179</LocationMile>
+		</CCTV>
+		<CCTV>
+			<CCTVID>CCTV-N3-N-340-O-SE-1</CCTVID>
+			<SubAuthorityCode>NFB-SR</SubAuthorityCode>
+			<LinkID>0000301161000D</LinkID>
+			<VideoStreamURL>https://cctvs.freeway.gov.tw/live-view/mjpg/video.cgi?camera=1148</VideoStreamURL>
+			<LocationType>1</LocationType>
+			<PositionLon>120.3307</PositionLon>
+			<PositionLat>23.1209</PositionLat>
+			<RoadID>000030</RoadID>
+			<RoadName>國道3號</RoadName>
+			<RoadClass>0</RoadClass>
+			<RoadDirection>N</RoadDirection>
+			<RoadSection>
+				<Start>新化系統交流道</Start>
+				<End>善化交流道</End>
+			</RoadSection>
+			<LocationMile>340K+404</LocationMile>
+		</CCTV>
+		<CCTV>
 			<CCTVID>CCTV-N3-N-343.360-M</CCTVID>
 			<SubAuthorityCode>NFB-SR</SubAuthorityCode>
 			<LinkID>0000300134300D</LinkID>
@@ -30262,6 +31504,42 @@
 				<End>善化交流道</End>
 			</RoadSection>
 			<LocationMile>344K+796</LocationMile>
+		</CCTV>
+		<CCTV>
+			<CCTVID>CCTV-N3-N-346-I-EN-1</CCTVID>
+			<SubAuthorityCode>NFB-SR</SubAuthorityCode>
+			<LinkID>0000301162030D</LinkID>
+			<VideoStreamURL>https://cctvs.freeway.gov.tw/live-view/mjpg/video.cgi?camera=1159</VideoStreamURL>
+			<LocationType>1</LocationType>
+			<PositionLon>120.3268</PositionLon>
+			<PositionLat>23.0641</PositionLat>
+			<RoadID>000030</RoadID>
+			<RoadName>國道3號</RoadName>
+			<RoadClass>0</RoadClass>
+			<RoadDirection>N</RoadDirection>
+			<RoadSection>
+				<Start>新化系統交流道</Start>
+				<End>善化交流道</End>
+			</RoadSection>
+			<LocationMile>346K+770</LocationMile>
+		</CCTV>
+		<CCTV>
+			<CCTVID>CCTV-N3-N-346-I-WN-1</CCTVID>
+			<SubAuthorityCode>NFB-SR</SubAuthorityCode>
+			<LinkID>0000301162060D</LinkID>
+			<VideoStreamURL>https://cctvs.freeway.gov.tw/live-view/mjpg/video.cgi?camera=1160</VideoStreamURL>
+			<LocationType>1</LocationType>
+			<PositionLon>120.3253</PositionLon>
+			<PositionLat>23.0652</PositionLat>
+			<RoadID>000030</RoadID>
+			<RoadName>國道3號</RoadName>
+			<RoadClass>0</RoadClass>
+			<RoadDirection>N</RoadDirection>
+			<RoadSection>
+				<Start>新化系統交流道</Start>
+				<End>善化交流道</End>
+			</RoadSection>
+			<LocationMile>346K+800</LocationMile>
 		</CCTV>
 		<CCTV>
 			<CCTVID>CCTV-N3-N-348.515-M</CCTVID>
@@ -30390,6 +31668,24 @@
 			<LocationMile>356K+915</LocationMile>
 		</CCTV>
 		<CCTV>
+			<CCTVID>CCTV-N3-N-357-O-NW-1</CCTVID>
+			<SubAuthorityCode>NFB-SR</SubAuthorityCode>
+			<LinkID>0000301163010D</LinkID>
+			<VideoStreamURL>https://cctvs.freeway.gov.tw/live-view/mjpg/video.cgi?camera=1161</VideoStreamURL>
+			<LocationType>1</LocationType>
+			<PositionLon>120.3191</PositionLon>
+			<PositionLat>22.9755</PositionLat>
+			<RoadID>000030</RoadID>
+			<RoadName>國道3號</RoadName>
+			<RoadClass>0</RoadClass>
+			<RoadDirection>N</RoadDirection>
+			<RoadSection>
+				<Start>關廟服務區</Start>
+				<End>關廟交流道</End>
+			</RoadSection>
+			<LocationMile>357K+000</LocationMile>
+		</CCTV>
+		<CCTV>
 			<CCTVID>CCTV-N3-N-357-O-SW-2</CCTVID>
 			<SubAuthorityCode>NFB-SR</SubAuthorityCode>
 			<LinkID>0000301163000D</LinkID>
@@ -30514,6 +31810,24 @@
 				<End>關廟服務區</End>
 			</RoadSection>
 			<LocationMile>364K+032</LocationMile>
+		</CCTV>
+		<CCTV>
+			<CCTVID>CCTV-N3-N-368.150-M</CCTVID>
+			<SubAuthorityCode>NFB-SR</SubAuthorityCode>
+			<LinkID>0000300136830E</LinkID>
+			<VideoStreamURL>https://cctvs.freeway.gov.tw/live-view/mjpg/video.cgi?camera=1164</VideoStreamURL>
+			<LocationType>1</LocationType>
+			<PositionLon>120.36</PositionLon>
+			<PositionLat>22.893</PositionLat>
+			<RoadID>000030</RoadID>
+			<RoadName>國道3號</RoadName>
+			<RoadClass>0</RoadClass>
+			<RoadDirection>N</RoadDirection>
+			<RoadSection>
+				<Start>田寮交流道</Start>
+				<End>關廟服務區</End>
+			</RoadSection>
+			<LocationMile>368K+695</LocationMile>
 		</CCTV>
 		<CCTV>
 			<CCTVID>CCTV-N3-N-372.415-M</CCTVID>
@@ -30840,6 +32154,60 @@
 			<LocationMile>381K+505</LocationMile>
 		</CCTV>
 		<CCTV>
+			<CCTVID>CCTV-N3-N-383-O-SW-1</CCTVID>
+			<SubAuthorityCode>NFB-SR</SubAuthorityCode>
+			<LinkID>0000301165010E</LinkID>
+			<VideoStreamURL>https://cctvs.freeway.gov.tw/live-view/mjpg/video.cgi?camera=1167</VideoStreamURL>
+			<LocationType>1</LocationType>
+			<PositionLon>120.4273</PositionLon>
+			<PositionLat>22.7873</PositionLat>
+			<RoadID>000030</RoadID>
+			<RoadName>國道3號</RoadName>
+			<RoadClass>0</RoadClass>
+			<RoadDirection>N</RoadDirection>
+			<RoadSection>
+				<Start>燕巢系統交流道</Start>
+				<End>田寮交流道</End>
+			</RoadSection>
+			<LocationMile>382K+000</LocationMile>
+		</CCTV>
+		<CCTV>
+			<CCTVID>CCTV-N3-N-383-I-EN-1</CCTVID>
+			<SubAuthorityCode>NFB-SR</SubAuthorityCode>
+			<LinkID>0000301165050E</LinkID>
+			<VideoStreamURL>https://cctvs.freeway.gov.tw/live-view/mjpg/video.cgi?camera=1169</VideoStreamURL>
+			<LocationType>1</LocationType>
+			<PositionLon>120.4264</PositionLon>
+			<PositionLat>22.7888</PositionLat>
+			<RoadID>000030</RoadID>
+			<RoadName>國道3號</RoadName>
+			<RoadClass>0</RoadClass>
+			<RoadDirection>N</RoadDirection>
+			<RoadSection>
+				<Start>燕巢系統交流道</Start>
+				<End>田寮交流道</End>
+			</RoadSection>
+			<LocationMile>382K+800</LocationMile>
+		</CCTV>
+		<CCTV>
+			<CCTVID>CCTV-N3-N-383-O-SE-1</CCTVID>
+			<SubAuthorityCode>NFB-SR</SubAuthorityCode>
+			<LinkID>0000301165010E</LinkID>
+			<VideoStreamURL>https://cctvs.freeway.gov.tw/live-view/mjpg/video.cgi?camera=1165</VideoStreamURL>
+			<LocationType>1</LocationType>
+			<PositionLon>120.427</PositionLon>
+			<PositionLat>22.7858</PositionLat>
+			<RoadID>000030</RoadID>
+			<RoadName>國道3號</RoadName>
+			<RoadClass>0</RoadClass>
+			<RoadDirection>N</RoadDirection>
+			<RoadSection>
+				<Start>九如交流道</Start>
+				<End>燕巢系統交流道</End>
+			</RoadSection>
+			<LocationMile>383K+000</LocationMile>
+		</CCTV>
+		<CCTV>
 			<CCTVID>CCTV-N3-N-384.628-M</CCTVID>
 			<SubAuthorityCode>NFB-SR</SubAuthorityCode>
 			<LinkID>0000300138400E</LinkID>
@@ -30928,6 +32296,42 @@
 				<End>燕巢系統交流道</End>
 			</RoadSection>
 			<LocationMile>390K+963</LocationMile>
+		</CCTV>
+		<CCTV>
+			<CCTVID>CCTV-N3-N-391-O-SE-1</CCTVID>
+			<SubAuthorityCode>NFB-SR</SubAuthorityCode>
+			<LinkID>0000301166000T</LinkID>
+			<VideoStreamURL>https://cctvs.freeway.gov.tw/live-view/mjpg/video.cgi?camera=1172</VideoStreamURL>
+			<LocationType>1</LocationType>
+			<PositionLon>120.4949</PositionLon>
+			<PositionLat>22.7521</PositionLat>
+			<RoadID>000030</RoadID>
+			<RoadName>國道3號</RoadName>
+			<RoadClass>0</RoadClass>
+			<RoadDirection>N</RoadDirection>
+			<RoadSection>
+				<Start>九如交流道</Start>
+				<End>燕巢系統交流道</End>
+			</RoadSection>
+			<LocationMile>391K+000</LocationMile>
+		</CCTV>
+		<CCTV>
+			<CCTVID>CCTV-N3-N-391-I-EN-1</CCTVID>
+			<SubAuthorityCode>NFB-SR</SubAuthorityCode>
+			<LinkID>0000301166000T</LinkID>
+			<VideoStreamURL>https://cctvs.freeway.gov.tw/live-view/mjpg/video.cgi?camera=1173</VideoStreamURL>
+			<LocationType>1</LocationType>
+			<PositionLon>120.495</PositionLon>
+			<PositionLat>22.7539</PositionLat>
+			<RoadID>000030</RoadID>
+			<RoadName>國道3號</RoadName>
+			<RoadClass>0</RoadClass>
+			<RoadDirection>N</RoadDirection>
+			<RoadSection>
+				<Start>九如交流道</Start>
+				<End>燕巢系統交流道</End>
+			</RoadSection>
+			<LocationMile>391K+000</LocationMile>
 		</CCTV>
 		<CCTV>
 			<CCTVID>CCTV-N3-N-391.400-M</CCTVID>
@@ -31092,6 +32496,24 @@
 			<LocationMile>404K+546</LocationMile>
 		</CCTV>
 		<CCTV>
+			<CCTVID>CCTV-N3-N-406.443-M</CCTVID>
+			<SubAuthorityCode>NFB-SR</SubAuthorityCode>
+			<LinkID>0000300140600T</LinkID>
+			<VideoStreamURL>https://cctvs.freeway.gov.tw/live-view/mjpg/video.cgi?camera=1182</VideoStreamURL>
+			<LocationType>1</LocationType>
+			<PositionLon>120.543</PositionLon>
+			<PositionLat>22.6471</PositionLat>
+			<RoadID>000030</RoadID>
+			<RoadName>國道3號</RoadName>
+			<RoadClass>0</RoadClass>
+			<RoadDirection>N</RoadDirection>
+			<RoadSection>
+				<Start>麟洛交流道</Start>
+				<End>長治交流道</End>
+			</RoadSection>
+			<LocationMile>406K+443</LocationMile>
+		</CCTV>
+		<CCTV>
 			<CCTVID>CCTV-N3-N-408.736-M</CCTVID>
 			<SubAuthorityCode>NFB-SR</SubAuthorityCode>
 			<LinkID>0000300140800T</LinkID>
@@ -31146,6 +32568,42 @@
 			<LocationMile>411K+283</LocationMile>
 		</CCTV>
 		<CCTV>
+			<CCTVID>CCTV-N3-N-415-I-WN-2</CCTVID>
+			<SubAuthorityCode>NFB-SR</SubAuthorityCode>
+			<LinkID>0000301170050T</LinkID>
+			<VideoStreamURL>https://cctvs.freeway.gov.tw/live-view/mjpg/video.cgi?camera=1188</VideoStreamURL>
+			<LocationType>1</LocationType>
+			<PositionLon>120.5283</PositionLon>
+			<PositionLat>22.5735</PositionLat>
+			<RoadID>000030</RoadID>
+			<RoadName>國道3號</RoadName>
+			<RoadClass>0</RoadClass>
+			<RoadDirection>N</RoadDirection>
+			<RoadSection>
+				<Start>竹田系統交流道</Start>
+				<End>麟洛交流道</End>
+			</RoadSection>
+			<LocationMile>415K+000</LocationMile>
+		</CCTV>
+		<CCTV>
+			<CCTVID>CCTV-N3-N-415.131-N</CCTVID>
+			<SubAuthorityCode>NFB-SR</SubAuthorityCode>
+			<LinkID>0000301170060T</LinkID>
+			<VideoStreamURL>https://cctvs.freeway.gov.tw/live-view/mjpg/video.cgi?camera=1190</VideoStreamURL>
+			<LocationType>1</LocationType>
+			<PositionLon>120.5281</PositionLon>
+			<PositionLat>22.5721</PositionLat>
+			<RoadID>000030</RoadID>
+			<RoadName>國道3號</RoadName>
+			<RoadClass>0</RoadClass>
+			<RoadDirection>N</RoadDirection>
+			<RoadSection>
+				<Start>竹田系統交流道</Start>
+				<End>麟洛交流道</End>
+			</RoadSection>
+			<LocationMile>415K+131</LocationMile>
+		</CCTV>
+		<CCTV>
 			<CCTVID>CCTV-N3-N-415.150-L</CCTVID>
 			<SubAuthorityCode>NFB-SR</SubAuthorityCode>
 			<LinkID>0000301170010T</LinkID>
@@ -31164,6 +32622,78 @@
 			<LocationMile>415K+150</LocationMile>
 		</CCTV>
 		<CCTV>
+			<CCTVID>CCTV-N3-N-415-I-EN-1</CCTVID>
+			<SubAuthorityCode>NFB-SR</SubAuthorityCode>
+			<LinkID>0000301170050T</LinkID>
+			<VideoStreamURL>https://cctvs.freeway.gov.tw/live-view/mjpg/video.cgi?camera=1193</VideoStreamURL>
+			<LocationType>1</LocationType>
+			<PositionLon>120.5301</PositionLon>
+			<PositionLat>22.5721</PositionLat>
+			<RoadID>000030</RoadID>
+			<RoadName>國道3號</RoadName>
+			<RoadClass>0</RoadClass>
+			<RoadDirection>N</RoadDirection>
+			<RoadSection>
+				<Start>竹田系統交流道</Start>
+				<End>麟洛交流道</End>
+			</RoadSection>
+			<LocationMile>415K+170</LocationMile>
+		</CCTV>
+		<CCTV>
+			<CCTVID>CCTV-N3-N-415-I-WN-1</CCTVID>
+			<SubAuthorityCode>NFB-SR</SubAuthorityCode>
+			<LinkID>0000301170050T</LinkID>
+			<VideoStreamURL>https://cctvs.freeway.gov.tw/live-view/mjpg/video.cgi?camera=1187</VideoStreamURL>
+			<LocationType>1</LocationType>
+			<PositionLon>120.5302</PositionLon>
+			<PositionLat>22.572</PositionLat>
+			<RoadID>000030</RoadID>
+			<RoadName>國道3號</RoadName>
+			<RoadClass>0</RoadClass>
+			<RoadDirection>N</RoadDirection>
+			<RoadSection>
+				<Start>崁頂交流道</Start>
+				<End>竹田系統交流道</End>
+			</RoadSection>
+			<LocationMile>415K+200</LocationMile>
+		</CCTV>
+		<CCTV>
+			<CCTVID>CCTV-N3-N-415-O-SW-1</CCTVID>
+			<SubAuthorityCode>NFB-SR</SubAuthorityCode>
+			<LinkID>0000301170020T</LinkID>
+			<VideoStreamURL>https://cctvs.freeway.gov.tw/live-view/mjpg/video.cgi?camera=1185</VideoStreamURL>
+			<LocationType>1</LocationType>
+			<PositionLon>120.5278</PositionLon>
+			<PositionLat>22.5712</PositionLat>
+			<RoadID>000030</RoadID>
+			<RoadName>國道3號</RoadName>
+			<RoadClass>0</RoadClass>
+			<RoadDirection>N</RoadDirection>
+			<RoadSection>
+				<Start>崁頂交流道</Start>
+				<End>竹田系統交流道</End>
+			</RoadSection>
+			<LocationMile>415K+220</LocationMile>
+		</CCTV>
+		<CCTV>
+			<CCTVID>CCTV-N3-N-415-O-SE-1</CCTVID>
+			<SubAuthorityCode>NFB-SR</SubAuthorityCode>
+			<LinkID>0000301170010T</LinkID>
+			<VideoStreamURL>https://cctvs.freeway.gov.tw/live-view/mjpg/video.cgi?camera=1186</VideoStreamURL>
+			<LocationType>1</LocationType>
+			<PositionLon>120.53</PositionLon>
+			<PositionLat>22.5708</PositionLat>
+			<RoadID>000030</RoadID>
+			<RoadName>國道3號</RoadName>
+			<RoadClass>0</RoadClass>
+			<RoadDirection>N</RoadDirection>
+			<RoadSection>
+				<Start>崁頂交流道</Start>
+				<End>竹田系統交流道</End>
+			</RoadSection>
+			<LocationMile>415K+300</LocationMile>
+		</CCTV>
+		<CCTV>
 			<CCTVID>CCTV-N3-N-416.551-M</CCTVID>
 			<SubAuthorityCode>NFB-SR</SubAuthorityCode>
 			<LinkID>0000300141600T</LinkID>
@@ -31180,6 +32710,24 @@
 				<End>竹田系統交流道</End>
 			</RoadSection>
 			<LocationMile>416K+551</LocationMile>
+		</CCTV>
+		<CCTV>
+			<CCTVID>CCTV-N3-N-421.557-M</CCTVID>
+			<SubAuthorityCode>NFB-SR</SubAuthorityCode>
+			<LinkID>0000300142100T</LinkID>
+			<VideoStreamURL>https://cctvs.freeway.gov.tw/live-view/mjpg/video.cgi?camera=1196</VideoStreamURL>
+			<LocationType>1</LocationType>
+			<PositionLon>120.5246</PositionLon>
+			<PositionLat>22.5164</PositionLat>
+			<RoadID>000030</RoadID>
+			<RoadName>國道3號</RoadName>
+			<RoadClass>0</RoadClass>
+			<RoadDirection>N</RoadDirection>
+			<RoadSection>
+				<Start>南州交流道</Start>
+				<End>崁頂交流道</End>
+			</RoadSection>
+			<LocationMile>421K+557</LocationMile>
 		</CCTV>
 		<CCTV>
 			<CCTVID>CCTV-N3-N-421.846-M</CCTVID>
@@ -31378,6 +32926,24 @@
 				<End>林邊交流道</End>
 			</RoadSection>
 			<LocationMile>430K+500</LocationMile>
+		</CCTV>
+		<CCTV>
+			<CCTVID>CCTV-N3-N-430.791-M</CCTVID>
+			<SubAuthorityCode>NFB-SR</SubAuthorityCode>
+			<LinkID>0000300143070T</LinkID>
+			<VideoStreamURL>https://cctvs.freeway.gov.tw/live-view/mjpg/video.cgi?camera=1197</VideoStreamURL>
+			<LocationType>1</LocationType>
+			<PositionLon>120.504</PositionLon>
+			<PositionLat>22.4437</PositionLat>
+			<RoadID>000030</RoadID>
+			<RoadName>國道3號</RoadName>
+			<RoadClass>0</RoadClass>
+			<RoadDirection>N</RoadDirection>
+			<RoadSection>
+				<Start>大鵬灣端</Start>
+				<End>林邊交流道</End>
+			</RoadSection>
+			<LocationMile>430K+791</LocationMile>
 		</CCTV>
 		<CCTV>
 			<CCTVID>CCTV-N3-N-431.461-M</CCTVID>
@@ -31819,10 +33385,10 @@
 			<LocationType>1</LocationType>
 			<PositionLon>120.281409</PositionLon>
 			<PositionLat>23.063354</PositionLat>
-			<RoadID>616311</RoadID>
-			<RoadName>國道8號</RoadName>
-			<RoadClass>0</RoadClass>
-			<RoadDirection>W</RoadDirection>
+			<RoadID>616311D</RoadID>
+			<RoadName>新港社大道</RoadName>
+			<RoadClass>6</RoadClass>
+			<RoadDirection>N</RoadDirection>
 			<RoadSection>
 				<Start>新化系統交流道</Start>
 				<End>新市交流道</End>
