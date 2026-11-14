@@ -1,5 +1,5 @@
 {
-  "count": 34,
+  "count": 33,
   "results": [
     {
       "id": "PB077",
@@ -16,15 +16,6 @@
       "x": 121.576518,
       "y": 25.05142,
       "url": "https://heocctv3.gov.taipei/channel55//snapshot",
-      "type": "water",
-      "source": "臺北市政府工務局水利工程處"
-    },
-    {
-      "id": "PB074",
-      "name": "大直橋",
-      "x": 121.544175,
-      "y": 25.076389,
-      "url": "https://heocctv3.gov.taipei/dzc02024608552022//snapshot",
       "type": "water",
       "source": "臺北市政府工務局水利工程處"
     },
