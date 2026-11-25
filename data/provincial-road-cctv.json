@@ -1,11 +1,11 @@
 {
    "metadata" : {
       "authorityCode" : "THB",
-      "generatedAt" : "2026-11-24T04:18:37Z",
+      "generatedAt" : "2026-11-25T03:03:05Z",
       "skipped" : 0,
       "source" : "交通部公路局",
       "sourceUpdateInterval" : "86400",
-      "sourceUpdateTime" : "2026-11-24T12:10:29+08:00",
+      "sourceUpdateTime" : "2026-11-25T10:10:01+08:00",
       "sourceUrl" : "https://cctv-maintain.thb.gov.tw/opendataCCTVs.xml",
       "total" : 2354
    },
@@ -12568,17 +12568,17 @@
       {
          "city" : "",
          "district" : "",
-         "id" : "CCTV-24-0140-014-001",
-         "key" : "provincial-CCTV-24-0140-014-001",
-         "linkId" : "3001400001341N",
+         "id" : "CCTV-24-0140-014-002",
+         "key" : "provincial-CCTV-24-0140-014-002",
+         "linkId" : "3001400001445M",
          "locationType" : "6",
-         "name" : "省道 CCTV CCTV-24-0140-014-001",
+         "name" : "省道 CCTV CCTV-24-0140-014-002",
          "source" : "交通部公路局",
-         "streamUrl" : "https://cctv-ss04.thb.gov.tw:443/T14-14K+200",
+         "streamUrl" : "https://cctv-ss04.thb.gov.tw:443/T14-14K+550",
          "type" : "provincial",
-         "url" : "https://cctv-ss04.thb.gov.tw:443/T14-14K+200",
-         "x" : 120.648738,
-         "y" : 24.01015978
+         "url" : "https://cctv-ss04.thb.gov.tw:443/T14-14K+550",
+         "x" : 120.6499659,
+         "y" : 24.0077546
       },
       {
          "city" : "",
@@ -12598,11 +12598,11 @@
       {
          "city" : "",
          "district" : "",
-         "id" : "CCTV-24-0140-016-001",
-         "key" : "provincial-CCTV-24-0140-016-001",
-         "linkId" : "3001400001659M",
+         "id" : "CCTV-24-0140-016-002",
+         "key" : "provincial-CCTV-24-0140-016-002",
+         "linkId" : "6527970300000M",
          "locationType" : "6",
-         "name" : "省道 CCTV CCTV-24-0140-016-001",
+         "name" : "省道 CCTV CCTV-24-0140-016-002",
          "source" : "交通部公路局",
          "streamUrl" : "https://cctv-ss03.thb.gov.tw:443/T14-016K+920",
          "type" : "provincial",
